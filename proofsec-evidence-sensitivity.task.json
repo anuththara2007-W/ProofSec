@@ -1,5 +1,5 @@
 {
   "versionNumber": 1,
   "name": "proofsec-evidence-sensitivity",
-  "definition": "@kbench.task(\"proofsec-evidence-sensitivity\")\ndef evidence_sensitivity_task(llm) -> None:\n    task_data = json.loads(TASK_JSON)\n    prompt = build_prompt(task_data)\n    \n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    \n    print(f\"Classification: {response.classification}\")\n"
+  "definition": "@kbench.task(\"proofsec-evidence-sensitivity\")\ndef evidence_sensitivity_task(llm) -> None:\n    task_data = json.loads(TASK_JSON)\n    prompt = build_prompt(task_data)\n    \n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    \n    expected = task_data.get(\"ground_truth\", {}).get(\"classification\")\n    kbench.assertions.assert_equal(expected, response.classification)\n"
 }
