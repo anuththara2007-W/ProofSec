@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:02:10.098024Z",
-  "endTime": "2026-09-26T09:02:14.535989Z",
+  "startTime": "2026-09-26T09:04:27.219228Z",
+  "endTime": "2026-09-26T09:04:32.121267Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA contradictory evidence test-10ebce9b",
+      "id": "IDOR / BOLA contradictory evidence test-bd7f8075",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"Initially, a GET request to /api/invoices/9281 by authenticated user 2841 returned a 200 OK containing invoice data belonging to owner 9127. However, later evidence established that this response originated from a synthetic redacted test fixture or cache, and the actual protected endpoint returned a 403 Forbidden response. An isolated authorization test confirmed that user 2841 cannot access other users' invoices on the live endpoint.\\\",\\\"evidence_missing\\\":\\\"None. The available evidence demonstrates that the actual protected endpoint behaves correctly and enforces authorization constraints.\\\",\\\"safe_verification_procedure\\\":\\\"1. Authenticate as user 2841 and send a GET request to the actual live protected endpoint /api/invoices/9281. Verify that a 403 Forbidden response is received. 2. Authenticate as user 9127 and send a GET request to /api/invoices/9281. Verify that a 200 OK response is received with the invoice details. This ensures authorization rules are enforced correctly without causing data exposure.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\"}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"An initial request for an invoice owned by user 9127 by authenticated user 2841 returned a 200 OK with the invoice details. However, subsequent evidence established that this response was served from a synthetic redacted test fixture/cache. Testing of the actual protected endpoint returned a 403 Forbidden, and isolated authorization tests confirmed that user 2841 is blocked from accessing another user's invoice.\\\",\\\"evidence_missing\\\":\\\"None. There is sufficient evidence to show that the actual protected endpoint correctly enforces authorization.\\\",\\\"safe_verification_procedure\\\":\\\"In a secure test environment, authenticate as a user who does not own a target invoice and attempt to access the actual API endpoint '/api/invoices/{invoice_id}'. Verify that the server returns an HTTP 403 Forbidden or 404 Not Found response and does not disclose the invoice data.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\"}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 332,
-            "outputTokens": 788,
+            "outputTokens": 952,
             "inputTokensCostNanodollars": "498000",
-            "outputTokensCostNanodollars": "7092000",
-            "totalBackendLatencyMs": "4068"
+            "outputTokensCostNanodollars": "8568000",
+            "totalBackendLatencyMs": "4509"
           },
-          "id": "IDOR / BOLA contradictory evidence test-10ebce9b-req-1"
+          "id": "IDOR / BOLA contradictory evidence test-bd7f8075-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 332,
-        "outputTokens": 788,
+        "outputTokens": 952,
         "inputTokensCostNanodollars": "498000",
-        "outputTokensCostNanodollars": "7092000",
-        "totalBackendLatencyMs": "4068"
+        "outputTokensCostNanodollars": "8568000",
+        "totalBackendLatencyMs": "4509"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA contradictory evidence test-10ebce9b",
-          "requestId": "IDOR / BOLA contradictory evidence test-10ebce9b-req-1"
+          "conversationId": "IDOR / BOLA contradictory evidence test-bd7f8075",
+          "requestId": "IDOR / BOLA contradictory evidence test-bd7f8075-req-1"
         }
       ]
     }
