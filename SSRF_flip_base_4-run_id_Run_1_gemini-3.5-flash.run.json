@@ -1,7 +1,7 @@
 {
   "taskVersion": {
     "versionNumber": 1,
-    "name": "SQLi flip base 3",
+    "name": "SSRF flip base 4",
     "description": "",
     "definition": "            def run_task(llm) -> None:\n                is_dry_run = os.environ.get('PROOFSEC_DRY_RUN') == '1'\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                if is_dry_run:\n                    print(f\"[DRY-RUN] Would execute task: {t_data['id']}\")\n                    return\n                \n                start_t = time.time()\n                try:\n                    response = llm.prompt(prompt, schema=SecurityAssessment)\n                except Exception as e:\n                    # Isolate infrastructure failure\n                    latency = int((time.time() - start_t) * 1000)\n                    error_dir = get_project_root() / \"results\" / \"errors\" / model\n                    error_dir.mkdir(parents=True, exist_ok=True)\n                    error_file = error_dir / f\"{t_data['id']}_{int(time.time())}.json\"\n                    error_rec = {\n                        \"task_id\": t_data['id'],\n                        \"experiment_id\": experiment_id,\n                        \"status\": \"infrastructure_error\",\n                        \"error_type\": e.__class__.__name__,\n                        \"error_msg\": str(e),\n                        \"latency_ms\": latency\n                    }\n                    with open(error_file, 'w', encoding='utf-8') as ef:\n                        json.dump(error_rec, ef, indent=4)\n                    print(f\"Infrastructure error isolated for {t_data['id']}: {e.__class__.__name__}\")\n                    raise e # Let it bubble up to halt execution\n                    \n                latency = int((time.time() - start_t) * 1000)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                is_correct = (expected == response.classification)\n                \n                save_raw_result(t_data, response, is_correct, dataset_hash, experiment_id, model, latency)\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T10:35:39.838867Z",
-  "endTime": "2026-09-26T10:35:39.838982Z",
+  "startTime": "2026-09-26T10:35:39.871678Z",
+  "endTime": "2026-09-26T10:35:39.871775Z",
   "conversations": [
     {
-      "id": "SQLi flip base 3-6199954e",
+      "id": "SSRF flip base 4-323fdc12",
       "metrics": {},
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -24,5 +24,5 @@
       "booleanResult": true
     }
   ],
-  "pyRunId": "SQLi flip base 3-Run #1"
+  "pyRunId": "SSRF flip base 4-Run #1"
 }

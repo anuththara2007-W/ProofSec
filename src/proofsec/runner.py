@@ -64,6 +64,7 @@ def register_kbench_tasks():
         # Find all JSONs and collect completed IDs
         existing = glob.glob(str(model_raw_dir / "*.json"))
         for ef in existing:
+            if "config.json" in ef: continue
             with open(ef, 'r', encoding='utf-8') as f:
                 try:
                     ed = json.load(f)
@@ -71,7 +72,29 @@ def register_kbench_tasks():
                     experiment_id = ed['experiment_id'] # Use the existing experiment ID!
                 except Exception:
                     pass
-    
+                    
+    # Save experiment configuration
+    model_raw_dir.mkdir(parents=True, exist_ok=True)
+    config_file = model_raw_dir / f"{experiment_id}_config.json"
+    if not config_file.exists() and not os.environ.get('PROOFSEC_DRY_RUN') == '1':
+        from src.proofsec.version import __version__
+        config_data = {
+            "benchmark_version": __version__,
+            "benchmark_sha256": dataset_hash,
+            "experiment_id": experiment_id,
+            "model": model,
+            "provider": "UNAVAILABLE", # Kaggle abstracted
+            "model_version": "UNAVAILABLE",
+            "temperature": "UNAVAILABLE",
+            "max_tokens": "UNAVAILABLE",
+            "system_prompt_hash": "UNAVAILABLE",
+            "prompt_template_hash": "UNAVAILABLE",
+            "runner_version": "v0.2",
+            "timestamp": timestamp
+        }
+        with open(config_file, 'w', encoding='utf-8') as cf:
+            json.dump(config_data, cf, indent=4)
+            
     task_funcs = []
     for task_data in tasks:
         if is_resume and task_data['id'] in completed_task_ids:
@@ -79,6 +102,7 @@ def register_kbench_tasks():
             
         def make_task(t_data):
             def run_task(llm) -> None:
+                is_dry_run = os.environ.get('PROOFSEC_DRY_RUN') == '1'
                 scenario = t_data['scenario']
                 prompt = (
                     "You are an expert security code reviewer. Analyze the following scenario:\n\n"
@@ -91,8 +115,32 @@ def register_kbench_tasks():
                     "- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
                 )
                 
+                if is_dry_run:
+                    print(f"[DRY-RUN] Would execute task: {t_data['id']}")
+                    return
+                
                 start_t = time.time()
-                response = llm.prompt(prompt, schema=SecurityAssessment)
+                try:
+                    response = llm.prompt(prompt, schema=SecurityAssessment)
+                except Exception as e:
+                    # Isolate infrastructure failure
+                    latency = int((time.time() - start_t) * 1000)
+                    error_dir = get_project_root() / "results" / "errors" / model
+                    error_dir.mkdir(parents=True, exist_ok=True)
+                    error_file = error_dir / f"{t_data['id']}_{int(time.time())}.json"
+                    error_rec = {
+                        "task_id": t_data['id'],
+                        "experiment_id": experiment_id,
+                        "status": "infrastructure_error",
+                        "error_type": e.__class__.__name__,
+                        "error_msg": str(e),
+                        "latency_ms": latency
+                    }
+                    with open(error_file, 'w', encoding='utf-8') as ef:
+                        json.dump(error_rec, ef, indent=4)
+                    print(f"Infrastructure error isolated for {t_data['id']}: {e.__class__.__name__}")
+                    raise e # Let it bubble up to halt execution
+                    
                 latency = int((time.time() - start_t) * 1000)
                 
                 expected = t_data['ground_truth']['classification']

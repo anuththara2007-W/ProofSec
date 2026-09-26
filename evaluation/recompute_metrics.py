@@ -125,6 +125,8 @@ def compute_metrics():
     # Load responses (keep latest)
     responses = {}
     for f in sorted(res_dir.glob('*.json')):
+        if "config" in str(f):
+            continue
         with open(f, 'r', encoding='utf-8') as file:
             d = json.load(file)
             responses[d['task_id']] = d

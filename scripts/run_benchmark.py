@@ -16,6 +16,7 @@ def main():
     parser.add_argument("--all-models", action="store_true", help="Run all available models")
     parser.add_argument("--resume", action="store_true", help="Resume an existing run (skip completed tasks)")
     parser.add_argument("--fresh", action="store_true", help="Start a fresh run (default behavior without --resume)")
+    parser.add_argument("--dry-run", action="store_true", help="Perform a dry run without API calls")
     
     args, unknown = parser.parse_known_args()
     
@@ -23,6 +24,7 @@ def main():
     if args.category: os.environ['PROOFSEC_CATEGORY'] = args.category
     if args.experiment: os.environ['PROOFSEC_EXPERIMENT'] = args.experiment
     if args.resume: os.environ['PROOFSEC_RESUME'] = '1'
+    if args.dry_run: os.environ['PROOFSEC_DRY_RUN'] = '1'
     
     root_dir = Path(__file__).parent.parent
     
