@@ -1,44 +1,44 @@
 {
-    "overall_accuracy": 0.9333333333333333,
-    "total_tasks": 30,
-    "correct": 28,
+    "overall_accuracy": 0.6590909090909091,
+    "total_tasks": 88,
+    "correct": 58,
     "classes": {
         "Vulnerable": {
-            "tp": 8,
-            "fp": 0,
-            "fn": 0,
-            "tn": 22,
-            "precision": 1.0,
-            "recall": 1.0,
-            "f1": 1.0
+            "tp": 13,
+            "fp": 1,
+            "fn": 13,
+            "tn": 61,
+            "precision": 0.9285714285714286,
+            "recall": 0.5,
+            "f1": 0.65
         },
         "Not Vulnerable": {
-            "tp": 11,
+            "tp": 18,
             "fp": 1,
-            "fn": 1,
-            "tn": 17,
-            "precision": 0.9166666666666666,
-            "recall": 0.9166666666666666,
-            "f1": 0.9166666666666666
+            "fn": 15,
+            "tn": 54,
+            "precision": 0.9473684210526315,
+            "recall": 0.5454545454545454,
+            "f1": 0.6923076923076923
         },
         "Insufficient Evidence": {
-            "tp": 9,
-            "fp": 1,
-            "fn": 1,
-            "tn": 19,
-            "precision": 0.9,
-            "recall": 0.9,
-            "f1": 0.9
+            "tp": 27,
+            "fp": 28,
+            "fn": 2,
+            "tn": 31,
+            "precision": 0.4909090909090909,
+            "recall": 0.9310344827586207,
+            "f1": 0.6428571428571428
         }
     },
     "by_domain": {
         "idor": {
-            "correct": 5,
-            "total": 5
+            "correct": 12,
+            "total": 19
         },
         "authentication": {
-            "correct": 4,
-            "total": 6
+            "correct": 16,
+            "total": 20
         },
         "ssrf": {
             "correct": 3,
@@ -49,39 +49,78 @@
             "total": 5
         },
         "sqli": {
-            "correct": 4,
-            "total": 4
+            "correct": 7,
+            "total": 10
         },
         "rate_limiting": {
             "correct": 3,
             "total": 3
         },
         "business_logic": {
-            "correct": 2,
-            "total": 2
+            "correct": 3,
+            "total": 6
         },
         "security_headers": {
             "correct": 1,
             "total": 1
         },
         "information_disclosure": {
-            "correct": 1,
-            "total": 1
+            "correct": 3,
+            "total": 11
+        },
+        "authorization": {
+            "correct": 0,
+            "total": 5
+        },
+        "csrf": {
+            "correct": 5,
+            "total": 5
         }
     },
     "by_evidence_state": {
         "WEAK": {
-            "correct": 9,
-            "total": 10
+            "correct": 25,
+            "total": 26
         },
         "DECISIVE": {
-            "correct": 17,
-            "total": 17
+            "correct": 22,
+            "total": 35
         },
         "CONTRADICTORY": {
+            "correct": 2,
+            "total": 9
+        },
+        "NEGATIVE": {
+            "correct": 7,
+            "total": 15
+        },
+        "PARTIAL": {
             "correct": 2,
             "total": 3
         }
     },
-    "macro_f1": 0.9388888888888888
+    "evidence_sensitivity": {
+        "flips": 4,
+        "valid_pairs": 13,
+        "appropriate_flips": 4,
+        "flip_errors": 0,
+        "flip_misses": 9
+    },
+    "authority_bias": {
+        "flips": 2,
+        "valid_pairs": 5
+    },
+    "terminology_sensitivity": {
+        "flips": 0,
+        "valid_pairs": 0
+    },
+    "contradiction_accuracy": {
+        "correct": 0,
+        "total": 5
+    },
+    "ladder_monotonicity": {
+        "monotonic_ladders": 3,
+        "total_ladders": 3
+    },
+    "macro_f1": 0.6617216117216117
 }
