@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "IDOR / BOLA contradictory evidence test",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:16:54.447065Z",
-  "endTime": "2026-09-26T09:16:58.433324Z",
+  "startTime": "2026-09-26T09:23:40.783729Z",
+  "endTime": "2026-09-26T09:23:46.220264Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA contradictory evidence test-60867130",
+      "id": "IDOR / BOLA contradictory evidence test-43c8fedb",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"An initial GET request to `/api/invoices/9281` by user 2841 returned a 200 OK response with invoice details belonging to user 9127. However, subsequent evidence indicates this response originated from a synthetic redacted test fixture/cache rather than the actual live endpoint. Testing of the actual protected endpoint returned a 403 Forbidden response when accessed by an unauthorized user.\\\",\\\"evidence_missing\\\":\\\"None. The available evidence comprehensively demonstrates that the actual authorization mechanism correctly denies unauthorized access.\\\",\\\"safe_verification_procedure\\\":\\\"Send a GET request to the live `/api/invoices/9281` endpoint using the authentication token of user 2841 in a staging environment. Verify that the server rejects the request with a 403 Forbidden status code and does not expose any invoice data.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"An initial request by user 2841 to GET /api/invoices/9281 (owned by user 9127) returned a 200 OK with the invoice details. However, subsequent evidence revealed this response came from a synthetic redacted test fixture/cache rather than the live endpoint. An isolated test of the actual protected endpoint correctly returned a 403 Forbidden response when user 2841 attempted to access another user's invoice.\\\",\\\"evidence_missing\\\":\\\"None. There is sufficient evidence to show that the live application endpoint correctly enforces the authorization rules.\\\",\\\"safe_verification_procedure\\\":\\\"To verify authorization in an isolated environment, send a GET request to the actual protected endpoint /api/invoices/9281 using the credentials of user 2841. Confirm that the application returns a 403 Forbidden response and does not leak the invoice details or route the request to an unauthenticated test cache.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 332,
-            "outputTokens": 749,
+            "outputTokens": 1077,
             "inputTokensCostNanodollars": "498000",
-            "outputTokensCostNanodollars": "6741000",
-            "totalBackendLatencyMs": "3443"
+            "outputTokensCostNanodollars": "9693000",
+            "totalBackendLatencyMs": "4996"
           },
-          "id": "IDOR / BOLA contradictory evidence test-60867130-req-1"
+          "id": "IDOR / BOLA contradictory evidence test-43c8fedb-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 332,
-        "outputTokens": 749,
+        "outputTokens": 1077,
         "inputTokensCostNanodollars": "498000",
-        "outputTokensCostNanodollars": "6741000",
-        "totalBackendLatencyMs": "3443"
+        "outputTokensCostNanodollars": "9693000",
+        "totalBackendLatencyMs": "4996"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Not Vulnerable' because the actual protected endpoint correctly restricts access (403 Forbidden), and the 200 OK was from a harmless test fixture.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA contradictory evidence test-60867130",
-          "requestId": "IDOR / BOLA contradictory evidence test-60867130-req-1"
+          "conversationId": "IDOR / BOLA contradictory evidence test-43c8fedb",
+          "requestId": "IDOR / BOLA contradictory evidence test-43c8fedb-req-1"
         }
       ]
     }

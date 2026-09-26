@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "Business Logic - Zero Price Unknown",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:16:23.724148Z",
-  "endTime": "2026-09-26T09:16:28.938767Z",
+  "startTime": "2026-09-26T09:23:18.390758Z",
+  "endTime": "2026-09-26T09:23:22.928719Z",
   "conversations": [
     {
-      "id": "Business Logic - Zero Price Unknown-6d7f4859",
+      "id": "Business Logic - Zero Price Unknown-486f3219",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 607,
             "inputTokensCostNanodollars": "270000",
             "outputTokensCostNanodollars": "5463000",
-            "totalBackendLatencyMs": "4145"
+            "totalBackendLatencyMs": "4173"
           },
-          "id": "Business Logic - Zero Price Unknown-6d7f4859-req-1"
+          "id": "Business Logic - Zero Price Unknown-486f3219-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 607,
         "inputTokensCostNanodollars": "270000",
         "outputTokensCostNanodollars": "5463000",
-        "totalBackendLatencyMs": "4145"
+        "totalBackendLatencyMs": "4173"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The item might be legitimately free. Missing business rules.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Business Logic - Zero Price Unknown-6d7f4859",
-          "requestId": "Business Logic - Zero Price Unknown-6d7f4859-req-1"
+          "conversationId": "Business Logic - Zero Price Unknown-486f3219",
+          "requestId": "Business Logic - Zero Price Unknown-486f3219-req-1"
         }
       ]
     }

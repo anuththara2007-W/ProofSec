@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "IDOR / BOLA missing ownership test",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:16:58.435303Z",
-  "endTime": "2026-09-26T09:17:02.113920Z",
+  "startTime": "2026-09-26T09:23:46.222832Z",
+  "endTime": "2026-09-26T09:23:49.849828Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA missing ownership test-dc0d576a",
+      "id": "IDOR / BOLA missing ownership test-473e917b",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"User A accessed '/api/orders/5001' and successfully received a 200 OK response with the order details. The endpoint uses predictable numeric IDs.\\\",\\\"evidence_missing\\\":\\\"Information establishing the ownership of order 5001, the authorization status/identity of User A, and whether User A can access an order belonging to a different user (e.g., User B).\\\",\\\"safe_verification_procedure\\\":\\\"1. Set up an isolated test environment with two distinct test accounts: User A and User B.\\\\n2. Log in as User B and create an order, generating a specific order ID (e.g., 6001).\\\\n3. Log out of User B and log in as User A.\\\\n4. Send a request to 'GET /api/orders/6001' as User A.\\\\n5. Check if User A is granted access to User B's order (indicating a vulnerability) or if the request is blocked with an appropriate authorization error (e.g., 403 Forbidden).\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\",\\\"reasoning_confidence\\\":100}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"User A accessed GET /api/orders/5001 and received a 200 OK response containing order details. The endpoint uses a predictable, sequential numeric identifier (5001).\\\",\\\"evidence_missing\\\":\\\"There is no evidence establishing ownership of order 5001, whether User A is authorized to view it, or if User A can access orders belonging to other users (IDOR/BOLA).\\\",\\\"safe_verification_procedure\\\":\\\"In an isolated test environment, register two distinct non-privileged users: User A and User B. Create an order belonging to User B (e.g., ID 9001). Authenticate as User A and send a GET request to /api/orders/9001. If User A successfully retrieves User B's order details, a vulnerability exists.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\",\\\"reasoning_confidence\\\":100}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 250,
-            "outputTokens": 627,
+            "outputTokens": 593,
             "inputTokensCostNanodollars": "375000",
-            "outputTokensCostNanodollars": "5643000",
-            "totalBackendLatencyMs": "2991"
+            "outputTokensCostNanodollars": "5337000",
+            "totalBackendLatencyMs": "3180"
           },
-          "id": "IDOR / BOLA missing ownership test-dc0d576a-req-1"
+          "id": "IDOR / BOLA missing ownership test-473e917b-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 250,
-        "outputTokens": 627,
+        "outputTokens": 593,
         "inputTokensCostNanodollars": "375000",
-        "outputTokensCostNanodollars": "5643000",
-        "totalBackendLatencyMs": "2991"
+        "outputTokensCostNanodollars": "5337000",
+        "totalBackendLatencyMs": "3180"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Insufficient Evidence' because ownership and authorization boundaries are entirely unknown.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA missing ownership test-dc0d576a",
-          "requestId": "IDOR / BOLA missing ownership test-dc0d576a-req-1"
+          "conversationId": "IDOR / BOLA missing ownership test-473e917b",
+          "requestId": "IDOR / BOLA missing ownership test-473e917b-req-1"
         }
       ]
     }

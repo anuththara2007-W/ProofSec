@@ -31,16 +31,21 @@ def validate_dataset():
             task_ids.add(tid)
             
         # 2. Required fields
-        for field in ['title', 'category', 'scenario', 'ground_truth']:
+        for field in ['title', 'category', 'scenario', 'ground_truth', 'evidence_state', 'task_family']:
             if field not in t:
                 errors.append(f"Missing '{field}' in {tid}")
                 
-        # 3. Valid classifications
+        # 3. Valid classifications and states
         gt = t.get('ground_truth', {})
         cls = gt.get('classification')
         valid_classes = ["Vulnerable", "Not Vulnerable", "Insufficient Evidence"]
         if cls not in valid_classes:
             errors.append(f"Invalid classification '{cls}' in {tid}")
+            
+        valid_states = ["WEAK", "PARTIAL", "DECISIVE", "CONTRADICTORY", "NEGATIVE"]
+        estate = t.get('evidence_state')
+        if estate and estate not in valid_states:
+            errors.append(f"Invalid evidence state '{estate}' in {tid}")
             
         # 4. Answer-leakage check in scenario
         scenario = str(t.get('scenario', '')).lower()

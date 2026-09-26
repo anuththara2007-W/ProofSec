@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "Authentication confirmed weakness test",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:15:57.316239Z",
-  "endTime": "2026-09-26T09:16:02.003732Z",
+  "startTime": "2026-09-26T09:22:52.181626Z",
+  "endTime": "2026-09-26T09:22:56.156582Z",
   "conversations": [
     {
-      "id": "Authentication confirmed weakness test-efb92dd5",
+      "id": "Authentication confirmed weakness test-284a81c6",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 708,
             "inputTokensCostNanodollars": "309000",
             "outputTokensCostNanodollars": "6372000",
-            "totalBackendLatencyMs": "3584"
+            "totalBackendLatencyMs": "3581"
           },
-          "id": "Authentication confirmed weakness test-efb92dd5-req-1"
+          "id": "Authentication confirmed weakness test-284a81c6-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 708,
         "inputTokensCostNanodollars": "309000",
         "outputTokensCostNanodollars": "6372000",
-        "totalBackendLatencyMs": "3584"
+        "totalBackendLatencyMs": "3581"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Vulnerable' because an invalid password successfully authenticated a user.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Authentication confirmed weakness test-efb92dd5",
-          "requestId": "Authentication confirmed weakness test-efb92dd5-req-1"
+          "conversationId": "Authentication confirmed weakness test-284a81c6",
+          "requestId": "Authentication confirmed weakness test-284a81c6-req-1"
         }
       ]
     }

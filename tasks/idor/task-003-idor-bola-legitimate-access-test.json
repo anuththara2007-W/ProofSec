@@ -18,5 +18,12 @@
         "difficulty": "medium",
         "security_domain": "idor",
         "version": "1.0"
-    }
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "paired_task_id": null,
+    "decisive_fact": null,
+    "research_tags": [
+        "idor"
+    ]
 }

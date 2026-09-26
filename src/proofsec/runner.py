@@ -73,8 +73,11 @@ def register_kbench_tasks():
                 expected = t_data['ground_truth']['classification']
                 rationale = t_data['ground_truth']['rationale']
                 
+                # Determine if correct
+                is_correct = (expected == response.classification)
+                
                 # Save raw response
-                save_raw_result(t_data['id'], response)
+                save_raw_result(t_data, response, is_correct)
                 
                 # Deterministic check
                 assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)
@@ -90,17 +93,38 @@ def register_kbench_tasks():
         
     return task_funcs
 
-def save_raw_result(task_id, response):
+def save_raw_result(task_data, response, is_correct):
     results_dir = get_project_root() / "results" / "raw"
     results_dir.mkdir(parents=True, exist_ok=True)
     
     timestamp = int(time.time())
+    task_id = task_data['id']
     filepath = results_dir / f"{task_id}_{timestamp}.json"
     
     try:
-        data = response.model_dump()
+        model_resp = response.model_dump()
     except AttributeError:
-        data = str(response)
+        model_resp = {"raw_output": str(response)}
+        
+    from src.proofsec.version import __version__
+        
+    structured_output = {
+        "benchmark_version": __version__,
+        "task_id": task_id,
+        "model": os.environ.get('PROOFSEC_MODEL', 'gemini-3.5-flash'),
+        "classification": getattr(response, 'classification', 'UNKNOWN'),
+        "expected_classification": task_data['ground_truth']['classification'],
+        "correct": is_correct,
+        "latency_ms": 0,  # Could be captured if kbench exposes it
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost": 0,
+        "evidence_state": task_data.get('evidence_state', 'UNKNOWN'),
+        "task_family": task_data.get('task_family', 'UNKNOWN'),
+        "experiment": task_data.get('experiment', 'UNKNOWN'),
+        "category": task_data.get('category', 'UNKNOWN'),
+        "response": model_resp
+    }
         
     with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
+        json.dump(structured_output, f, indent=4)

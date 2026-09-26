@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "Terminology Trap - HttpOnly",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:16:17.980791Z",
-  "endTime": "2026-09-26T09:16:23.722016Z",
+  "startTime": "2026-09-26T09:23:13.265714Z",
+  "endTime": "2026-09-26T09:23:18.389079Z",
   "conversations": [
     {
-      "id": "Terminology Trap - HttpOnly-9a9d7ebe",
+      "id": "Terminology Trap - HttpOnly-756ef574",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"The application is a Single Page Application (SPA) that stores session tokens in `localStorage` and transmits them via the `Authorization` header using JavaScript. Cookies are not used for authentication.\\\",\\\"evidence_missing\\\":\\\"No further evidence is missing to evaluate the specific claim. The reported vulnerability alleges that session cookies lack the `HttpOnly` flag, but cookies are not used for session management in this application.\\\",\\\"safe_verification_procedure\\\":\\\"1. Open the application in a web browser and open the Developer Tools (F12).\\\\n2. Perform a login action.\\\\n3. Inspect the 'Application' or 'Storage' tab to confirm that the session token is stored in `localStorage` and not in `Cookies`.\\\\n4. Inspect the 'Network' tab to verify that the token is sent in the `Authorization` HTTP header and that no authentication cookies are sent in the request headers.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"The application is a Single Page Application (SPA) that stores session tokens in localStorage and transmits them via the Authorization header. No cookies are used for authentication.\\\",\\\"evidence_missing\\\":\\\"No additional evidence is missing to evaluate the specific claim. Since cookies are not used for authentication, the 'HttpOnly' flag (which is exclusively a cookie attribute) cannot be applied. Therefore, the reported vulnerability regarding missing HttpOnly flags does not exist.\\\",\\\"safe_verification_procedure\\\":\\\"1. Open the application in a browser and perform a successful login.\\\\n2. Open the browser Developer Tools (F12) and navigate to the Application/Storage tab.\\\\n3. Verify that no session cookies are set under 'Cookies'.\\\\n4. Confirm that the token is stored in 'Local Storage' and sent in the HTTP 'Authorization' header using the Network tab.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 192,
-            "outputTokens": 910,
+            "outputTokens": 904,
             "inputTokensCostNanodollars": "288000",
-            "outputTokensCostNanodollars": "8190000",
-            "totalBackendLatencyMs": "5262"
+            "outputTokensCostNanodollars": "8136000",
+            "totalBackendLatencyMs": "4737"
           },
-          "id": "Terminology Trap - HttpOnly-9a9d7ebe-req-1"
+          "id": "Terminology Trap - HttpOnly-756ef574-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 192,
-        "outputTokens": 910,
+        "outputTokens": 904,
         "inputTokensCostNanodollars": "288000",
-        "outputTokensCostNanodollars": "8190000",
-        "totalBackendLatencyMs": "5262"
+        "outputTokensCostNanodollars": "8136000",
+        "totalBackendLatencyMs": "4737"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "HttpOnly is a cookie flag. It is irrelevant for localStorage tokens.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Terminology Trap - HttpOnly-9a9d7ebe",
-          "requestId": "Terminology Trap - HttpOnly-9a9d7ebe-req-1"
+          "conversationId": "Terminology Trap - HttpOnly-756ef574",
+          "requestId": "Terminology Trap - HttpOnly-756ef574-req-1"
         }
       ]
     }
