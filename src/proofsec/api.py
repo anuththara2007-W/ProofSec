@@ -1,14 +1,16 @@
 import json
 import sys
 import re
+import os
+import time
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
 from proofsec.schemas import CustomEvaluationRequest, CUSTOM_EVALUATION_VERSION
 from proofsec.evaluator import CustomEvaluator
 from proofsec.providers import get_provider
+from proofsec.compare import CompareEngine
 from pydantic import ValidationError
-import time
 
 RATE_LIMIT_WINDOW = 60
 RATE_LIMIT_MAX_REQUESTS = 100
@@ -22,14 +24,56 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({"error": message}).encode('utf-8'))
 
+    def _authenticate_request(self):
+        """Authentication middleware abstraction."""
+        if os.environ.get('PROOFSEC_REQUIRE_AUTH') != '1':
+            return True
+            
+        auth_header = self.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith("Bearer "):
+            self._send_error(401, "Authentication required")
+            return False
+            
+        # Token validation logic would go here for a hosted product
+        # For now, it's just a structural placeholder.
+        token = auth_header.split(" ")[1]
+        if token != os.environ.get('PROOFSEC_API_KEY', 'default_dev_token'):
+            self._send_error(403, "Invalid API Key")
+            return False
+            
+        return True
+
+    def _check_rate_limit(self):
+        client_ip = self.client_address[0]
+        current_time = time.time()
+        
+        if client_ip not in _rate_limits:
+            _rate_limits[client_ip] = []
+            
+        requests = _rate_limits[client_ip]
+        requests = [req_time for req_time in requests if current_time - req_time < RATE_LIMIT_WINDOW]
+        
+        if len(requests) >= RATE_LIMIT_MAX_REQUESTS:
+            self._send_error(429, "Rate limit exceeded. Try again later.")
+            return False
+            
+        requests.append(current_time)
+        _rate_limits[client_ip] = requests
+        return True
+
     def do_GET(self):
         if not self._check_rate_limit():
+            return
+            
+        if not self._authenticate_request():
             return
         
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         
         if not path.startswith('/api/'):
+            if '.' not in path.split('/')[-1]:
+                return self._serve_static('/index.html')
             return self._serve_static(path)
 
         if path == '/api/v1/health':
@@ -69,24 +113,17 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             return
 
         if path == '/api/v1/evaluations':
-            from proofsec.evaluator import get_project_root
-            evals_dir = get_project_root() / "custom_evaluations"
+            evaluator = CustomEvaluator()
+            records = evaluator.store.list_all()
             history = []
-            if evals_dir.exists():
-                for file_path in sorted(evals_dir.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True):
-                    try:
-                        with open(file_path, 'r', encoding='utf-8') as f:
-                            data = json.load(f)
-                        resp = data.get("response", {})
-                        history.append({
-                            "evaluation_id": resp.get("evaluation_id"),
-                            "classification": resp.get("classification"),
-                            "evidence_state": resp.get("evidence_state"),
-                            "summary": resp.get("summary"),
-                            "created_at": resp.get("created_at")
-                        })
-                    except Exception:
-                        pass
+            for r in records:
+                history.append({
+                    "evaluation_id": r.response.evaluation_id,
+                    "classification": r.response.classification,
+                    "evidence_state": r.response.evidence_state,
+                    "summary": r.response.summary,
+                    "created_at": r.response.created_at
+                })
             
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
@@ -98,14 +135,86 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         if match:
             eval_id = match.group(1)
             evaluator = CustomEvaluator()
-            evaluation = evaluator.get_evaluation(eval_id)
-            if not evaluation:
+            record = evaluator.store.get(eval_id)
+            if not record:
                 self._send_error(404, "Evaluation not found")
                 return
+                
+            metrics = CompareEngine.calculate_metrics(record.request, record.response)
+                
+            resp_dict = record.response.model_dump()
+            resp_dict["metrics"] = metrics
+            
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(evaluation.model_dump_json().encode('utf-8'))
+            self.wfile.write(json.dumps(resp_dict).encode('utf-8'))
+            return
+
+        match = re.match(r'^/api/v1/evaluations/([a-zA-Z0-9_\-]+)/revisions$', path)
+        if match:
+            eval_id = match.group(1)
+            evaluator = CustomEvaluator()
+            revisions = []
+            current_id = eval_id
+            
+            while current_id:
+                rec = evaluator.store.get(current_id)
+                if not rec:
+                    break
+                revisions.append(rec.response.model_dump())
+                current_id = rec.response.previous_evaluation_id
+                
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({"revisions": revisions}).encode('utf-8'))
+            return
+
+        if path == '/api/v1/benchmark':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "version": "v0.2",
+                "tasks": 110,
+                "categories": ["authentication", "authorization", "ssrf", "sqli", "idor", "xss", "business_logic", "csrf", "jwt", "rate_limiting", "security_headers", "sessions", "information_disclosure", "terminology_traps"]
+            }).encode('utf-8'))
+            return
+
+        if path == '/api/v1/benchmark/hash':
+            import evaluation.verify_frozen_benchmark as verify
+            from proofsec.evaluator import get_project_root
+            root = get_project_root()
+            tasks_dir = root / "tasks"
+            current_hash = verify.calculate_dataset_hash(str(tasks_dir))
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({"hash": current_hash}).encode('utf-8'))
+            return
+            
+        if path == '/api/v1/research/metrics':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "experiment": "Gemini 3.5 Flash Historical",
+                "status": "PARTIAL EXPERIMENT",
+                "completed": 88,
+                "total": 110,
+                "metrics": {
+                    "accuracy": "65.91%",
+                    "pvr": "1.61%",
+                    "flip_miss_rate": "50.00%",
+                    "flip_error_rate": "11.11%",
+                    "pair_consistency": "22.22%",
+                    "authority_bias": "40.00%",
+                    "terminology_bias": "0.00%",
+                    "confidence": "UNAVAILABLE"
+                }
+            }).encode('utf-8'))
             return
 
         self._send_error(404, "Not Found")
@@ -118,7 +227,6 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             path = '/index.html'
             
         # Security: Prevent path traversal
-        import os
         normalized_path = os.path.normpath(path).lstrip('\\/')
         file_path = get_project_root() / "web" / normalized_path
         
@@ -144,26 +252,12 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(content)
 
-    def _check_rate_limit(self):
-        client_ip = self.client_address[0]
-        current_time = time.time()
-        
-        if client_ip not in _rate_limits:
-            _rate_limits[client_ip] = []
-            
-        requests = _rate_limits[client_ip]
-        requests = [req_time for req_time in requests if current_time - req_time < RATE_LIMIT_WINDOW]
-        
-        if len(requests) >= RATE_LIMIT_MAX_REQUESTS:
-            self._send_error(429, "Rate limit exceeded. Try again later.")
-            return False
-            
-        requests.append(current_time)
-        _rate_limits[client_ip] = requests
-        return True
 
     def do_POST(self):
         if not self._check_rate_limit():
+            return
+            
+        if not self._authenticate_request():
             return
             
         parsed_path = urlparse(self.path)
@@ -187,6 +281,12 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             original_id = match.group(1)
             self._handle_revise(original_id, payload)
             return
+            
+        match = re.match(r'^/api/v1/evaluations/([a-zA-Z0-9_\-]+)/compare$', path)
+        if match:
+            eval_id = match.group(1)
+            self._handle_compare(eval_id, payload)
+            return
 
         self._send_error(404, "Not Found")
 
@@ -201,72 +301,71 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
 
     def _handle_revise(self, original_id: str, payload: dict):
         evaluator = CustomEvaluator()
-        original_eval = evaluator.get_evaluation(original_id)
-        if not original_eval:
+        record = evaluator.store.get(original_id)
+        if not record:
             self._send_error(404, "Original evaluation not found")
             return
 
-        try:
-            # We construct a new request combining original scenario/context with new evidence
-            # We expect payload to contain an "evidence" array which gets appended
-            new_evidence = payload.get("evidence", [])
-            
-            # We need the original request to rebuild correctly. The original evaluation only has the response.
-            # But the response contains all evidence. We can just add the new evidence.
-            # Wait, EvaluationResponse doesn't store scenario! 
-            # If EvaluationResponse doesn't store scenario, we can't re-evaluate without it.
-            # The saved JSON contains both "request" and "response".
-            # We should probably load the raw JSON to get the original request.
-            # Let's fix that. We can fetch it manually.
-            pass
-        except Exception:
-            pass
-            
-        import os
-        from proofsec.evaluator import get_project_root, _sanitize_id
-        
-        safe_id = _sanitize_id(original_id)
-        file_path = get_project_root() / "custom_evaluations" / f"{safe_id}.json"
-        
-        if not file_path.exists():
-            self._send_error(404, "Evaluation file missing")
-            return
-            
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            
-        original_request = data.get("request", {})
-        
+        original_request = record.request
         new_evidence = payload.get("evidence", [])
         if not isinstance(new_evidence, list):
             self._send_error(422, "evidence must be a list of strings")
             return
             
-        combined_evidence = original_request.get("evidence", []) + new_evidence
+        combined_evidence = original_request.evidence + new_evidence
         
         try:
             request = CustomEvaluationRequest(
-                scenario=original_request.get("scenario", ""),
-                context=original_request.get("context"),
-                question=original_request.get("question"),
+                scenario=original_request.scenario,
+                context=original_request.context,
+                question=original_request.question,
                 evidence=combined_evidence,
-                previous_evaluation_id=safe_id
+                previous_evaluation_id=original_id,
+                expected_classification=original_request.expected_classification,
+                expected_evidence_state=original_request.expected_evidence_state,
+                expected_decisive_fact=original_request.expected_decisive_fact
             )
         except ValidationError as e:
             self._send_error(422, f"Schema validation error: {str(e)}")
             return
             
         self._run_evaluation(request)
+        
+    def _handle_compare(self, eval_id: str, payload: dict):
+        target_id = payload.get("target_id")
+        if not target_id:
+            self._send_error(422, "target_id is required")
+            return
+            
+        evaluator = CustomEvaluator()
+        record_a = evaluator.store.get(eval_id)
+        record_b = evaluator.store.get(target_id)
+        
+        if not record_a or not record_b:
+            self._send_error(404, "One or both evaluations not found")
+            return
+            
+        comparison = CompareEngine.compare_evaluations(record_a.response, record_b.response)
+        
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(comparison).encode('utf-8'))
 
     def _run_evaluation(self, request: CustomEvaluationRequest):
         evaluator = CustomEvaluator()
         try:
             eval_response = evaluator.evaluate(request)
             
+            metrics = CompareEngine.calculate_metrics(request, eval_response)
+            
+            resp_dict = eval_response.model_dump()
+            resp_dict["metrics"] = metrics
+            
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(eval_response.model_dump_json().encode('utf-8'))
+            self.wfile.write(json.dumps(resp_dict).encode('utf-8'))
         except ValueError as e:
             self._send_error(422, str(e))
         except RuntimeError as e:

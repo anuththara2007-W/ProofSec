@@ -3,93 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProofSec</title>
+    <title>ProofSec Evaluation Platform</title>
     <link rel="stylesheet" href="/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="glass">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            <h1>ProofSec</h1>
-        </div>
-        <div class="status-indicator" id="api-status">
-            <span class="dot checking"></span> Checking API...
-        </div>
-    </header>
+    <div class="app-container">
+        <aside class="sidebar glass">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span> ProofSec
+            </div>
+            <nav>
+                <a href="/" class="nav-btn" data-route="/">Home</a>
+                <a href="/evaluate" class="nav-btn" data-route="/evaluate">Evaluate</a>
+                <a href="/benchmark" class="nav-btn" data-route="/benchmark">Benchmark</a>
+                <a href="/research" class="nav-btn" data-route="/research">Research</a>
+                <a href="/docs" class="nav-btn" data-route="/docs">Docs</a>
+            </nav>
+            <div class="status-indicator">
+                <span id="api-status" style="font-size: 0.8rem; color: var(--text-secondary);">
+                    <span class="dot"></span> Checking API...
+                </span>
+            </div>
+        </aside>
 
-    <main>
-        <div class="layout">
-            <aside class="sidebar glass">
-                <nav>
-                    <button class="nav-btn active" data-target="evaluate-view">Evaluate</button>
-                    <button class="nav-btn" data-target="history-view">History</button>
-                </nav>
-            </aside>
-
-            <section class="content" id="evaluate-view">
+        <main class="main-content">
+            <!-- Home -->
+            <div id="page-home" class="page hidden">
+                <header>
+                    <h1>ProofSec Ecosystem</h1>
+                    <p>Evidence-grounded security reasoning.</p>
+                </header>
                 <div class="card glass">
-                    <h2>New Evaluation</h2>
+                    <h2>Welcome to ProofSec</h2>
+                    <p>Start by running a custom evaluation, or explore the frozen research benchmark.</p>
+                    <a href="/evaluate" class="btn btn-primary" onclick="route(event)">New Evaluation</a>
+                </div>
+            </div>
+
+            <!-- Evaluate -->
+            <div id="page-evaluate" class="page hidden">
+                <header>
+                    <h1>Custom Evaluation Workspace</h1>
+                    <p>Evaluate scenarios securely. Research data is perfectly isolated.</p>
+                </header>
+                <div class="card glass">
                     <form id="eval-form">
                         <div class="form-group">
-                            <label for="scenario">Scenario Description</label>
-                            <textarea id="scenario" rows="4" placeholder="Describe the security scenario or context..."></textarea>
+                            <label>Scenario Description</label>
+                            <textarea id="scenario" rows="4" placeholder="Describe the potential vulnerability..." required></textarea>
                         </div>
-                        
+                        <div class="form-group">
+                            <label>Context (Optional)</label>
+                            <textarea id="context" rows="2" placeholder="Application context, tenant model, etc."></textarea>
+                        </div>
                         <div class="form-group">
                             <label>Evidence</label>
                             <div id="evidence-list">
                                 <div class="evidence-input-wrapper">
-                                    <input type="text" class="evidence-input" placeholder="E.g., HTTP 200 OK returned with user data">
+                                    <input type="text" class="evidence-input" placeholder="Initial evidence observation..." required>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-secondary btn-sm" id="add-evidence-btn">+ Add Evidence</button>
                         </div>
 
+                        <!-- Ground Truth (Optional) -->
                         <div class="form-group">
-                            <label for="provider">Provider</label>
-                            <select id="provider">
-                                <option value="kaggle">Kaggle</option>
-                                <option value="openai_compatible">OpenAI Compatible</option>
-                                <option value="mock">Mock (Test Fixture)</option>
-                            </select>
+                            <label>Ground Truth (Optional - for Metrics)</label>
+                            <div style="display: flex; gap: 1rem;">
+                                <select id="expected_classification" class="input">
+                                    <option value="">Expected Classification...</option>
+                                    <option value="Vulnerable">Vulnerable</option>
+                                    <option value="Not Vulnerable">Not Vulnerable</option>
+                                    <option value="Insufficient Evidence">Insufficient Evidence</option>
+                                </select>
+                                <select id="expected_evidence_state" class="input">
+                                    <option value="">Expected State...</option>
+                                    <option value="DECISIVE">DECISIVE</option>
+                                    <option value="PARTIAL">PARTIAL</option>
+                                    <option value="WEAK">WEAK</option>
+                                    <option value="CONTRADICTORY">CONTRADICTORY</option>
+                                    <option value="NEGATIVE">NEGATIVE</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" id="evaluate-submit-btn">Evaluate Scenario</button>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="evaluate-submit-btn">Evaluate Scenario</button>
+                        </div>
                     </form>
                 </div>
-
-                <div id="result-container" class="hidden">
-                    <!-- Results populated by JS -->
-                </div>
-            </section>
-
-            <section class="content hidden" id="history-view">
-                <div class="card glass">
+                
+                <div id="history-section" style="margin-top: 2rem;">
                     <h2>Evaluation History</h2>
-                    <div class="table-container">
-                        <table id="history-table">
+                    <div class="card glass" style="padding: 0;">
+                        <table class="data-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Classification</th>
                                     <th>State</th>
-                                    <th>Date</th>
+                                    <th>Time</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="history-body">
-                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
 
+            <!-- Single Evaluation View -->
+            <div id="page-evaluation" class="page hidden">
+                <header>
+                    <h1>Evaluation Result</h1>
+                    <p id="eval-header-id" style="font-family: monospace;"></p>
+                </header>
+                <div id="evaluation-content"></div>
+                
+                <div class="card glass" style="margin-top: 2rem;">
+                    <h3>Revise Evaluation</h3>
+                    <p>Add new evidence to generate a revised evaluation without modifying the original.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" id="revision-evidence" class="input" placeholder="New observed evidence..." style="flex: 1;">
+                        <button class="btn btn-primary" id="revise-btn">Submit Revision</button>
+                    </div>
+                </div>
+                
+                <div id="evaluation-timeline" style="margin-top: 2rem;"></div>
+            </div>
+
+            <!-- Compare -->
+            <div id="page-compare" class="page hidden">
+                <header>
+                    <h1>Compare Revisions</h1>
+                </header>
+                <div id="compare-content" class="card glass"></div>
+            </div>
+
+            <!-- Benchmark -->
+            <div id="page-benchmark" class="page hidden">
+                <header>
+                    <h1>Official Benchmark (v0.2)</h1>
+                    <p>Frozen, reproducible dataset for academic evaluation.</p>
+                </header>
+                <div id="benchmark-content" class="card glass"></div>
+            </div>
+
+            <!-- Research -->
+            <div id="page-research" class="page hidden">
+                <header>
+                    <h1>Historical Research Metrics</h1>
+                </header>
+                <div id="research-content" class="card glass"></div>
+            </div>
+
+            <!-- Docs -->
+            <div id="page-docs" class="page hidden">
+                <header>
+                    <h1>Documentation</h1>
+                </header>
+                <div class="card glass">
+                    <h2>Developer Platform</h2>
+                    <p>See the README.md and OpenAPI specifications in the /docs folder of the repository.</p>
+                </div>
+            </div>
+        </main>
+    </div>
     <script src="/app.js"></script>
 </body>
 </html>

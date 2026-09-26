@@ -22,8 +22,14 @@ def _sanitize_id(eval_id: str) -> str:
     return re.sub(r'[^a-zA-Z0-9_\-]', '', eval_id)
 
 class CustomEvaluator:
-    def __init__(self, provider: Optional[ModelProvider] = None):
+    def __init__(self, provider: Optional[ModelProvider] = None, store=None):
         self.provider = provider or get_provider()
+        if store is None:
+            from proofsec.storage import FileEvaluationStore
+            product_dir = get_project_root() / "custom_evaluations"
+            self.store = FileEvaluationStore(product_dir)
+        else:
+            self.store = store
 
     def _validate_input_limits(self, request: CustomEvaluationRequest):
         """Reject oversized inputs before they reach the provider."""
@@ -59,10 +65,13 @@ class CustomEvaluator:
         if request.question:
             prompt += f"USER-PROVIDED QUESTION\n{request.question}\n\n"
 
+        # NOTE: Ground truth (expected_classification, expected_evidence_state, expected_decisive_fact)
+        # must NEVER enter the prompt. They are for external comparison only.
+
         return prompt
 
     def evaluate(self, request: CustomEvaluationRequest, save: bool = True, evaluation_id: Optional[str] = None) -> 'EvaluationResponse':
-        from proofsec.schemas import EvaluationResponse, CUSTOM_EVALUATION_VERSION
+        from proofsec.schemas import EvaluationResponse, CUSTOM_EVALUATION_VERSION, CustomEvaluationRecord
         from datetime import datetime, timezone
         
         self._validate_input_limits(request)
@@ -101,34 +110,13 @@ class CustomEvaluator:
         )
 
         if save:
-            self._save_evaluation(request, eval_response)
+            record = CustomEvaluationRecord(request=request, response=eval_response)
+            self.store.save(record)
 
         return eval_response
 
-    def _save_evaluation(self, request: CustomEvaluationRequest, eval_response: 'EvaluationResponse') -> str:
-        """Save evaluation to custom_evaluations/. Returns file_path as string."""
-        product_dir = get_project_root() / "custom_evaluations"
-        product_dir.mkdir(exist_ok=True, parents=True)
-
-        file_path = product_dir / f"{eval_response.evaluation_id}.json"
-
-        # Build the record — never includes credentials/secrets
-        data = {
-            "request": request.model_dump(),
-            "response": eval_response.model_dump()
-        }
-
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4)
-
-        return str(file_path)
-
     def get_evaluation(self, evaluation_id: str) -> Optional['EvaluationResponse']:
-        from proofsec.schemas import EvaluationResponse
-        safe_id = _sanitize_id(evaluation_id)
-        file_path = get_project_root() / "custom_evaluations" / f"{safe_id}.json"
-        if not file_path.exists():
-            return None
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return EvaluationResponse(**data["response"])
+        record = self.store.get(evaluation_id)
+        if record:
+            return record.response
+        return None
