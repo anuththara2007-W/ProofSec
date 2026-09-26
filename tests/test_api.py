@@ -89,6 +89,26 @@ class TestAPI(unittest.TestCase):
             self.assertNotIn("api_key", body.lower())
             self.assertNotIn("authorization", body.lower())
 
+    def test_kaggle_auth_failure_returns_502(self):
+        """Test the regression case for Kaggle 502 structured error."""
+        # Force provider to kaggle
+        os.environ['PROOFSEC_PROVIDER'] = 'kaggle'
+        # Since we likely don't have valid kaggle credentials in the test env, it should fail
+        # Or even if it's not configured, it returns 503 or 502
+        try:
+            req = urllib.request.Request(self.url, method='POST')
+            req.add_header('Content-Type', 'application/json')
+            urllib.request.urlopen(req, b'{"scenario": "Test"}')
+            self.fail("Expected HTTPError")
+        except urllib.error.HTTPError as e:
+            self.assertIn(e.code, [502, 503])
+            body = json.loads(e.read().decode('utf-8'))
+            self.assertIn("error", body)
+            self.assertIn(body["error"]["code"], ["AUTHENTICATION_ERROR", "CONFIGURATION_ERROR"])
+            self.assertEqual(body["error"]["provider"], "kaggle")
+        finally:
+            os.environ['PROOFSEC_PROVIDER'] = 'mock'
+
 
 if __name__ == '__main__':
     unittest.main()

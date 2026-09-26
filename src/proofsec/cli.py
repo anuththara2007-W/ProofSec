@@ -16,7 +16,20 @@ console = Console()
 def evaluate_cmd(args):
     client = ProofSec(provider=args.provider)
     
-    if args.file:
+    scenario = None
+    evidence = []
+    context = None
+    
+    if getattr(args, 'stdin', False):
+        try:
+            data = json.load(sys.stdin)
+            scenario = data.get("scenario", "")
+            evidence = data.get("evidence", [])
+            context = data.get("context")
+        except Exception as e:
+            console.print(f"[red]Error loading from stdin: {e}[/red]")
+            sys.exit(1)
+    elif args.file:
         try:
             with open(args.file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -26,6 +39,9 @@ def evaluate_cmd(args):
         except Exception as e:
             console.print(f"[red]Error loading file: {e}[/red]")
             sys.exit(1)
+    elif getattr(args, 'scenario', None):
+        scenario = args.scenario
+        evidence = getattr(args, 'evidence', [])
     else:
         console.print("[bold cyan]ProofSec Custom Evaluation[/bold cyan]\n")
         scenario = input("Scenario:\n> ")
@@ -87,16 +103,31 @@ def evaluate_cmd(args):
 
     console.print(f"\n[bold]Reasoning:[/bold]\n{result.reasoning}")
 
+def auth_cmd(args):
+    if args.subcommand == "kaggle":
+        from proofsec.auth import handle_auth_kaggle
+        handle_auth_kaggle()
+    elif args.subcommand == "status":
+        from proofsec.auth import handle_auth_status
+        handle_auth_status()
+    else:
+        console.print("Available subcommands: kaggle, status")
+
 def providers_cmd(args):
-    # For now we list the known providers
+    from proofsec.providers import provider_manager
     table = Table(title="ProofSec Providers")
-    table.add_column("Provider ID", style="cyan")
-    table.add_column("Description")
+    table.add_column("Provider", style="cyan")
+    table.add_column("Status")
+    table.add_column("Authentication")
     
-    table.add_row("kaggle", "Kaggle Models API (Requires authentication)")
-    table.add_row("openai_compatible", "OpenAI /v1/chat/completions compatible endpoint")
-    table.add_row("mock", "Local test fixture for deterministic testing")
-    
+    for name, provider_cls in provider_manager.list_providers().items():
+        provider = provider_cls()
+        health = provider.health_check()
+        caps = provider.get_capabilities()
+        status = getattr(health.status, 'value', str(health.status))
+        auth = caps.get("authentication", "unknown")
+        table.add_row(name, status, auth)
+        
     console.print(table)
 
 def health_cmd(args):
@@ -145,13 +176,18 @@ def benchmark_cmd(args):
         else:
             console.print("[red]INTEGRITY VIOLATION DETECTED[/red]")
     elif args.subcommand == "status":
+        from proofsec.kaggle_api import check_benchmark_status
         console.print("[bold]Benchmark Status (v0.2)[/bold]")
         console.print("DESIGNED TASKS: 110")
         console.print("EXECUTED TASKS (Gemini 3.5 Flash historical): 88")
         console.print("FAILED INFRASTRUCTURE TASKS (Auth Failure): 22")
-        console.print("MISSING TASKS: 0")
+        console.print("MISSING TASKS: 0\n")
+        check_benchmark_status()
+    elif args.subcommand == "results":
+        from proofsec.kaggle_api import download_benchmark_results
+        download_benchmark_results()
     else:
-        console.print("Available subcommands: hash, status")
+        console.print("Available subcommands: hash, status, results")
 
 def research_cmd(args):
     if args.subcommand == "metrics":
@@ -255,6 +291,9 @@ def main():
     # evaluate command
     eval_parser = subparsers.add_parser("evaluate", help="Evaluate a security scenario")
     eval_parser.add_argument("--file", type=str, help="Path to JSON request file")
+    eval_parser.add_argument("--scenario", type=str, help="Scenario text")
+    eval_parser.add_argument("--evidence", type=str, action="append", help="Evidence text (can be passed multiple times)")
+    eval_parser.add_argument("--stdin", action="store_true", help="Read JSON from stdin")
     eval_parser.add_argument("--provider", type=str, help="Model provider", default=None)
     eval_parser.add_argument("--json", action="store_true", help="Output JSON instead of rich text")
     eval_parser.add_argument("--save", action="store_true", default=True, help="Save evaluation locally (default true)")
@@ -272,9 +311,13 @@ def main():
     serve_parser.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind to")
     serve_parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
     
+    # auth command
+    auth_parser = subparsers.add_parser("auth", help="Authentication management")
+    auth_parser.add_argument("subcommand", type=str, choices=["kaggle", "status"])
+    
     # benchmark command
     bench_parser = subparsers.add_parser("benchmark", help="Benchmark integration")
-    bench_parser.add_argument("subcommand", type=str, choices=["hash", "status", "run", "validate"])
+    bench_parser.add_argument("subcommand", type=str, choices=["hash", "status", "run", "validate", "results"])
     
     # research command
     res_parser = subparsers.add_parser("research", help="Researcher mode")
@@ -304,6 +347,8 @@ def main():
         version_cmd(args)
     elif args.command == "serve":
         serve_cmd(args)
+    elif args.command == "auth":
+        auth_cmd(args)
     elif args.command == "benchmark":
         benchmark_cmd(args)
     elif args.command == "research":

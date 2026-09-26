@@ -6,8 +6,9 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult, CUSTOM_EVALUATION_VERSION
-from proofsec.evaluator import CustomEvaluator, _sanitize_id, MAX_SCENARIO_LENGTH, MAX_EVIDENCE_ITEMS
-from proofsec.providers import MockProvider, ProviderStatus
+from proofsec.evaluator import CustomEvaluator, _sanitize_id, MAX_SCENARIO_LENGTH, MAX_EVIDENCE_ITEMS, ProviderError
+from proofsec.providers import ProviderStatus
+from proofsec.providers.mock import MockProvider
 
 
 class TestCustomEvaluator(unittest.TestCase):
@@ -65,28 +66,28 @@ class TestCustomEvaluator(unittest.TestCase):
             CustomEvaluationRequest(evidence=["test"])
 
     def test_provider_authentication_failure(self):
-        """Provider auth failure → structured RuntimeError."""
+        """Provider auth failure → structured ProviderError."""
         evaluator = CustomEvaluator(provider=self.fail_auth_mock)
         req = CustomEvaluationRequest(scenario="Test API")
-        with self.assertRaises(RuntimeError) as ctx:
+        with self.assertRaises(ProviderError) as ctx:
             evaluator.evaluate(req)
-        self.assertIn("AUTHENTICATION_ERROR", str(ctx.exception))
+        self.assertEqual("AUTHENTICATION_ERROR", ctx.exception.status)
 
     def test_provider_timeout(self):
-        """Provider timeout → structured RuntimeError."""
+        """Provider timeout → structured ProviderError."""
         evaluator = CustomEvaluator(provider=self.fail_timeout_mock)
         req = CustomEvaluationRequest(scenario="Test API")
-        with self.assertRaises(RuntimeError) as ctx:
+        with self.assertRaises(ProviderError) as ctx:
             evaluator.evaluate(req)
-        self.assertIn("TIMEOUT", str(ctx.exception))
+        self.assertEqual("TIMEOUT", ctx.exception.status)
 
     def test_parser_failure(self):
         """Malformed model output → PARSER_FAILURE status."""
         evaluator = CustomEvaluator(provider=self.fail_parser_mock)
         req = CustomEvaluationRequest(scenario="Test API")
-        with self.assertRaises(RuntimeError) as ctx:
+        with self.assertRaises(ProviderError) as ctx:
             evaluator.evaluate(req)
-        self.assertIn("PARSER_FAILURE", str(ctx.exception))
+        self.assertEqual("PARSER_FAILURE", ctx.exception.status)
 
     def test_research_isolation(self):
         """Research files unchanged after custom evaluation."""
@@ -289,3 +290,5 @@ class TestCustomEvaluator(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+

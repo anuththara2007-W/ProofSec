@@ -1,0 +1,18 @@
+{
+  "name": "@proofsec/cli",
+  "version": "1.0.0",
+  "description": "ProofSec CLI NPM Launcher",
+  "main": "bin/proofsec.js",
+  "bin": {
+    "proofsec": "bin/proofsec.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proofsec/proofsec.git"
+  },
+  "author": "ProofSec",
+  "license": "MIT"
+}

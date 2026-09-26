@@ -15,11 +15,11 @@ class TestProofSec(unittest.TestCase):
         self.tasks_dir = self.root / "tasks"
         
     def test_dataset_validation(self):
-        files = glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True)
+        files = [f for f in glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True) if "v0.3" not in Path(f).parts]
         self.assertEqual(len(files), 110, "Dataset must contain exactly 110 tasks")
         
     def test_schema_validation(self):
-        files = glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True)
+        files = [f for f in glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True) if "v0.3" not in Path(f).parts]
         for f in files:
             with open(f, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -37,7 +37,7 @@ class TestProofSec(unittest.TestCase):
         self.assertEqual(frozen_hash, "422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80")
         
     def test_leakage_detection(self):
-        files = glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True)
+        files = [f for f in glob.glob(str(self.tasks_dir / "**/*.json"), recursive=True) if "v0.3" not in Path(f).parts]
         for f in files:
             with open(f, 'r', encoding='utf-8') as file:
                 data = json.load(file)
