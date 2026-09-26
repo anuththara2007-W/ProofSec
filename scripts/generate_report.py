@@ -1,9 +1,11 @@
 import json
 from pathlib import Path
-from src.proofsec.version import __version__
-
+import sys
 def get_project_root():
     return Path(__file__).parent.parent
+
+sys.path.insert(0, str(get_project_root()))
+from src.proofsec.version import __version__
 
 def generate_report():
     metrics_file = get_project_root() / "results" / "metrics" / "latest_metrics.json"
