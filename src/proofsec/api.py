@@ -8,6 +8,11 @@ from proofsec.schemas import CustomEvaluationRequest, CUSTOM_EVALUATION_VERSION
 from proofsec.evaluator import CustomEvaluator
 from proofsec.providers import get_provider
 from pydantic import ValidationError
+import time
+
+RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_MAX_REQUESTS = 100
+_rate_limits = {}
 
 class ProofSecAPIHandler(BaseHTTPRequestHandler):
     
@@ -18,6 +23,9 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps({"error": message}).encode('utf-8'))
 
     def do_GET(self):
+        if not self._check_rate_limit():
+            return
+        
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         
@@ -136,7 +144,28 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(content)
 
+    def _check_rate_limit(self):
+        client_ip = self.client_address[0]
+        current_time = time.time()
+        
+        if client_ip not in _rate_limits:
+            _rate_limits[client_ip] = []
+            
+        requests = _rate_limits[client_ip]
+        requests = [req_time for req_time in requests if current_time - req_time < RATE_LIMIT_WINDOW]
+        
+        if len(requests) >= RATE_LIMIT_MAX_REQUESTS:
+            self._send_error(429, "Rate limit exceeded. Try again later.")
+            return False
+            
+        requests.append(current_time)
+        _rate_limits[client_ip] = requests
+        return True
+
     def do_POST(self):
+        if not self._check_rate_limit():
+            return
+            
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         

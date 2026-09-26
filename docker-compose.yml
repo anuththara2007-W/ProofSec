@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  proofsec:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./custom_evaluations:/app/custom_evaluations
+      - ./web:/app/web
+    environment:
+      - PROOFSEC_PROVIDER=kaggle
+      # - KAGGLE_USERNAME=your_username
+      # - KAGGLE_KEY=your_key
+    restart: unless-stopped
