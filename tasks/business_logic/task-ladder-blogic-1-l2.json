@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-blogic-1-l2",
+    "title": "BLogic Ladder 1 Stage 2",
+    "category": "business_logic",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "Cart allows negative quantities, total price goes down.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Decisive proof"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 2,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

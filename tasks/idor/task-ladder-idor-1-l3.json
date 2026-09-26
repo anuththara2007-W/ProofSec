@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-idor-1-l3",
+    "title": "IDOR Ladder 1 Stage 3",
+    "category": "idor",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "API returns 200, IDs sequential, belongs to other user.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Decisive proof without policy"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 3,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

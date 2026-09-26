@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-ssrf-1-a",
+    "title": "SSRF flip base 1",
+    "category": "ssrf",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "Param url accepts input 1.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Base state"
+    },
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-ssrf-1-b",
+    "changed_fact": "Internal metadata returned",
+    "invariant_facts": "Param url accepts input",
+    "decisive_fact": null,
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

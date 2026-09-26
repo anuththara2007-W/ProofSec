@@ -11,7 +11,8 @@ def validate_dataset():
     task_files = glob.glob(str(tasks_dir / "**/*.json"), recursive=True)
     
     errors = []
-    task_ids = set()
+    tasks = {}
+    scenarios = set()
     
     for f in task_files:
         with open(f, 'r', encoding='utf-8') as file:
@@ -20,49 +21,67 @@ def validate_dataset():
             except Exception as e:
                 errors.append(f"Invalid JSON in {f}: {e}")
                 continue
-        
-        # 1. Unique task IDs
+                
         tid = t.get('id')
         if not tid:
             errors.append(f"Missing ID in {f}")
-        elif tid in task_ids:
+            continue
+            
+        if tid in tasks:
             errors.append(f"Duplicate task ID found: {tid}")
         else:
-            task_ids.add(tid)
+            tasks[tid] = t
+
+        scenario = t.get('scenario', '')
+        if scenario in scenarios:
+            errors.append(f"Duplicate scenario text found in {tid}")
+        scenarios.add(scenario)
             
         # 2. Required fields
-        for field in ['title', 'category', 'scenario', 'ground_truth', 'evidence_state', 'task_family']:
+        for field in ['title', 'category', 'scenario', 'ground_truth', 'evidence_state', 'task_family', 'experiment']:
             if field not in t:
-                errors.append(f"Missing '{field}' in {tid}")
+                errors.append(f"Missing required field '{field}' in {tid}")
                 
-        # 3. Valid classifications and states
+        # 3. Valid classes and states
         gt = t.get('ground_truth', {})
         cls = gt.get('classification')
-        valid_classes = ["Vulnerable", "Not Vulnerable", "Insufficient Evidence"]
-        if cls not in valid_classes:
+        if cls not in ["Vulnerable", "Not Vulnerable", "Insufficient Evidence"]:
             errors.append(f"Invalid classification '{cls}' in {tid}")
             
-        valid_states = ["WEAK", "PARTIAL", "DECISIVE", "CONTRADICTORY", "NEGATIVE"]
         estate = t.get('evidence_state')
-        if estate and estate not in valid_states:
+        if estate not in ["WEAK", "PARTIAL", "DECISIVE", "CONTRADICTORY", "NEGATIVE"]:
             errors.append(f"Invalid evidence state '{estate}' in {tid}")
             
-        # 4. Answer-leakage check in scenario
-        scenario = str(t.get('scenario', '')).lower()
-        leakage_phrases = [
-            "expected answer",
-            "therefore vulnerable",
-            "classification: vulnerable",
-            "this is vulnerable",
-            "not vulnerable",
-            "insufficient evidence"
-        ]
+        cat = t.get('category')
+        valid_cats = ["idor", "authentication", "authorization", "ssrf", "sqli", "business_logic", "rate_limiting", "jwt", "information_disclosure", "csrf", "terminology", "terminology_traps"]
+        if cat not in valid_cats:
+            # We warn but don't strictly fail on category right now unless it's completely alien
+            pass
+            
+        family = t.get('task_family')
         
-        for phrase in leakage_phrases:
-            if phrase in scenario:
-                # We flag this for review (soft fail, but since we want strict validation, we report it)
+        if family == 'one_fact_flip':
+            if not t.get('paired_task_id'):
+                errors.append(f"Task {tid} is one_fact_flip but missing 'paired_task_id'")
+            if 'changed_fact' not in t or 'invariant_facts' not in t:
+                errors.append(f"Task {tid} missing flip metadata")
+        elif family == 'evidence_ladder':
+            if 'ladder_stage' not in t:
+                errors.append(f"Task {tid} is evidence_ladder but missing 'ladder_stage'")
+                
+        # Leakage
+        scen_lower = scenario.lower()
+        for phrase in ["expected answer", "therefore vulnerable", "classification: vulnerable", "this is vulnerable", "not vulnerable", "insufficient evidence"]:
+            if phrase in scen_lower:
                 errors.append(f"Possible answer leakage '{phrase}' found in scenario of {tid}")
                 
+    # Check orphans
+    for tid, t in tasks.items():
+        if t.get('task_family') == 'one_fact_flip':
+            pid = t.get('paired_task_id')
+            if pid and pid not in tasks:
+                errors.append(f"Task {tid} references non-existent paired_task_id {pid}")
+
     if errors:
         print("Dataset Validation Failed:")
         for e in errors:
@@ -70,7 +89,7 @@ def validate_dataset():
         sys.exit(1)
     else:
         print("Dataset Validation Passed.")
-        print(f"Total valid tasks: {len(task_ids)}")
+        print(f"Total valid tasks: {len(tasks)}")
 
 if __name__ == "__main__":
     validate_dataset()

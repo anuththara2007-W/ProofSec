@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-idor-1-b",
+    "title": "IDOR flip mod 1",
+    "category": "idor",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "User requests record 1. Owner is known to be a different user.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Flipped state"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-idor-1-a",
+    "changed_fact": "Owner is known",
+    "invariant_facts": "User requests record",
+    "decisive_fact": "Different user ownership",
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

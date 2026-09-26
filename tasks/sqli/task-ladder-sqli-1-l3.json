@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-sqli-1-l3",
+    "title": "SQLi Ladder 1 Stage 3",
+    "category": "sqli",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "Quote causes 500, double quote 200, but WAF blocks exploits.",
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Mitigated"
+    },
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 3,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-auth-1-l3",
+    "title": "Auth Ladder 1 Stage 3",
+    "category": "authentication",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "JWT has no exp, reused after 1 day.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Stronger but still no policy violation proven"
+    },
+    "evidence_state": "PARTIAL",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 3,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

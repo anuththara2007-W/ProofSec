@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-ssrf-1-l2",
+    "title": "SSRF Ladder 1 Stage 2",
+    "category": "ssrf",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "Param url accepts external domain.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Correlated but not proven"
+    },
+    "evidence_state": "PARTIAL",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 2,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-auth-1-l4",
+    "title": "Auth Ladder 1 Stage 4",
+    "category": "authentication",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "JWT has no exp, reused after 1 year, policy says 1hr max.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Decisive proof"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 4,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

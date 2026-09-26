@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-auth-3-b",
+    "title": "Auth flip mod 3",
+    "category": "authentication",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "User logs in. Token is missing field X_3, and server crashes allowing bypass.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Flipped state"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-auth-3-a",
+    "changed_fact": "Server crashes allowing bypass",
+    "invariant_facts": "Token missing field",
+    "decisive_fact": "Bypass verified",
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-ssrf-0-b",
+    "title": "SSRF flip mod 0",
+    "category": "ssrf",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "Param url accepts input 0 and internal metadata is returned.",
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Flipped state"
+    },
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-ssrf-0-a",
+    "changed_fact": "Internal metadata returned",
+    "invariant_facts": "Param url accepts input",
+    "decisive_fact": "Internal metadata access",
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

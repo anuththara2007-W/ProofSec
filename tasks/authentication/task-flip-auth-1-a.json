@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-auth-1-a",
+    "title": "Auth flip base 1",
+    "category": "authentication",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "User logs in. Token is missing field X_1.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Base state"
+    },
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-auth-1-b",
+    "changed_fact": "Server crashes allowing bypass",
+    "invariant_facts": "Token missing field",
+    "decisive_fact": null,
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "id": "task-flip-sqli-4-a",
+    "title": "SQLi flip base 4",
+    "category": "sqli",
+    "experiment": "v0_2_evidence_sensitivity",
+    "scenario": "Input 4 causes 500 error.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Base state"
+    },
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "paired_task_id": "task-flip-sqli-4-b",
+    "changed_fact": "Differential response",
+    "invariant_facts": "500 error on input",
+    "decisive_fact": null,
+    "research_tags": [
+        "one_fact_flip"
+    ]
+}

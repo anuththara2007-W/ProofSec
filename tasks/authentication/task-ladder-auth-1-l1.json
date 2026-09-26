@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-auth-1-l1",
+    "title": "Auth Ladder 1 Stage 1",
+    "category": "authentication",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "JWT has no exp.",
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Weak symptom"
+    },
+    "evidence_state": "WEAK",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 1,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}

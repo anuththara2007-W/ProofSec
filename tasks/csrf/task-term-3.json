@@ -1,0 +1,17 @@
+{
+    "id": "task-term-3",
+    "title": "Terminology 3",
+    "category": "csrf",
+    "experiment": "v0_2_terminology",
+    "scenario": "Scanner reports CSRF 3. The API uses Bearer tokens exclusively.",
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Bearer tokens immune to CSRF."
+    },
+    "evidence_state": "NEGATIVE",
+    "task_family": "terminology_trap",
+    "paired_task_id": null,
+    "research_tags": [
+        "terminology_trap"
+    ]
+}

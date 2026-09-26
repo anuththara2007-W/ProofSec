@@ -1,0 +1,17 @@
+{
+    "id": "task-contra-2",
+    "title": "Contradiction 2",
+    "category": "authorization",
+    "experiment": "v0_2_contradiction",
+    "scenario": "Logs show admin bypass 2. But the source IP is an authorized internal monitoring service.",
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Monitoring service is authorized."
+    },
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "contradiction",
+    "paired_task_id": null,
+    "research_tags": [
+        "contradiction"
+    ]
+}

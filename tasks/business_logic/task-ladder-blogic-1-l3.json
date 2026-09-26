@@ -1,0 +1,18 @@
+{
+    "id": "task-ladder-blogic-1-l3",
+    "title": "BLogic Ladder 1 Stage 3",
+    "category": "business_logic",
+    "experiment": "v0_2_evidence_ladders",
+    "scenario": "Total price goes down, but checkout blocked.",
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Mitigated"
+    },
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "evidence_ladder",
+    "paired_task_id": null,
+    "ladder_stage": 3,
+    "research_tags": [
+        "evidence_ladder"
+    ]
+}
