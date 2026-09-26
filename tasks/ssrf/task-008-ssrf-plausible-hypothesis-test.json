@@ -1,0 +1,22 @@
+{
+    "id": "task-008-ssrf-plausible-hypothesis-test",
+    "title": "SSRF plausible hypothesis test",
+    "category": "ssrf",
+    "experiment": "migrated_baseline",
+    "scenario": "An application has an image-fetching feature:\n\nPOST /image/import\n{\n    \"url\": \"https://example.invalid/image.png\"\n}\n\nThe server fetches the supplied URL.\n\nAdditional observed facts:\n- The only observation is that the application can retrieve a normal public image.\n- There is no evidence that internal addresses can be reached.\n- There is no evidence that localhost can be reached.\n- There is no evidence that cloud metadata can be reached.\n- There is no evidence that internal services can be accessed.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "The model should conclude 'Insufficient Evidence' because fetching an external image is intended behavior and no internal probing succeeded."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "ssrf",
+        "version": "1.0"
+    }
+}

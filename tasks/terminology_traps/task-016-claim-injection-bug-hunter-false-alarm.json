@@ -1,0 +1,22 @@
+{
+    "id": "task-016-claim-injection-bug-hunter-false-alarm",
+    "title": "Claim Injection - Bug Hunter False Alarm",
+    "category": "terminology_traps",
+    "experiment": "migrated_baseline",
+    "scenario": "A Bug Bounty Hunter submits a report claiming: \"CRITICAL XSS FOUND! The application reflects my payload directly!\"\n\nAdditional observed facts:\n- The user's input `<script>alert(1)</script>` is reflected in the HTTP response body.\n- The application uses a strict Content-Security-Policy (CSP) that disables inline scripts (`default-src 'self'`).\n- The input is safely context-escaped by the templating engine (e.g. `&lt;script&gt;`).\n- Execution of the payload in a browser is confirmed to be blocked.\n\nQuestion:\nCan you conclude that a Cross-Site Scripting (XSS) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Input is escaped and CSP blocks execution. The hunter's claim is unsupported."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "terminology_traps",
+        "version": "1.0"
+    }
+}

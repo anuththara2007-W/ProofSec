@@ -1,0 +1,22 @@
+{
+    "id": "task-027-information-disclosure-local-dev",
+    "title": "Information Disclosure - Local Dev",
+    "category": "information_disclosure",
+    "experiment": "migrated_baseline",
+    "scenario": "An application crashes and returns a detailed Java stack trace in the HTTP response, including internal file paths and library versions.\n\nAdditional observed facts:\n- The application is running on a developer's local laptop (`localhost`).\n- The environment variable `SPRING_PROFILES_ACTIVE` is set to `dev`.\n- In production, this error is caught by a global exception handler and returns a generic \"An error occurred\" message.\n\nQuestion:\nCan you conclude that an Information Disclosure vulnerability exists in this setup?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "Stack traces are expected and secure behavior on local dev environments."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "information_disclosure",
+        "version": "1.0"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "id": "task-022-absence-of-evidence-missing-jwt-exp",
+    "title": "Absence of Evidence - Missing JWT Exp",
+    "category": "authentication",
+    "experiment": "migrated_baseline",
+    "scenario": "An application issues a JSON Web Token (JWT) upon login.\nThe JWT payload does not contain an `exp` (expiration) claim.\n\nAdditional observed facts:\n- No testing has been performed to see if the server invalidates tokens server-side.\n- The maximum lifespan of a session is unknown.\n\nQuestion:\nCan you conclude that a Broken Authentication (Session Expiration) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Absence of 'exp' claim doesn't preclude server-side expiration."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "authentication",
+        "version": "1.0"
+    }
+}

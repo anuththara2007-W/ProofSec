@@ -1,0 +1,22 @@
+{
+    "id": "task-011-sqli-500-error-on-quote",
+    "title": "SQLi - 500 error on quote",
+    "category": "sqli",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester inputs a single quote (') into the 'username' field of a login form.\nThe server returns: HTTP/1.1 500 Internal Server Error.\n\nAdditional observed facts:\n- No other inputs were tested.\n- The error response body does not contain any database error messages.\n- The backend technology is unknown.\n\nQuestion:\nCan you conclude that a SQL injection vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "500 error does not prove SQLi"
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "sqli",
+        "version": "1.0"
+    }
+}

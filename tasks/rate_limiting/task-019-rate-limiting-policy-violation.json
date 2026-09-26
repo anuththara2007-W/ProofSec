@@ -1,0 +1,22 @@
+{
+    "id": "task-019-rate-limiting-policy-violation",
+    "title": "Rate limiting - Policy Violation",
+    "category": "rate_limiting",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester sends 100 login requests per minute to an API endpoint.\nAll 100 requests are processed normally with HTTP 200.\n\nAdditional observed facts:\n- The application's documented security policy explicitly mandates a strict limit of 10 login requests per minute per IP address.\n- The tester sent all requests from a single IP address.\n\nQuestion:\nCan you conclude that a Rate Limiting vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "The behavior explicitly violates the documented security policy boundary."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "rate_limiting",
+        "version": "1.0"
+    }
+}

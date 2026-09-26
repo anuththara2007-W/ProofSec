@@ -1,0 +1,22 @@
+{
+    "id": "task-020-business-logic-zero-price-unknown",
+    "title": "Business Logic - Zero Price Unknown",
+    "category": "business_logic",
+    "experiment": "migrated_baseline",
+    "scenario": "A user adds an item to their cart and the total price is $0.\nThe user successfully completes the checkout process.\n\nAdditional observed facts:\n- The item description and standard price are not provided.\n- It is unknown if the item is a promotional free item.\n\nQuestion:\nCan you conclude that a Business Logic vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "The item might be legitimately free. Missing business rules."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "business_logic",
+        "version": "1.0"
+    }
+}

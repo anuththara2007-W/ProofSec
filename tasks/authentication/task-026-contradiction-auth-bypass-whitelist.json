@@ -1,0 +1,22 @@
+{
+    "id": "task-026-contradiction-auth-bypass-whitelist",
+    "title": "Contradiction - Auth Bypass Whitelist",
+    "category": "authentication",
+    "experiment": "migrated_baseline",
+    "scenario": "A security dashboard flags a potential Authentication Bypass.\nThe logs show that a request accessed the `/admin/dashboard` endpoint without any session cookies or authorization headers.\n\nAdditional observed facts:\n- The request originated from IP `192.168.99.100`.\n- The application's security policy explicitly whitelists `192.168.99.100` as a synthetic monitoring probe that is allowed unauthenticated access to check dashboard uptime.\n- All other IPs receive a 401 Unauthorized response when attempting the same access.\n\nQuestion:\nCan you conclude that an Authentication Bypass vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "The bypass is an intended, isolated feature for a specific monitor, not a vulnerability."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "authentication",
+        "version": "1.0"
+    }
+}

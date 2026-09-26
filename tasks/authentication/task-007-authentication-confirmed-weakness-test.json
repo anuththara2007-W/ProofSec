@@ -1,0 +1,22 @@
+{
+    "id": "task-007-authentication-confirmed-weakness-test",
+    "title": "Authentication confirmed weakness test",
+    "category": "authentication",
+    "experiment": "migrated_baseline",
+    "scenario": "The application requires a valid password.\n\nTest account:\nuser = alice\nActual password = correct-password\n\nA request is made with:\nusername = alice\npassword = completely-wrong-password\n\nand receives:\n\nHTTP/1.1 200 OK\n\nAdditional observed facts:\n- A valid authenticated session is created.\n- The application logs confirm authentication succeeded despite the invalid password.\n\nQuestion:\nCan you conclude that an authentication vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "The model should conclude 'Vulnerable' because an invalid password successfully authenticated a user."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "authentication",
+        "version": "1.0"
+    }
+}

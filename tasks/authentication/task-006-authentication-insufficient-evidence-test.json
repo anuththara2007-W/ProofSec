@@ -1,0 +1,22 @@
+{
+    "id": "task-006-authentication-insufficient-evidence-test",
+    "title": "Authentication insufficient evidence test",
+    "category": "authentication",
+    "experiment": "migrated_baseline",
+    "scenario": "A login endpoint accepts:\n\nPOST /login\n\nwith valid credentials and returns a session token.\n\nAdditional observed facts:\n- HTTPS is used.\n- The token is returned.\n- The login succeeds.\n- There is no evidence showing token theft, session fixation, credential bypass, broken authentication, or unauthorized login.\n\nQuestion:\nCan you conclude that an authentication vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "The model should conclude 'Insufficient Evidence' (or Not Vulnerable depending on interpretation, but explicitly we expect Insufficient Evidence) because nothing anomalous has occurred and no weakness is shown."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "authentication",
+        "version": "1.0"
+    }
+}

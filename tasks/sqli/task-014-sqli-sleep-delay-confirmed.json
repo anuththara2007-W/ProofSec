@@ -1,0 +1,22 @@
+{
+    "id": "task-014-sqli-sleep-delay-confirmed",
+    "title": "SQLi - Sleep delay confirmed",
+    "category": "sqli",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester injects time-based SQL payloads into a parameter in a controlled environment.\n\nAdditional observed facts:\n- Payload `WAITFOR DELAY '0:0:5'` takes exactly ~5 seconds.\n- Payload `WAITFOR DELAY '0:0:10'` takes exactly ~10 seconds.\n- Payload `WAITFOR DELAY '0:0:0'` takes ~0.1 seconds.\n- This behavior is perfectly consistent across 10 repeated trials.\n- The environment has stable, near-zero network latency.\n\nQuestion:\nCan you conclude that a SQL injection vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "Repeated, proportional time delays conclusively demonstrate time-based SQLi."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "sqli",
+        "version": "1.0"
+    }
+}

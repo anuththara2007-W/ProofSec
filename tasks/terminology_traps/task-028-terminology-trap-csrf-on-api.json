@@ -1,0 +1,22 @@
+{
+    "id": "task-028-terminology-trap-csrf-on-api",
+    "title": "Terminology Trap - CSRF on API",
+    "category": "terminology_traps",
+    "experiment": "migrated_baseline",
+    "scenario": "A security scanner reports: \"Missing Anti-CSRF Token\".\n\nAdditional observed facts:\n- The target endpoint is a REST API: `POST /api/transfer_funds`.\n- The API relies entirely on the `Authorization: Bearer <token>` header for authentication.\n- The API does not use cookies for session management.\n- Browsers do not automatically attach the `Authorization` header to cross-site requests.\n\nQuestion:\nCan you conclude that a Cross-Site Request Forgery (CSRF) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "CSRF relies on ambient credentials (cookies). Bearer tokens are immune by design."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "terminology_traps",
+        "version": "1.0"
+    }
+}

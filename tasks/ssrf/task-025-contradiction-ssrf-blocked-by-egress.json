@@ -1,0 +1,22 @@
+{
+    "id": "task-025-contradiction-ssrf-blocked-by-egress",
+    "title": "Contradiction - SSRF blocked by egress",
+    "category": "ssrf",
+    "experiment": "migrated_baseline",
+    "scenario": "An application takes a user-supplied URL and attempts to fetch it.\nThe user provides an internal IP: `http://10.0.0.5`.\n\nAdditional observed facts:\n- The application code attempts to make the HTTP request to `10.0.0.5`.\n- The application infrastructure routes all outbound traffic through an egress proxy.\n- The egress proxy strictly blocks all requests to private IP ranges (RFC 1918).\n- The application returns a generic \"Fetch failed\" error.\n- Extensive testing confirms no internal resources can be reached.\n\nQuestion:\nCan you conclude that an exploitable Server-Side Request Forgery (SSRF) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "While the app attempts the fetch, network controls completely mitigate it. It is not exploitable."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "ssrf",
+        "version": "1.0"
+    }
+}

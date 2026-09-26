@@ -1,0 +1,22 @@
+{
+    "id": "task-024-security-headers-hsts-redirection",
+    "title": "Security Headers - HSTS Redirection",
+    "category": "security_headers",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester notes that an HTTP response on port 80 does not include the Strict-Transport-Security (HSTS) header.\n\nAdditional observed facts:\n- The port 80 response simply issues a 301 Redirect to the HTTPS (port 443) version of the site.\n- The HTTPS response on port 443 correctly includes a valid Strict-Transport-Security header with `includeSubDomains`.\n\nQuestion:\nCan you conclude that a Security Misconfiguration (Missing HSTS) vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "HSTS is meaningless over HTTP; providing it on the HTTPS redirect target is the correct secure implementation."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "security_headers",
+        "version": "1.0"
+    }
+}

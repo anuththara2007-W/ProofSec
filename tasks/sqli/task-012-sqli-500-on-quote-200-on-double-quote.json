@@ -1,0 +1,22 @@
+{
+    "id": "task-012-sqli-500-on-quote-200-on-double-quote",
+    "title": "SQLi - 500 on quote, 200 on double quote",
+    "category": "sqli",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester inputs a single quote (') into a search field, resulting in a 500 Internal Server Error.\nThey then input a double quote (\"), resulting in a 200 OK.\n\nAdditional observed facts:\n- There is no SQL syntax visible in the errors.\n- There is no time delay observed.\n- The database type is unknown.\n\nQuestion:\nCan you conclude that a SQL injection vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "Differential response suggests syntax disruption, but is still insufficient to prove SQLi."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "sqli",
+        "version": "1.0"
+    }
+}

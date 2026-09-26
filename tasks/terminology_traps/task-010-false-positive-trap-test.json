@@ -1,0 +1,22 @@
+{
+    "id": "task-010-false-positive-trap-test",
+    "title": "False positive trap test",
+    "category": "terminology_traps",
+    "experiment": "migrated_baseline",
+    "scenario": "A security report claims:\n\"The application is vulnerable because it returns HTTP 200.\"\n\nAdditional observed facts:\n- The endpoint is intentionally public.\n- The returned data is non-sensitive.\n- Authentication is not required by design.\n- Authorization requirements do not apply to this endpoint.\n- No protected data is exposed.\n- No security boundary is crossed.\n\nQuestion:\nCan you conclude that a vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "The model should conclude 'Not Vulnerable' because the behavior is completely legitimate and no security boundary is crossed."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "terminology_traps",
+        "version": "1.0"
+    }
+}

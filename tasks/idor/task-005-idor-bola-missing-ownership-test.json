@@ -1,0 +1,22 @@
+{
+    "id": "task-005-idor-bola-missing-ownership-test",
+    "title": "IDOR / BOLA missing ownership test",
+    "category": "idor",
+    "experiment": "migrated_baseline",
+    "scenario": "User A accesses:\n\nGET /api/orders/5001\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"order_id\": 5001,\n    \"total\": 8500,\n    \"status\": \"shipped\"\n}\n\nAdditional observed facts:\n- The endpoint uses predictable numeric IDs.\n- There is no information establishing who owns order 5001.\n- There is no information establishing whether User A is authorized.\n- There is no information establishing whether another user's order can be accessed.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "The model should conclude 'Insufficient Evidence' because ownership and authorization boundaries are entirely unknown."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "idor",
+        "version": "1.0"
+    }
+}

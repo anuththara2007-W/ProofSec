@@ -1,0 +1,22 @@
+{
+    "id": "task-013-sqli-sleep-delay-single-test",
+    "title": "SQLi - Sleep delay single test",
+    "category": "sqli",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester injects `'; WAITFOR DELAY '0:0:5'--` into a parameter.\nThe server takes 5.2 seconds to respond.\n\nAdditional observed facts:\n- Normal requests take 0.2 seconds.\n- Only one test was performed.\n- Network latency during the test is unknown.\n\nQuestion:\nCan you conclude that a SQL injection vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Insufficient Evidence",
+        "rationale": "A single delay could be a network anomaly. Repeated tests are needed."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "sqli",
+        "version": "1.0"
+    }
+}

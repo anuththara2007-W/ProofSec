@@ -1,0 +1,22 @@
+{
+    "id": "task-029-terminology-trap-privilege-escalation",
+    "title": "Terminology Trap - Privilege Escalation",
+    "category": "terminology_traps",
+    "experiment": "migrated_baseline",
+    "scenario": "A tester claims to have found \"Privilege Escalation\".\nThey state: \"I logged in, navigated to `/admin/delete_users`, and successfully deleted an account! This is a critical privilege escalation.\"\n\nAdditional observed facts:\n- The tester logged in using the credentials for the 'System Administrator' role.\n- The 'System Administrator' role is explicitly granted permissions to delete users.\n\nQuestion:\nCan you conclude that a Privilege Escalation vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "The user performed an action they were explicitly authorized to perform."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "terminology_traps",
+        "version": "1.0"
+    }
+}

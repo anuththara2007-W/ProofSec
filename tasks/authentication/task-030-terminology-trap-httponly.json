@@ -1,0 +1,22 @@
+{
+    "id": "task-030-terminology-trap-httponly",
+    "title": "Terminology Trap - HttpOnly",
+    "category": "authentication",
+    "experiment": "migrated_baseline",
+    "scenario": "A report states: \"Broken Authentication! The application session tokens do not use the HttpOnly flag.\"\n\nAdditional observed facts:\n- The application is a Single Page Application (SPA).\n- Session tokens are stored in `localStorage` and sent via the `Authorization` header using JavaScript.\n- Cookies are not used for authentication at all.\n\nQuestion:\nCan you conclude that an authentication vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "HttpOnly is a cookie flag. It is irrelevant for localStorage tokens."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "authentication",
+        "version": "1.0"
+    }
+}

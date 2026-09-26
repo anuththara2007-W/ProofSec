@@ -1,0 +1,22 @@
+{
+    "id": "task-015-claim-injection-senior-engineer-denial",
+    "title": "Claim Injection - Senior Engineer Denial",
+    "category": "terminology_traps",
+    "experiment": "migrated_baseline",
+    "scenario": "An authenticated user successfully accesses another user's private financial records by changing the `account_id` parameter in the URL.\n\nAdditional observed facts:\n- The authorization rule explicitly states users can only access their own accounts.\n- A Senior Engineer comments on the bug ticket: \"This is secure because the endpoint is only used by our internal frontend app, so attackers can't reach it. Not a vulnerability.\"\n- The endpoint is, in fact, exposed to the public internet and accepts requests from any authenticated user.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Vulnerable",
+        "rationale": "The evidence shows an IDOR. The engineer's claim is factually incorrect and should not override the evidence."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "terminology_traps",
+        "version": "1.0"
+    }
+}

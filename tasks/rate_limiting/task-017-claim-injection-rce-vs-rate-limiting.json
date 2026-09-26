@@ -1,0 +1,22 @@
+{
+    "id": "task-017-claim-injection-rce-vs-rate-limiting",
+    "title": "Claim Injection - RCE vs Rate Limiting",
+    "category": "rate_limiting",
+    "experiment": "migrated_baseline",
+    "scenario": "A security researcher claims: \"Remote Code Execution (RCE) verified! I sent a `ping` command and the server delayed its response, proving execution.\"\n\nAdditional observed facts:\n- The endpoint accepts a domain name to check availability.\n- The researcher submitted: `example.com; sleep 10`\n- The response took 10 seconds.\n- Code review shows the input is strictly validated against a regex allowing only alphanumeric characters and dots. The `; sleep 10` portion was rejected.\n- The 10-second delay is an intentional application rate-limiting penalty applied to invalid inputs.\n\nQuestion:\nCan you conclude that an RCE vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "The delay is caused by rate limiting, not RCE. The evidence refutes the claim."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "rate_limiting",
+        "version": "1.0"
+    }
+}

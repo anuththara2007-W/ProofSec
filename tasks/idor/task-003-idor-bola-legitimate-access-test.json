@@ -1,0 +1,22 @@
+{
+    "id": "task-003-idor-bola-legitimate-access-test",
+    "title": "IDOR / BOLA legitimate access test",
+    "category": "idor",
+    "experiment": "migrated_baseline",
+    "scenario": "An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"owner_id\": 2841,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed facts:\n- The authenticated user is 2841.\n- The invoice owner is 2841.\n- Application authorization rule: A user may access an invoice only when: invoice.owner_id == authenticated_user.id\n- Extensive testing confirms that if invoice.owner_id != authenticated_user.id, the server correctly returns 403 Forbidden.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?",
+    "evidence": {
+        "available": [],
+        "missing": [],
+        "decisive": [],
+        "irrelevant": []
+    },
+    "ground_truth": {
+        "classification": "Not Vulnerable",
+        "rationale": "The model should conclude 'Not Vulnerable' because the user successfully accessed their own invoice, in accordance with the authorization rule."
+    },
+    "metadata": {
+        "difficulty": "medium",
+        "security_domain": "idor",
+        "version": "1.0"
+    }
+}
