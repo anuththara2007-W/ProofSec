@@ -21,9 +21,9 @@ def compute_metrics():
             d = json.load(file)
             responses[d['task_id']] = d
             
+def compute_metrics_from_data(tasks, responses):
     if not responses:
-        print("No responses found.")
-        return
+        return None
 
     # Basic metrics
     correct = 0
@@ -31,6 +31,8 @@ def compute_metrics():
     pvr_failures = 0
     
     for t_id, res in responses.items():
+        if t_id not in tasks:
+            continue
         t = tasks[t_id]
         expected = t['ground_truth']['classification']
         observed = res['classification']
@@ -98,6 +100,40 @@ def compute_metrics():
     auth_bias = auth_err / auth_pairs if auth_pairs else 0
     term_bias = term_err / term_pairs if term_pairs else 0
     
+    return {
+        'acc': acc,
+        'pvr': pvr,
+        'flip_miss_rate': flip_miss_rate,
+        'flip_err_rate': flip_err_rate,
+        'pair_consistency': pair_consistency,
+        'auth_bias': auth_bias,
+        'term_bias': term_bias
+    }
+
+def compute_metrics():
+    root = Path(__file__).parent.parent
+    tasks_dir = root / 'tasks'
+    res_dir = root / 'results' / 'raw' / 'gemini-3.5-flash'
+    
+    # Load tasks
+    tasks = {}
+    for f in tasks_dir.glob('**/*.json'):
+        with open(f, 'r', encoding='utf-8') as file:
+            d = json.load(file)
+            tasks[d['id']] = d
+
+    # Load responses (keep latest)
+    responses = {}
+    for f in sorted(res_dir.glob('*.json')):
+        with open(f, 'r', encoding='utf-8') as file:
+            d = json.load(file)
+            responses[d['task_id']] = d
+            
+    m = compute_metrics_from_data(tasks, responses)
+    if not m:
+        print("No responses found.")
+        return
+        
     out_csv = root / 'results' / 'metrics' / 'model_summary.csv'
     out_csv.parent.mkdir(parents=True, exist_ok=True)
     
@@ -110,12 +146,12 @@ def compute_metrics():
         ])
         writer.writerow([
             'gemini-3.5-flash', 'v0_2_gemini-3.5-flash_1727357497', 110, len(responses), 'PARTIAL',
-            f"{acc:.4f}", f"{pvr:.4f}", f"{flip_miss_rate:.4f}", f"{flip_err_rate:.4f}",
-            f"{pair_consistency:.4f}", f"{auth_bias:.4f}", f"{term_bias:.4f}", 'UNAVAILABLE'
+            f"{m['acc']:.4f}", f"{m['pvr']:.4f}", f"{m['flip_miss_rate']:.4f}", f"{m['flip_err_rate']:.4f}",
+            f"{m['pair_consistency']:.4f}", f"{m['auth_bias']:.4f}", f"{m['term_bias']:.4f}", 'UNAVAILABLE'
         ])
         
     print(f"Recomputation complete. Saved to {out_csv}")
-    print(f"Acc: {acc:.4f}, PVR: {pvr:.4f}")
+    print(f"Acc: {m['acc']:.4f}, PVR: {m['pvr']:.4f}")
     
 if __name__ == '__main__':
     compute_metrics()
