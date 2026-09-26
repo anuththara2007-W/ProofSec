@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "SSRF plausible hypothesis test",
+    "description": "",
+    "definition": "@kbench.task(name=\"SSRF plausible hypothesis test\")\ndef proofsec_ssrf_plausible(llm) -> None:\n    scenario = \"\"\"An application has an image-fetching feature:\n\nPOST /image/import\n{\n    \"url\": \"https://example.invalid/image.png\"\n}\n\nThe server fetches the supplied URL.\n\nAdditional observed facts:\n- The only observation is that the application can retrieve a normal public image.\n- There is no evidence that internal addresses can be reached.\n- There is no evidence that localhost can be reached.\n- There is no evidence that cloud metadata can be reached.\n- There is no evidence that internal services can be accessed.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' because fetching an external image is intended behavior and no internal probing succeeded.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T08:57:33.157391Z",
+  "endTime": "2026-09-26T08:57:39.781548Z",
+  "conversations": [
+    {
+      "id": "SSRF plausible hypothesis test-c61226c1",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn application has an image-fetching feature:\n\nPOST /image/import\n{\n    \"url\": \"https://example.invalid/image.png\"\n}\n\nThe server fetches the supplied URL.\n\nAdditional observed facts:\n- The only observation is that the application can retrieve a normal public image.\n- There is no evidence that internal addresses can be reached.\n- There is no evidence that localhost can be reached.\n- There is no evidence that cloud metadata can be reached.\n- There is no evidence that internal services can be accessed.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"The application has an endpoint '/image/import' that accepts a user-specified URL and successfully fetches a normal public image.\\\",\\\"evidence_missing\\\":\\\"There is no verification or evidence showing whether the application allows requests to loopback addresses (localhost/127.0.0.1), private network addresses (RFC 1918), cloud link-local metadata addresses (169.254.169.254), or alternate protocols (e.g., file://, gopher://). Without testing these restrictions, it is impossible to determine if the behavior is standard proxying/fetching or SSRF.\\\",\\\"safe_verification_procedure\\\":\\\"In a dedicated, isolated test environment, attempt to point the image-fetching URL parameter to a harmless local port or an internal test-only server (e.g., http://127.0.0.1:80/ or a specific mock local endpoint). Observe whether the application blocks the request with a validation error or attempts to establish a connection to the internal resource.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 247,
+            "outputTokens": 1070,
+            "inputTokensCostNanodollars": "370500",
+            "outputTokensCostNanodollars": "9630000",
+            "totalBackendLatencyMs": "6240"
+          },
+          "id": "SSRF plausible hypothesis test-c61226c1-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 247,
+        "outputTokens": 1070,
+        "inputTokensCostNanodollars": "370500",
+        "outputTokensCostNanodollars": "9630000",
+        "totalBackendLatencyMs": "6240"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "The model should conclude 'Insufficient Evidence' because fetching an external image is intended behavior and no internal probing succeeded.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 347,
+      "definition": "assertions.assert_equal(",
+      "conversationRequestIds": [
+        {
+          "conversationId": "SSRF plausible hypothesis test-c61226c1",
+          "requestId": "SSRF plausible hypothesis test-c61226c1-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "SSRF plausible hypothesis test-Run #1"
+}
