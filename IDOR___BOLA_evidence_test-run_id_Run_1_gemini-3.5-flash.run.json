@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:49:42.268355Z",
-  "endTime": "2026-09-26T08:49:50.308582Z",
+  "startTime": "2026-09-26T08:54:02.964353Z",
+  "endTime": "2026-09-26T08:54:10.014431Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA evidence test-83a596b4",
+      "id": "IDOR / BOLA evidence test-dd24a57c",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 1136,
             "inputTokensCostNanodollars": "315000",
             "outputTokensCostNanodollars": "10224000",
-            "totalBackendLatencyMs": "5344"
+            "totalBackendLatencyMs": "5433"
           },
-          "id": "IDOR / BOLA evidence test-83a596b4-req-1"
+          "id": "IDOR / BOLA evidence test-dd24a57c-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 1136,
         "inputTokensCostNanodollars": "315000",
         "outputTokensCostNanodollars": "10224000",
-        "totalBackendLatencyMs": "5344"
+        "totalBackendLatencyMs": "5433"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA evidence test-83a596b4",
-          "requestId": "IDOR / BOLA evidence test-83a596b4-req-1"
+          "conversationId": "IDOR / BOLA evidence test-dd24a57c",
+          "requestId": "IDOR / BOLA evidence test-dd24a57c-req-1"
         }
       ]
     }
