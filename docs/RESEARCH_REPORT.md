@@ -37,19 +37,20 @@ The execution runner natively supports schema validation, evidence masking, and 
 
 ## 10. Results (Partial)
 *WARNING: Metrics reflect an 88/110 task partial snapshot of gemini-3.5-flash.*
-- **Accuracy**: 90.91%
-- **PVR**: 20.45%
-- **Evidence Sensitivity**: 80.00%
-- **Authority/Terminology Bias**: 0.00%
+- **Accuracy**: 65.91%
+- **PVR**: 1.61%
+- **Pair Consistency**: 22.22%
+- **Authority Bias**: 40.00%
+- **Terminology Bias**: 0.00%
 
 ## 11. Failure Analysis
-In the observed 88-task Gemini snapshot, premature vulnerability classifications were the principal measured failure pattern. The model aggressively diagnosed flaws based on initial generic symptoms. 
+In the observed 88-task Gemini snapshot, the principal measured failure pattern was **Flip Misses** and **Authority Bias**, rather than Premature Vulnerability. The model was highly conservative (low PVR) but frequently failed to transition its classification when a single decisive technical fact changed, and often deferred to non-technical human authority claims.
 
 ## 12. Evidence-Sensitivity Analysis
-The model proved generally capable of executing one-fact-flips (80.00% consistency) when explicitly directed, indicating strong baseline attention mechanisms, but struggled to generalize this restraint natively to IDOR scenarios.
+The model demonstrated surprisingly low consistency (22.22%) on one-fact-flips and missed 50.00% of required transitions, indicating weak causal tracking of decisive security evidence.
 
 ## 13. Discussion
-The divergence between standard accuracy (high) and PVR (moderate) validates the core ProofSec hypothesis: generalized coding benchmarks fail to capture critical nuances of professional security skepticism. 
+The divergence between expected high accuracy and the observed rigid, authority-biased behavior validates the core ProofSec hypothesis: generalized coding benchmarks fail to capture critical nuances of professional security skepticism and dynamic evidence tracking.
 
 ## 14. Threats to Validity
 Extensively documented in `docs/THREATS_TO_VALIDITY.md`.

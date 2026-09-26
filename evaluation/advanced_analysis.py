@@ -3,7 +3,7 @@ from pathlib import Path
 
 def advanced_analysis():
     root = Path(__file__).parent.parent
-    results_dir = root / "results" / "raw" / "gemini-3.5-flash" / "v0_2_gemini-3.5-flash_1727357497"
+    results_dir = root / "results" / "raw" / "gemini-3.5-flash"
     
     if not results_dir.exists():
         print("No raw results found.")
