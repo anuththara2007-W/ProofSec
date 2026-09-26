@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "SQLi - Sleep delay confirmed",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:17:46.548207Z",
-  "endTime": "2026-09-26T09:17:53.263654Z",
+  "startTime": "2026-09-26T09:24:56.235751Z",
+  "endTime": "2026-09-26T09:25:11.778736Z",
   "conversations": [
     {
-      "id": "SQLi - Sleep delay confirmed-19d82a05",
+      "id": "SQLi - Sleep delay confirmed-46e02589",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 999,
             "inputTokensCostNanodollars": "358500",
             "outputTokensCostNanodollars": "8991000",
-            "totalBackendLatencyMs": "5901"
+            "totalBackendLatencyMs": "6085"
           },
-          "id": "SQLi - Sleep delay confirmed-19d82a05-req-1"
+          "id": "SQLi - Sleep delay confirmed-46e02589-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 999,
         "inputTokensCostNanodollars": "358500",
         "outputTokensCostNanodollars": "8991000",
-        "totalBackendLatencyMs": "5901"
+        "totalBackendLatencyMs": "6085"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "Repeated, proportional time delays conclusively demonstrate time-based SQLi.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "SQLi - Sleep delay confirmed-19d82a05",
-          "requestId": "SQLi - Sleep delay confirmed-19d82a05-req-1"
+          "conversationId": "SQLi - Sleep delay confirmed-46e02589",
+          "requestId": "SQLi - Sleep delay confirmed-46e02589-req-1"
         }
       ]
     }

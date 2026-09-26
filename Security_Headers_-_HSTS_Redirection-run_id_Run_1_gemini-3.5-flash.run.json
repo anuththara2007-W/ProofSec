@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "Security Headers - HSTS Redirection",
     "description": "",
-    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:17:26.709948Z",
-  "endTime": "2026-09-26T09:17:31.096854Z",
+  "startTime": "2026-09-26T09:24:15.864339Z",
+  "endTime": "2026-09-26T09:24:28.915335Z",
   "conversations": [
     {
-      "id": "Security Headers - HSTS Redirection-33822cf6",
+      "id": "Security Headers - HSTS Redirection-0d90c595",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"The HTTP response on port 80 does not contain the Strict-Transport-Security header and issues a 301 Redirect to the HTTPS version of the site on port 443. The HTTPS response on port 443 correctly includes a valid Strict-Transport-Security header with the includeSubDomains directive.\\\",\\\"evidence_missing\\\":\\\"None. The observed behavior conforms exactly to the specifications of RFC 6797, which states that a host MUST NOT include the HSTS header in unencrypted HTTP responses, and that user agents must ignore HSTS headers received over non-secure transport.\\\",\\\"safe_verification_procedure\\\":\\\"Use a command-line tool like curl to inspect headers on both ports: run 'curl -I http://<target>' to verify it issues a 301 redirect and does not send the HSTS header over HTTP, then run 'curl -I https://<target>' to verify that the HSTS header is present and correctly configured over the secure channel.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"HTTP response on port 80 redirects with a 301 status code to the HTTPS version and does not include the HSTS header. The HTTPS response on port 443 includes a valid Strict-Transport-Security header with the includeSubDomains directive.\\\",\\\"evidence_missing\\\":\\\"None. The available observations are sufficient to determine that the HSTS implementation is correct.\\\",\\\"safe_verification_procedure\\\":\\\"Use an HTTP client such as curl to inspect headers: 1. Run 'curl -I http://<domain>' and confirm it returns a 3xx redirect to HTTPS and does not contain the Strict-Transport-Security header (as mandated by RFC 6797). 2. Run 'curl -I https://<domain>' and confirm the presence of 'Strict-Transport-Security: max-age=<value>; includeSubDomains'.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 220,
-            "outputTokens": 788,
+            "outputTokens": 738,
             "inputTokensCostNanodollars": "330000",
-            "outputTokensCostNanodollars": "7092000",
-            "totalBackendLatencyMs": "3993"
+            "outputTokensCostNanodollars": "6642000",
+            "totalBackendLatencyMs": "8478"
           },
-          "id": "Security Headers - HSTS Redirection-33822cf6-req-1"
+          "id": "Security Headers - HSTS Redirection-0d90c595-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 220,
-        "outputTokens": 788,
+        "outputTokens": 738,
         "inputTokensCostNanodollars": "330000",
-        "outputTokensCostNanodollars": "7092000",
-        "totalBackendLatencyMs": "3993"
+        "outputTokensCostNanodollars": "6642000",
+        "totalBackendLatencyMs": "8478"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "HSTS is meaningless over HTTP; providing it on the HTTPS redirect target is the correct secure implementation.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 80,
+      "lineNumber": 83,
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Security Headers - HSTS Redirection-33822cf6",
-          "requestId": "Security Headers - HSTS Redirection-33822cf6-req-1"
+          "conversationId": "Security Headers - HSTS Redirection-0d90c595",
+          "requestId": "Security Headers - HSTS Redirection-0d90c595-req-1"
         }
       ]
     }
