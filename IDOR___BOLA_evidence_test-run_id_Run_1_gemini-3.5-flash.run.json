@@ -3,17 +3,17 @@
     "versionNumber": 1,
     "name": "IDOR / BOLA evidence test",
     "description": "",
-    "definition": "@kbench.task(name=\"IDOR / BOLA evidence test\")\ndef proofsec_idor_evidence(llm) -> None:\n    scenario = \"\"\"An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed fact:\nInvoice IDs are sequential.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n\n    # Send prompt to the Kaggle LLM using the structured schema\n    response = llm.prompt(prompt, schema=IDORAssessment)\n    \n    # Deterministic assertion for the expected classification\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' because we don't know the owner of the invoice.\"\n    )\n"
+    "definition": "@kbench.task(name=\"IDOR / BOLA evidence test\")\ndef proofsec_idor_evidence(llm) -> None:\n    scenario = \"\"\"An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed fact:\nInvoice IDs are sequential.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n\n    # Send prompt to the Kaggle LLM using the structured schema\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    \n    # Deterministic assertion for the expected classification\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' because we don't know the owner of the invoice.\"\n    )\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:54:02.964353Z",
-  "endTime": "2026-09-26T08:54:10.014431Z",
+  "startTime": "2026-09-26T08:56:51.062883Z",
+  "endTime": "2026-09-26T08:56:58.260563Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA evidence test-dd24a57c",
+      "id": "IDOR / BOLA evidence test-fcfd6631",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 1136,
             "inputTokensCostNanodollars": "315000",
             "outputTokensCostNanodollars": "10224000",
-            "totalBackendLatencyMs": "5433"
+            "totalBackendLatencyMs": "5415"
           },
-          "id": "IDOR / BOLA evidence test-dd24a57c-req-1"
+          "id": "IDOR / BOLA evidence test-fcfd6631-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 1136,
         "inputTokensCostNanodollars": "315000",
         "outputTokensCostNanodollars": "10224000",
-        "totalBackendLatencyMs": "5433"
+        "totalBackendLatencyMs": "5415"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA evidence test-dd24a57c",
-          "requestId": "IDOR / BOLA evidence test-dd24a57c-req-1"
+          "conversationId": "IDOR / BOLA evidence test-fcfd6631",
+          "requestId": "IDOR / BOLA evidence test-fcfd6631-req-1"
         }
       ]
     }

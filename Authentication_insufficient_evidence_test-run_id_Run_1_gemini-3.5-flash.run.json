@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Authentication insufficient evidence test",
+    "description": "",
+    "definition": "@kbench.task(name=\"Authentication insufficient evidence test\")\ndef proofsec_auth_insufficient(llm) -> None:\n    scenario = \"\"\"A login endpoint accepts:\n\nPOST /login\n\nwith valid credentials and returns a session token.\n\nAdditional observed facts:\n- HTTPS is used.\n- The token is returned.\n- The login succeeds.\n- There is no evidence showing token theft, session fixation, credential bypass, broken authentication, or unauthorized login.\n\nQuestion:\nCan you conclude that an authentication vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' (or Not Vulnerable depending on interpretation, but explicitly we expect Insufficient Evidence) because nothing anomalous has occurred and no weakness is shown.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T08:57:23.424213Z",
+  "endTime": "2026-09-26T08:57:28.344863Z",
+  "conversations": [
+    {
+      "id": "Authentication insufficient evidence test-57bb598e",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nA login endpoint accepts:\n\nPOST /login\n\nwith valid credentials and returns a session token.\n\nAdditional observed facts:\n- HTTPS is used.\n- The token is returned.\n- The login succeeds.\n- There is no evidence showing token theft, session fixation, credential bypass, broken authentication, or unauthorized login.\n\nQuestion:\nCan you conclude that an authentication vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"The application implements a POST /login endpoint that accepts valid credentials over HTTPS, successfully authenticates the user, and returns a session token.\\\",\\\"evidence_missing\\\":\\\"Information is missing regarding session token entropy and predictability, session timeout/expiration limits, the presence of security flags (e.g., HttpOnly, Secure, SameSite) if cookies are used, rate limiting or brute-force protection on the login endpoint, session invalidation mechanisms upon logout, and resistance to session fixation.\\\",\\\"safe_verification_procedure\\\":\\\"In an isolated test environment, perform the following checks: 1) Analyze the session token's entropy and structure to ensure it is not predictable. 2) Attempt brute-force login attempts to verify if rate limiting or account lockout triggers. 3) Inspect the transport mechanism (e.g., cookies vs. headers) and verify cookie security flags. 4) Verify that the session token is properly invalidated on the server side after a logout request. 5) Test for session fixation by ensuring the session token changes before and after authentication.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 189,
+            "outputTokens": 757,
+            "inputTokensCostNanodollars": "283500",
+            "outputTokensCostNanodollars": "6813000",
+            "totalBackendLatencyMs": "4549"
+          },
+          "id": "Authentication insufficient evidence test-57bb598e-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 189,
+        "outputTokens": 757,
+        "inputTokensCostNanodollars": "283500",
+        "outputTokensCostNanodollars": "6813000",
+        "totalBackendLatencyMs": "4549"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "The model should conclude 'Insufficient Evidence' (or Not Vulnerable depending on interpretation, but explicitly we expect Insufficient Evidence) because nothing anomalous has occurred and no weakness is shown.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 267,
+      "definition": "assertions.assert_equal(",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Authentication insufficient evidence test-57bb598e",
+          "requestId": "Authentication insufficient evidence test-57bb598e-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "Authentication insufficient evidence test-Run #1"
+}

@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "IDOR / BOLA legitimate access test",
+    "description": "",
+    "definition": "@kbench.task(name=\"IDOR / BOLA legitimate access test\")\ndef proofsec_idor_legitimate(llm) -> None:\n    scenario = \"\"\"An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"owner_id\": 2841,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed facts:\n- The authenticated user is 2841.\n- The invoice owner is 2841.\n- Application authorization rule: A user may access an invoice only when: invoice.owner_id == authenticated_user.id\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Not Vulnerable\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Not Vulnerable' because the user successfully accessed their own invoice, in accordance with the authorization rule.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T08:57:06.727694Z",
+  "endTime": "2026-09-26T08:57:13.685496Z",
+  "conversations": [
+    {
+      "id": "IDOR / BOLA legitimate access test-09806ed0",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"owner_id\": 2841,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed facts:\n- The authenticated user is 2841.\n- The invoice owner is 2841.\n- Application authorization rule: A user may access an invoice only when: invoice.owner_id == authenticated_user.id\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"We observed a GET request to /api/invoices/9281 by authenticated user 2841, which successfully returned invoice 9281. The invoice's owner_id is 2841, which matches the authenticated user's ID. This is an authorized request according to the application's rules.\\\",\\\"evidence_missing\\\":\\\"We are missing evidence of what happens when a user attempts to access an invoice they do not own. Specifically, we need to test if user A can access an invoice belonging to user B.\\\",\\\"safe_verification_procedure\\\":\\\"In a safe test environment, provision two distinct user accounts (User A and User B). Create an invoice belonging to User A. Authenticate as User B and attempt to send a GET request to retrieve User A's invoice ID. If the response returns the invoice data with a 200 OK status, the application is vulnerable. If it rejects the request with a 403 Forbidden or 404 Not Found status, it is not vulnerable.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 267,
+            "outputTokens": 1387,
+            "inputTokensCostNanodollars": "400500",
+            "outputTokensCostNanodollars": "12483000",
+            "totalBackendLatencyMs": "6283"
+          },
+          "id": "IDOR / BOLA legitimate access test-09806ed0-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 267,
+        "outputTokens": 1387,
+        "inputTokensCostNanodollars": "400500",
+        "outputTokensCostNanodollars": "12483000",
+        "totalBackendLatencyMs": "6283"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": false
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "The model should conclude 'Not Vulnerable' because the user successfully accessed their own invoice, in accordance with the authorization rule.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_FAILED",
+      "lineNumber": 143,
+      "definition": "assertions.assert_equal(",
+      "conversationRequestIds": [
+        {
+          "conversationId": "IDOR / BOLA legitimate access test-09806ed0",
+          "requestId": "IDOR / BOLA legitimate access test-09806ed0-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "IDOR / BOLA legitimate access test-Run #1"
+}
