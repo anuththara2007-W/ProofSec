@@ -54,3 +54,5 @@ class ModelProvider(ABC):
     @abstractmethod
     def get_capabilities(self) -> Dict[str, Any]:
         pass
+
+from .manager import ProviderManager, get_provider, provider_manager
