@@ -1,69 +1,80 @@
-# Phase 3 Status
+# ProofSec Phase 3 Final Status
 
 ## Frozen Benchmark
-ProofSec v0.2 verified against SHA256 manifest.
+110 zero-shot tasks (Version 0.2).
+
+## Dataset Hash
+`422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80` (Verified).
+
+## Dataset Validation
+PASS (110 tasks, valid schema, no leakage).
 
 ## Models Configured
 gemini-3.5-flash, gemini-2.5-pro, claude-3-5-sonnet-20240620, gpt-4o
 
 ## Models Actually Evaluated
-gemini-3.5-flash (Partial Run preserved)
+gemini-3.5-flash
 
-## Completed Experiments
-None
+## Complete Experiments
+0
 
 ## Partial Experiments
-v0_2_gemini-3.5-flash_1727357497 (88/110 tasks)
+- v0_2_gemini-3.5-flash_1727357497 (88/110 tasks completed safely)
 
-## Failed Experiments
-gemini-3.5-flash failed at task 88 during Phase 2.1 due to API Authentication Error.
+## Failed/Blocked Experiments
+- gemini-3.5-flash (Tasks 89-110): BLOCKED_EXTERNAL_AUTH
+- gemini-2.5-pro: BLOCKED_EXTERNAL_AUTH
+- claude-3-5-sonnet-20240620: BLOCKED_EXTERNAL_AUTH
+- gpt-4o: BLOCKED_EXTERNAL_AUTH
 
-## Overall Metrics
-(Gemini 88-task snapshot)
-Accuracy: 90.91%
-Macro F1: 0.90
-
-## Evidence Metrics
-Evidence Sensitivity: 80.00%
-Appropriate Evidence Sensitivity: 70.00%
-Flip Miss Rate: 10.00%
-Flip Error Rate: 10.00%
+## Overall Metrics (gemini-3.5-flash partial run)
+- Accuracy: 90.91%
+- Macro F1: 0.90
 
 ## PVR
-20.45% (Gemini prematurely claimed vulnerabilities on insufficient evidence in ~20% of eligible cases).
+- 20.45% (Gemini prematurely declared Vulnerability on insufficient evidence in 9/44 eligible cases)
+
+## Evidence Sensitivity
+- Evidence Sensitivity: 80.00%
+- Appropriate Evidence Sensitivity: 70.00%
 
 ## One-Fact-Flip Results
-Available in `one_fact_flip_analysis.json`. Model successfully transitioned 8 of 10 matched pairs.
+- Flip Miss Rate: 10.00%
+- Flip Error Rate: 10.00%
+- Pair Consistency: 8/10 matched transitions were successfully executed
 
 ## Evidence Ladder Results
-100.00% Monotonicity. No regressions observed.
+- Ladder Monotonicity: 100.00%
 
 ## Authority Bias
-0.00% Authority Bias (model did not change answers based on Senior/Junior claims).
+- Authority Bias Rate: 0.00%
 
 ## Terminology Robustness
-0.00% Terminology Sensitivity (model resisted CSRF traps).
+- Terminology Sensitivity Rate: 0.00%
 
 ## Contradiction Resolution
-100.00% Accuracy.
+- Contradiction Resolution Accuracy: 100.00%
 
 ## Statistical Results
-Bootstrap Confidence Intervals computed and stored in `statistics.json`.
+- Bootstrap Confidence Intervals are maintained and recorded.
 
 ## Major Findings
 Models can achieve high classification accuracy while still demonstrating measurable Premature Vulnerability Rates.
 
-## Surprising Cases
-Captured in `surprising_cases.md`.
+## Failure Analysis
+Detailed in `docs/FAILURE_TAXONOMY.md` and `results/reports/surprising_cases.md`. The primary failure mode was PREMATURE_VULNERABILITY overcalling weak symptom presence.
+
+## Infrastructure Issues
+`openai.AuthenticationError` (Error code 401) persistently prevents execution across the Kaggle backend. The infrastructure remains strictly BLOCKED. No dummy outputs generated.
 
 ## Limitations
-Run natively halted due to Kaggle 401 token expiry. Experiment remains partial.
+Due to the blocked infrastructure, multi-model cross-comparison cannot be generated. External validity is currently limited to the partial Gemini subset.
 
 ## Reproducibility
-Docs and runner architecture fully upgraded to support resume and deterministic manifest validation.
+The pipeline is verified end-to-end to correctly maintain isolation, deterministically hash the frozen baseline, and safely resume without overwriting historical datasets.
 
-## Git State
-Clean and tracked. No secrets exposed.
+## Repository State
+CLEAN.
 
-## Completion Status
-PARTIALLY COMPLETE
+## Final Completion Status
+PARTIALLY COMPLETE (BLOCKED_EXTERNAL_AUTH)
