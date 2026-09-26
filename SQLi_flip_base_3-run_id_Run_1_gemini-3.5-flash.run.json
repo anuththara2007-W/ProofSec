@@ -1,0 +1,29 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "SQLi flip base 3",
+    "description": "",
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                start_t = time.time()\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                latency = int((time.time() - start_t) * 1000)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                is_correct = (expected == response.classification)\n                \n                save_raw_result(t_data, response, is_correct, dataset_hash, experiment_id, model, latency)\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_ERRORED",
+  "startTime": "2026-09-26T09:49:20.580268Z",
+  "endTime": "2026-09-26T09:49:21.938036Z",
+  "conversations": [
+    {
+      "id": "SQLi flip base 3-e81a158c",
+      "metrics": {},
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": false
+    }
+  ],
+  "pyRunId": "SQLi flip base 3-Run #1",
+  "errorMessage": "Traceback (most recent call last):\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\tasks.py\", line 171, in run\n    run.result = self.func(*args, **kwargs)\n                 ~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\src\\proofsec\\runner.py\", line 95, in run_task\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 259, in prompt\n    response = self.respond(schema=schema, **kwargs, **extra)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\chats.py\", line 124, in wrapper\n    result = func(self, *args, **kwargs)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 326, in respond\n    invoke_response = self.invoke(\n        raw_messages,\n        system=system,\n        **kwargs,\n    )\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 457, in invoke\n    return self._call_api(raw_messages, **kwargs)\n           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 508, in _call_api\n    response = method(\n        model=self.model,\n        messages=messages,\n        **kwargs,\n    )\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\openai\\resources\\chat\\completions\\completions.py\", line 194, in parse\n    return self._post(\n           ~~~~~~~~~~^\n        \"/chat/completions\",\n        ^^^^^^^^^^^^^^^^^^^^\n    ...<53 lines>...\n        stream=False,\n        ^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\openai\\_base_client.py\", line 1439, in post\n    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))\n                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\openai\\_base_client.py\", line 1212, in request\n    raise self._make_status_error_from_response(err.response) from None\nopenai.AuthenticationError: Error code: 401 - {'code': '', 'message': 'Authorization failed: expired token', 'param': '', 'type': 'authentication_error'}\n"
+}
