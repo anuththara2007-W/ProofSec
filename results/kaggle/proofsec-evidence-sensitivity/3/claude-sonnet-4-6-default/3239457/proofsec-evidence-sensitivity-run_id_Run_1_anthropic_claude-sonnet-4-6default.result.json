@@ -1,0 +1,33 @@
+{
+  "task_name": "proofsec-evidence-sensitivity",
+  "trial_name": "proofsec-evidence-sensitivity-Run #1",
+  "trial_uri": "kbench://not-a-harbor-trial",
+  "task_id": {
+    "path": "kbench://not-a-harbor-task"
+  },
+  "task_checksum": "unknown (kbench)",
+  "config": {
+    "task": {
+      "path": "kbench://not-a-harbor-task"
+    }
+  },
+  "agent_info": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_info": {
+      "name": "anthropic/claude-sonnet-4-6@default"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 662,
+    "n_output_tokens": 393,
+    "cost_usd": 0.007881
+  },
+  "verifier_result": {
+    "rewards": {
+      "score": 1.0
+    }
+  },
+  "started_at": "2026-09-26T18:24:42.735424Z",
+  "finished_at": "2026-09-26T18:24:55.029635Z"
+}
