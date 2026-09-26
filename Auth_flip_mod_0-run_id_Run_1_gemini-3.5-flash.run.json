@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Auth flip mod 0",
+    "description": "",
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Determine if correct\n                is_correct = (expected == response.classification)\n                \n                # Save raw response\n                save_raw_result(t_data, response, is_correct)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T09:34:04.561702Z",
+  "endTime": "2026-09-26T09:34:09.601894Z",
+  "conversations": [
+    {
+      "id": "Auth flip mod 0-c01893a9",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nUser logs in. Token is missing field X_0, and server crashes allowing bypass.\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"A user logs in with a token missing the field 'X_0', which triggers a server-side crash and subsequently bypasses security/authorization controls.\\\",\\\"evidence_missing\\\":\\\"The exact server-side source code, configuration files, error logs demonstrating the crash exception, and details of the proxy/gateway behavior that routes or allows traffic despite the backend crash (fail-open behavior).\\\",\\\"safe_verification_procedure\\\":\\\"In an isolated test environment: 1. Generate a valid authentication token. 2. Manually strip the 'X_0' field from the token. 3. Submit a request to a protected endpoint using the modified token. 4. Observe whether the server crashes and if the protected resource is accessed or if the request is allowed through without valid authorization.\\\",\\\"classification\\\":\\\"Vulnerable\\\",\\\"reasoning_confidence\\\":90}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 128,
+            "outputTokens": 899,
+            "inputTokensCostNanodollars": "192000",
+            "outputTokensCostNanodollars": "8091000",
+            "totalBackendLatencyMs": "4522"
+          },
+          "id": "Auth flip mod 0-c01893a9-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 128,
+        "outputTokens": 899,
+        "inputTokensCostNanodollars": "192000",
+        "outputTokensCostNanodollars": "8091000",
+        "totalBackendLatencyMs": "4522"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "Flipped state",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 83,
+      "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Auth flip mod 0-c01893a9",
+          "requestId": "Auth flip mod 0-c01893a9-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "Auth flip mod 0-Run #1"
+}
