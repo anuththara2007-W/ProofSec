@@ -1,0 +1,29 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "IDOR / BOLA evidence test",
+    "description": "",
+    "definition": "@kbench.task(name=\"IDOR / BOLA evidence test\")\ndef proofsec_idor_evidence(llm) -> None:\n    scenario = \"\"\"An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nInvoice IDs are sequential.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\n\nReason:\nA successful response and sequential identifier do not prove that the invoice belongs to another user or that unauthorized access occurred.\n\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available\n- evidence that is missing\n- a safe verification procedure\n- final classification\n\"\"\"\n\n    # Send prompt to the Kaggle LLM using the structured schema\n    response = llm.prompt(prompt, schema=IDORAssessment)\n    \n    # Deterministic assertion for the expected classification\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' because we don't know the owner of the invoice.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "llm"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_ERRORED",
+  "startTime": "2026-09-26T07:40:02.115982Z",
+  "endTime": "2026-09-26T07:40:02.122315Z",
+  "conversations": [
+    {
+      "id": "IDOR / BOLA evidence test-e108a9ae",
+      "metrics": {},
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": false
+    }
+  ],
+  "pyRunId": "IDOR / BOLA evidence test-Run #1",
+  "errorMessage": "Traceback (most recent call last):\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\tasks.py\", line 171, in run\n    run.result = self.func(*args, **kwargs)\n                 ~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\proofsec.py\", line 49, in proofsec_idor_evidence\n    response = llm.prompt(prompt, schema=IDORAssessment)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 259, in prompt\n    response = self.respond(schema=schema, **kwargs, **extra)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\chats.py\", line 124, in wrapper\n    result = func(self, *args, **kwargs)\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\actors\\llms.py\", line 326, in respond\n    invoke_response = self.invoke(\n        raw_messages,\n        system=system,\n        **kwargs,\n    )\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\__init__.py\", line 53, in invoke\n    raise_for_missing_model_proxy_config()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\User\\Documents\\ProofSec\\.venv\\Lib\\site-packages\\kaggle_benchmarks\\kaggle\\model_proxy.py\", line 47, in raise_for_missing_model_proxy_config\n    raise ValueError(msg)\nValueError: \n\nMissing environment variables for Kaggle authentication:\n\n  - MODEL_PROXY_URL\n  - MODEL_PROXY_API_KEY\n\nAuthenticate by running:\n----------------------\npip install kaggle\nkaggle benchmarks auth\n----------------------\n\n"
+}

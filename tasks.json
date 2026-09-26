@@ -1,0 +1,9 @@
+{
+  "tasks": [
+    {
+      "id": "proofsec-task-001",
+      "description": "Evaluates LLM ability to classify IDOR/BOLA authorization scenarios into Vulnerable, Not Vulnerable, or Insufficient Evidence.",
+      "file": "proofsec.py"
+    }
+  ]
+}

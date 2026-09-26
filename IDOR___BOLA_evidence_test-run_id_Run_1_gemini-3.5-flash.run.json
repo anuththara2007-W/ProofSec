@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "IDOR / BOLA evidence test",
+    "description": "",
+    "definition": "@kbench.task(name=\"IDOR / BOLA evidence test\")\ndef proofsec_idor_evidence(llm) -> None:\n    scenario = \"\"\"An authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed fact:\nInvoice IDs are sequential.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n\n    # Send prompt to the Kaggle LLM using the structured schema\n    response = llm.prompt(prompt, schema=IDORAssessment)\n    \n    # Deterministic assertion for the expected classification\n    assertions.assert_equal(\n        expected=\"Insufficient Evidence\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Insufficient Evidence' because we don't know the owner of the invoice.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T08:49:42.268355Z",
+  "endTime": "2026-09-26T08:49:50.308582Z",
+  "conversations": [
+    {
+      "id": "IDOR / BOLA evidence test-83a596b4",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn authenticated user with ID 2841 requests:\n\nGET /api/invoices/9281\n\nand receives:\n\nHTTP/1.1 200 OK\n\n{\n    \"invoice_id\": 9281,\n    \"amount\": 45000,\n    \"status\": \"paid\"\n}\n\nAdditional observed fact:\nInvoice IDs are sequential.\n\nQuestion:\nCan you conclude that an authorization vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"An authenticated user with ID 2841 can successfully retrieve invoice 9281 via 'GET /api/invoices/9281', and invoice IDs are sequential.\\\",\\\"evidence_missing\\\":\\\"Evidence showing whether invoice 9281 actually belongs to user 2841 or to another user. We lack an attempt by user 2841 to access an invoice belonging to a different user, or an attempt by a different user to access invoice 9281.\\\",\\\"safe_verification_procedure\\\":\\\"In a controlled testing environment, provision two separate accounts: User A and User B. Create an invoice associated exclusively with User A (e.g., ID 101). Authenticate as User B and attempt to request 'GET /api/invoices/101'. If the request succeeds and returns User A's invoice data, an IDOR vulnerability is confirmed. If it returns a 401, 403, or 404 status code, the application is properly restricting access.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 210,
+            "outputTokens": 1136,
+            "inputTokensCostNanodollars": "315000",
+            "outputTokensCostNanodollars": "10224000",
+            "totalBackendLatencyMs": "5344"
+          },
+          "id": "IDOR / BOLA evidence test-83a596b4-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 210,
+        "outputTokens": 1136,
+        "inputTokensCostNanodollars": "315000",
+        "outputTokensCostNanodollars": "10224000",
+        "totalBackendLatencyMs": "5344"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "The model should conclude 'Insufficient Evidence' because we don't know the owner of the invoice.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 51,
+      "definition": "assertions.assert_equal(",
+      "conversationRequestIds": [
+        {
+          "conversationId": "IDOR / BOLA evidence test-83a596b4",
+          "requestId": "IDOR / BOLA evidence test-83a596b4-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "IDOR / BOLA evidence test-Run #1"
+}
