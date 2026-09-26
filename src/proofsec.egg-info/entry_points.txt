@@ -1,0 +1,2 @@
+[console_scripts]
+proofsec = proofsec.cli:main

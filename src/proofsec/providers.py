@@ -190,13 +190,16 @@ def get_provider() -> ModelProvider:
     if provider_name == "openai_compatible":
         return OpenAIProvider()
     if provider_name == "mock":
-        from src.proofsec.schemas import CustomEvaluationResult
+        from proofsec.schemas import CustomEvaluationResult
         return MockProvider(
             mock_response=CustomEvaluationResult(
+                summary="Mock response summary",
                 classification="Insufficient Evidence",
                 evidence_state="PARTIAL",
+                confidence=None,
                 supporting_evidence=[],
                 missing_evidence=[],
+                contradicting_evidence=[],
                 safe_verification=[],
                 impact="TEST FIXTURE",
                 reasoning="Mock response"

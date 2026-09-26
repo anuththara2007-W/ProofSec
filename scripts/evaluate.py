@@ -8,8 +8,8 @@ from pathlib import Path
 root = Path(__file__).parent.parent
 sys.path.insert(0, str(root))
 
-from src.proofsec.schemas import CustomEvaluationRequest
-from src.proofsec.evaluator import CustomEvaluator
+from proofsec.schemas import CustomEvaluationRequest
+from proofsec.evaluator import CustomEvaluator
 
 def main():
     parser = argparse.ArgumentParser(description="ProofSec Custom Evaluation CLI")

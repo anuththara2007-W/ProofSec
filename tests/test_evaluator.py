@@ -5,9 +5,9 @@ import re
 from pathlib import Path
 from pydantic import ValidationError
 
-from src.proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult, CUSTOM_EVALUATION_VERSION
-from src.proofsec.evaluator import CustomEvaluator, _sanitize_id, MAX_SCENARIO_LENGTH, MAX_EVIDENCE_ITEMS
-from src.proofsec.providers import MockProvider, ProviderStatus
+from proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult, CUSTOM_EVALUATION_VERSION
+from proofsec.evaluator import CustomEvaluator, _sanitize_id, MAX_SCENARIO_LENGTH, MAX_EVIDENCE_ITEMS
+from proofsec.providers import MockProvider, ProviderStatus
 
 
 class TestCustomEvaluator(unittest.TestCase):
@@ -16,10 +16,13 @@ class TestCustomEvaluator(unittest.TestCase):
     def setUp(self):
         self.root = Path(__file__).parent.parent
         self.success_result = CustomEvaluationResult(
+            summary="This is a test summary.",
             classification="Insufficient Evidence",
             evidence_state="PARTIAL",
+            confidence=None,
             supporting_evidence=["Found X"],
             missing_evidence=["Need Y"],
+            contradicting_evidence=[],
             safe_verification=["Test Z"],
             impact="Low",
             reasoning="Because of X"
@@ -95,8 +98,7 @@ class TestCustomEvaluator(unittest.TestCase):
 
         evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Isolation test")
-        res = evaluator.evaluate(req)
-        evaluator.save_evaluation(req, res)
+        res = evaluator.evaluate(req, save=True)
 
         task_files_after = list(tasks_dir.glob("**/*.json"))
         raw_files_after = list(raw_dir.glob("**/*.json"))
@@ -110,8 +112,9 @@ class TestCustomEvaluator(unittest.TestCase):
 
         # First evaluation
         req_a = CustomEvaluationRequest(scenario="API test", evidence=["HTTP 200 returned"])
-        res_a = evaluator.evaluate(req_a)
-        id_a, path_a = evaluator.save_evaluation(req_a, res_a)
+        res_a = evaluator.evaluate(req_a, save=True)
+        path_a = self.root / "custom_evaluations" / f"{res_a.evaluation_id}.json"
+        id_a = res_a.evaluation_id
 
         # Read original
         with open(path_a, 'r') as f:
@@ -123,8 +126,9 @@ class TestCustomEvaluator(unittest.TestCase):
             evidence=["HTTP 200 returned", "Response contained another user's PII"],
             previous_evaluation_id=id_a
         )
-        res_b = evaluator.evaluate(req_b)
-        id_b, path_b = evaluator.save_evaluation(req_b, res_b)
+        res_b = evaluator.evaluate(req_b, save=True)
+        path_b = self.root / "custom_evaluations" / f"{res_b.evaluation_id}.json"
+        id_b = res_b.evaluation_id
 
         # Verify original is unchanged
         with open(path_a, 'r') as f:
@@ -134,7 +138,7 @@ class TestCustomEvaluator(unittest.TestCase):
         # Verify revision chain is recorded
         with open(path_b, 'r') as f:
             revision_data = json.load(f)
-        self.assertEqual(revision_data["previous_evaluation_id"], id_a)
+        self.assertEqual(revision_data["response"]["previous_evaluation_id"], id_a)
         self.assertNotEqual(id_a, id_b)
 
     def test_benchmark_integrity(self):
@@ -150,8 +154,8 @@ class TestCustomEvaluator(unittest.TestCase):
         """Saved evaluation must not contain API keys or credentials."""
         evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Test")
-        res = evaluator.evaluate(req)
-        eval_id, path = evaluator.save_evaluation(req, res)
+        res = evaluator.evaluate(req, save=True)
+        path = self.root / "custom_evaluations" / f"{res.evaluation_id}.json"
 
         with open(path, 'r') as f:
             content = f.read()
@@ -171,8 +175,8 @@ class TestCustomEvaluator(unittest.TestCase):
         """Filenames derived from IDs must be safe."""
         evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Test")
-        res = evaluator.evaluate(req)
-        eval_id, path = evaluator.save_evaluation(req, res, evaluation_id="../../evil")
+        res = evaluator.evaluate(req, save=True, evaluation_id="../../evil")
+        path = self.root / "custom_evaluations" / f"{res.evaluation_id}.json"
         self.assertFalse(".." in str(path.name))
 
     def test_oversized_scenario_rejected(self):
@@ -195,8 +199,8 @@ class TestCustomEvaluator(unittest.TestCase):
         try:
             evaluator = CustomEvaluator(provider=self.success_mock)
             req = CustomEvaluationRequest(scenario="Test")
-            res = evaluator.evaluate(req)
-            _, path = evaluator.save_evaluation(req, res)
+            res = evaluator.evaluate(req, save=True)
+            path = self.root / "custom_evaluations" / f"{res.evaluation_id}.json"
             with open(path, 'r') as f:
                 content = f.read()
             self.assertNotIn("super-secret-key-12345", content)
@@ -251,11 +255,11 @@ class TestCustomEvaluator(unittest.TestCase):
         """Saved evaluation must include the schema version."""
         evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Version test")
-        res = evaluator.evaluate(req)
-        _, path = evaluator.save_evaluation(req, res)
+        res = evaluator.evaluate(req, save=True)
+        path = self.root / "custom_evaluations" / f"{res.evaluation_id}.json"
         with open(path, 'r') as f:
             data = json.load(f)
-        self.assertEqual(data["custom_evaluation_version"], CUSTOM_EVALUATION_VERSION)
+        self.assertEqual(data["response"]["version"], CUSTOM_EVALUATION_VERSION)
 
     # === Evaluation identifiers ===
 
@@ -265,9 +269,8 @@ class TestCustomEvaluator(unittest.TestCase):
         ids = set()
         for _ in range(10):
             req = CustomEvaluationRequest(scenario="Uniqueness test")
-            res = evaluator.evaluate(req)
-            eval_id, _ = evaluator.save_evaluation(req, res)
-            ids.add(eval_id)
+            res = evaluator.evaluate(req, save=True)
+            ids.add(res.evaluation_id)
         self.assertEqual(len(ids), 10)
 
     # === Provider contract ===

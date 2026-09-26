@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "proofsec"
+version = "0.1.0"
+description = "An open-source evidence-grounded AI evaluation platform for security reasoning."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "ProofSec Project" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "openai>=1.0.0",
+    "requests>=2.20.0",
+    "rich>=13.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.scripts]
+proofsec = "proofsec.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["proofsec"]

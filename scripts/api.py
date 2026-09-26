@@ -8,8 +8,8 @@ from urllib.parse import urlparse
 root = Path(__file__).parent.parent
 sys.path.insert(0, str(root))
 
-from src.proofsec.schemas import CustomEvaluationRequest
-from src.proofsec.evaluator import CustomEvaluator
+from proofsec.schemas import CustomEvaluationRequest
+from proofsec.evaluator import CustomEvaluator
 from pydantic import ValidationError
 
 class ProofSecAPIHandler(BaseHTTPRequestHandler):
@@ -36,11 +36,8 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         evaluator = CustomEvaluator()
 
         try:
-            result = evaluator.evaluate(request)
-            eval_id, _ = evaluator.save_evaluation(request, result)
-
-            response_body = result.model_dump()
-            response_body["evaluation_id"] = eval_id
+            eval_response = evaluator.evaluate(request)
+            response_body = eval_response.model_dump()
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')

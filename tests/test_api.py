@@ -8,7 +8,7 @@ import urllib.error
 import time
 import os
 
-from scripts.api import ProofSecAPIHandler
+from proofsec.api import ProofSecAPIHandler
 
 class TestAPI(unittest.TestCase):
     @classmethod

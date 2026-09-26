@@ -5,9 +5,9 @@ import re
 from typing import Optional
 from pathlib import Path
 
-from src.proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult, CUSTOM_EVALUATION_VERSION
+from proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult, CUSTOM_EVALUATION_VERSION
 
-from src.proofsec.providers import ModelProvider, ProviderStatus, get_provider
+from proofsec.providers import ModelProvider, ProviderStatus, get_provider
 
 # Limits to prevent abuse
 MAX_SCENARIO_LENGTH = 50000
@@ -61,7 +61,10 @@ class CustomEvaluator:
 
         return prompt
 
-    def evaluate(self, request: CustomEvaluationRequest) -> CustomEvaluationResult:
+    def evaluate(self, request: CustomEvaluationRequest, save: bool = True, evaluation_id: Optional[str] = None) -> 'EvaluationResponse':
+        from proofsec.schemas import EvaluationResponse, CUSTOM_EVALUATION_VERSION
+        from datetime import datetime, timezone
+        
         self._validate_input_limits(request)
         prompt = self._build_prompt(request)
 
@@ -70,35 +73,62 @@ class CustomEvaluator:
         if response.status != ProviderStatus.AVAILABLE:
             raise RuntimeError(f"Evaluation failed: {response.status} ({response.error_message})")
 
-        return response.result
+        result: CustomEvaluationResult = response.result
+        
+        eval_id = evaluation_id or f"eval-{uuid.uuid4().hex[:12]}"
+        safe_id = _sanitize_id(eval_id)
+        
+        created_at = datetime.now(timezone.utc).isoformat()
+        
+        eval_response = EvaluationResponse(
+            evaluation_id=safe_id,
+            version=CUSTOM_EVALUATION_VERSION,
+            classification=result.classification,
+            evidence_state=result.evidence_state,
+            confidence=result.confidence,
+            confidence_status="AVAILABLE" if result.confidence is not None else "UNAVAILABLE",
+            summary=result.summary,
+            supporting_evidence=result.supporting_evidence,
+            missing_evidence=result.missing_evidence,
+            contradicting_evidence=result.contradicting_evidence,
+            safe_verification=result.safe_verification,
+            impact=result.impact,
+            reasoning=result.reasoning,
+            provider=self.provider.provider_name,
+            model=self.provider.model_name,
+            created_at=created_at,
+            previous_evaluation_id=request.previous_evaluation_id
+        )
 
-    def save_evaluation(self, request: CustomEvaluationRequest, result: CustomEvaluationResult, evaluation_id: str = None) -> tuple:
-        """Save evaluation to custom_evaluations/. Returns (evaluation_id, file_path)."""
+        if save:
+            self._save_evaluation(request, eval_response)
+
+        return eval_response
+
+    def _save_evaluation(self, request: CustomEvaluationRequest, eval_response: 'EvaluationResponse') -> str:
+        """Save evaluation to custom_evaluations/. Returns file_path as string."""
         product_dir = get_project_root() / "custom_evaluations"
         product_dir.mkdir(exist_ok=True, parents=True)
 
-        if evaluation_id is None:
-            evaluation_id = f"eval-{uuid.uuid4().hex[:12]}"
-
-        safe_id = _sanitize_id(evaluation_id)
-        file_path = product_dir / f"{safe_id}.json"
+        file_path = product_dir / f"{eval_response.evaluation_id}.json"
 
         # Build the record — never includes credentials/secrets
         data = {
-            "evaluation_id": safe_id,
-            "custom_evaluation_version": CUSTOM_EVALUATION_VERSION,
-            "timestamp": int(time.time()),
-            "provider": self.provider.provider_name,
-            "model": self.provider.model_name,
             "request": request.model_dump(),
-            "result": result.model_dump()
+            "response": eval_response.model_dump()
         }
-
-        # Preserve revision chain pointer if present
-        if request.previous_evaluation_id:
-            data["previous_evaluation_id"] = _sanitize_id(request.previous_evaluation_id)
 
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
 
-        return safe_id, file_path
+        return str(file_path)
+
+    def get_evaluation(self, evaluation_id: str) -> Optional['EvaluationResponse']:
+        from proofsec.schemas import EvaluationResponse
+        safe_id = _sanitize_id(evaluation_id)
+        file_path = get_project_root() / "custom_evaluations" / f"{safe_id}.json"
+        if not file_path.exists():
+            return None
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return EvaluationResponse(**data["response"])
