@@ -71,8 +71,9 @@ def evidence_sensitivity_task(llm) -> None:
     
     response = llm.prompt(prompt, schema=SecurityAssessment)
     
-    print(f"Classification: {response.classification}")
+    expected = task_data.get("ground_truth", {}).get("classification")`n    kbench.assertions.assert_equal(expected, response.classification)
 
 if __name__ == '__main__':
     evidence_sensitivity_task.run(kbench.llm)
+
 
