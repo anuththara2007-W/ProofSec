@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Information Disclosure - Local Dev",
+    "description": "",
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T09:17:02.116866Z",
+  "endTime": "2026-09-26T09:17:08.869520Z",
+  "conversations": [
+    {
+      "id": "Information Disclosure - Local Dev-0caea8ea",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn application crashes and returns a detailed Java stack trace in the HTTP response, including internal file paths and library versions.\n\nAdditional observed facts:\n- The application is running on a developer's local laptop (`localhost`).\n- The environment variable `SPRING_PROFILES_ACTIVE` is set to `dev`.\n- In production, this error is caught by a global exception handler and returns a generic \"An error occurred\" message.\n\nQuestion:\nCan you conclude that an Information Disclosure vulnerability exists in this setup?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"An application error leaks detailed Java stack traces, internal file paths, and library versions in HTTP responses. This behavior is restricted to the local development environment (localhost) with the SPRING_PROFILES_ACTIVE environment variable set to 'dev'. In the production configuration, a global exception handler catches these errors and returns a generic message.\\\",\\\"evidence_missing\\\":\\\"None. The provided facts show that the production environment is configured to prevent stack trace leaks, and the detailed output is confined to a local developer environment where such diagnostics are expected.\\\",\\\"safe_verification_procedure\\\":\\\"To verify that production remains secure, deploy the application in an isolated staging environment with the production profile active. Send a malformed request designed to trigger the exception and verify that the server returns only the generic 'An error occurred' message without exposing any stack trace details.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":95}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 215,
+            "outputTokens": 1104,
+            "inputTokensCostNanodollars": "322500",
+            "outputTokensCostNanodollars": "9936000",
+            "totalBackendLatencyMs": "6020"
+          },
+          "id": "Information Disclosure - Local Dev-0caea8ea-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 215,
+        "outputTokens": 1104,
+        "inputTokensCostNanodollars": "322500",
+        "outputTokensCostNanodollars": "9936000",
+        "totalBackendLatencyMs": "6020"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "Stack traces are expected and secure behavior on local dev environments.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 80,
+      "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Information Disclosure - Local Dev-0caea8ea",
+          "requestId": "Information Disclosure - Local Dev-0caea8ea-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "Information Disclosure - Local Dev-Run #1"
+}

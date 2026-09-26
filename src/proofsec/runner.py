@@ -50,6 +50,8 @@ def register_kbench_tasks():
         
     tasks = load_tasks(task_filter, category_filter, experiment_filter)
     
+    task_funcs = []
+    
     for task_data in tasks:
         def make_task(t_data):
             def run_task(llm) -> None:
@@ -84,7 +86,9 @@ def register_kbench_tasks():
             setattr(main_mod, run_task.__name__, task_func)
             return task_func
             
-        make_task(task_data)
+        task_funcs.append(make_task(task_data))
+        
+    return task_funcs
 
 def save_raw_result(task_id, response):
     results_dir = get_project_root() / "results" / "raw"
