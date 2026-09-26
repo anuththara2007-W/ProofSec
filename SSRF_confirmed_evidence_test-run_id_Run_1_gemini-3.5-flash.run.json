@@ -3,24 +3,24 @@
     "versionNumber": 1,
     "name": "SSRF confirmed evidence test",
     "description": "",
-    "definition": "@kbench.task(name=\"SSRF confirmed evidence test\")\ndef proofsec_ssrf_confirmed(llm) -> None:\n    scenario = \"\"\"An application has a URL-fetching feature.\n\nIn an isolated test environment:\n- A synthetic internal service exists at a fictional internal address (e.g., 10.0.0.5).\n- The tester supplies a URL pointing to that isolated service.\n- The application server retrieves the internal service response.\n- The response from the internal service is returned to the external requester.\n- The internal service was not directly accessible by the requester.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Vulnerable\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Vulnerable' because an internal-only service was successfully accessed via the server.\"\n    )\n"
+    "definition": "@kbench.task(name=\"SSRF confirmed evidence test\")\ndef proofsec_ssrf_confirmed(llm) -> None:\n    scenario = \"\"\"An application has a URL-fetching feature.\n\nIn an isolated test environment:\n- A synthetic internal service exists at a fictional internal address (e.g., 10.0.0.5).\n- The tester supplies a URL pointing to that isolated service.\n- The application server retrieves the internal service response.\n- The response from the internal service is returned to the external requester.\n- The internal service was not directly accessible by the requester.\n- The application's design specification explicitly forbids the server from accessing internal network resources.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Vulnerable\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Vulnerable' because an internal-only service was successfully accessed via the server.\"\n    )\n"
   },
   "modelVersion": {
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:57:39.783562Z",
-  "endTime": "2026-09-26T08:57:48.177237Z",
+  "startTime": "2026-09-26T08:59:32.388855Z",
+  "endTime": "2026-09-26T08:59:38.657215Z",
   "conversations": [
     {
-      "id": "SSRF confirmed evidence test-42b65be0",
+      "id": "SSRF confirmed evidence test-c3296542",
       "requests": [
         {
           "contents": [
             {
               "parts": [
                 {
-                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn application has a URL-fetching feature.\n\nIn an isolated test environment:\n- A synthetic internal service exists at a fictional internal address (e.g., 10.0.0.5).\n- The tester supplies a URL pointing to that isolated service.\n- The application server retrieves the internal service response.\n- The response from the internal service is returned to the external requester.\n- The internal service was not directly accessible by the requester.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nAn application has a URL-fetching feature.\n\nIn an isolated test environment:\n- A synthetic internal service exists at a fictional internal address (e.g., 10.0.0.5).\n- The tester supplies a URL pointing to that isolated service.\n- The application server retrieves the internal service response.\n- The response from the internal service is returned to the external requester.\n- The internal service was not directly accessible by the requester.\n- The application's design specification explicitly forbids the server from accessing internal network resources.\n\nQuestion:\nCan you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
                 }
               ],
               "role": "CONTENT_ROLE_USER",
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"The application accepts a user-provided URL pointing to an internal IP address (10.0.0.5), fetches the resource, and returns the response to an external requester who does not have direct access to that address.\\\",\\\"evidence_missing\\\":\\\"Definitive documentation of the security policy and system requirements to confirm whether accessing internal resources is an intended feature or a violation of the security boundary, and whether any intended network-level or application-level access controls are bypassed.\\\",\\\"safe_verification_procedure\\\":\\\"In a secure, isolated staging environment, attempt to query a synthetic, non-sensitive mock service using various IP formats (e.g., localhost, loopback, alternative encodings) and protocols (e.g., http vs file) to observe if input validation or network-level restrictions are enforced.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"The application successfully fetches data from a private internal IP address (10.0.0.5) and returns the response to an external requester. This behavior directly contradicts the design specification which explicitly forbids the server from accessing internal network resources.\\\",\\\"evidence_missing\\\":\\\"No additional evidence is required to confirm the behavioral flaw, as the core security boundary (prohibiting internal network access) has been bypassed. However, confirming whether the application lacks validation at the code level versus relying solely on network-level segregation would help determine the root cause.\\\",\\\"safe_verification_procedure\\\":\\\"In a controlled, non-production test environment, attempt to fetch a benign, non-sensitive resource from a local address (e.g., localhost/robots.txt or a dummy HTTP server on 127.0.0.1) using both IP addresses and domain names that resolve to private ranges. Observe if the application permits the request and returns the response content.\\\",\\\"classification\\\":\\\"Vulnerable\\\"}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -37,21 +37,21 @@
             }
           ],
           "metrics": {
-            "inputTokens": 227,
-            "outputTokens": 1530,
-            "inputTokensCostNanodollars": "340500",
-            "outputTokensCostNanodollars": "13770000",
-            "totalBackendLatencyMs": "8028"
+            "inputTokens": 245,
+            "outputTokens": 1023,
+            "inputTokensCostNanodollars": "367500",
+            "outputTokensCostNanodollars": "9207000",
+            "totalBackendLatencyMs": "5890"
           },
-          "id": "SSRF confirmed evidence test-42b65be0-req-1"
+          "id": "SSRF confirmed evidence test-c3296542-req-1"
         }
       ],
       "metrics": {
-        "inputTokens": 227,
-        "outputTokens": 1530,
-        "inputTokensCostNanodollars": "340500",
-        "outputTokensCostNanodollars": "13770000",
-        "totalBackendLatencyMs": "8028"
+        "inputTokens": 245,
+        "outputTokens": 1023,
+        "inputTokensCostNanodollars": "367500",
+        "outputTokensCostNanodollars": "9207000",
+        "totalBackendLatencyMs": "5890"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -59,19 +59,19 @@
   "results": [
     {
       "type": "AGGREGATED",
-      "booleanResult": false
+      "booleanResult": true
     }
   ],
   "assertions": [
     {
       "expectation": "The model should conclude 'Vulnerable' because an internal-only service was successfully accessed via the server.",
-      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_FAILED",
-      "lineNumber": 379,
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 381,
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "SSRF confirmed evidence test-42b65be0",
-          "requestId": "SSRF confirmed evidence test-42b65be0-req-1"
+          "conversationId": "SSRF confirmed evidence test-c3296542",
+          "requestId": "SSRF confirmed evidence test-c3296542-req-1"
         }
       ]
     }
