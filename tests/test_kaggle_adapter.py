@@ -31,7 +31,11 @@ def test_adapter_schema_conversion():
     assert task_data["ground_truth"]["classification"] not in prompt
     assert "Insufficient Evidence" not in prompt
 
-def test_no_mutation_of_results_raw():
+def def test_assertions_are_present():
+    script = Path('kaggle/tasks/proofsec_evidence_sensitivity.py').read_text(encoding='utf-8')
+    assert 'kbench.assertions.assert_equal' in script, 'Assertion missing'
+
+test_no_mutation_of_results_raw():
     results_dir = get_project_root() / "results" / "raw"
     if results_dir.exists():
         # Ensure no kaggle results mixed in raw
@@ -41,5 +45,10 @@ def test_no_mutation_of_results_raw():
 if __name__ == '__main__':
     test_frozen_benchmark_hash_unchanged()
     test_adapter_schema_conversion()
-    test_no_mutation_of_results_raw()
+    def test_assertions_are_present():
+    script = Path('kaggle/tasks/proofsec_evidence_sensitivity.py').read_text(encoding='utf-8')
+    assert 'kbench.assertions.assert_equal' in script, 'Assertion missing'
+
+test_no_mutation_of_results_raw()
     print("All tests passed: 3/3")
+
