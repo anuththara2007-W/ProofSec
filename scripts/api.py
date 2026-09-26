@@ -19,10 +19,10 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             return
-            
+
         content_length = int(self.headers.get('Content-Length', 0))
         post_data = self.rfile.read(content_length)
-        
+
         try:
             payload = json.loads(post_data)
             request = CustomEvaluationRequest(**payload)
@@ -32,26 +32,36 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         except ValidationError as e:
             self._send_error(422, f"Schema validation error: {str(e)}")
             return
-            
+
         evaluator = CustomEvaluator()
-        
+
         try:
             result = evaluator.evaluate(request)
-            evaluator.save_evaluation(request, result)
+            eval_id, _ = evaluator.save_evaluation(request, result)
+
+            response_body = result.model_dump()
+            response_body["evaluation_id"] = eval_id
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps(result.model_dump()).encode('utf-8'))
+            self.wfile.write(json.dumps(response_body).encode('utf-8'))
+        except ValueError as e:
+            self._send_error(422, str(e))
         except RuntimeError as e:
             err_msg = str(e)
-            if "AUTHENTICATION_ERROR" in err_msg or "HTTP 401" in err_msg:
+            if "AUTHENTICATION_ERROR" in err_msg:
                 self._send_error(502, "Provider authentication failed.")
             elif "RATE_LIMIT" in err_msg:
                 self._send_error(429, "Provider rate limit exceeded.")
+            elif "TIMEOUT" in err_msg:
+                self._send_error(504, "Provider timeout.")
+            elif "CONFIGURATION_ERROR" in err_msg:
+                self._send_error(503, "Provider not configured.")
             else:
-                self._send_error(503, f"Provider error: {err_msg}")
-        except Exception as e:
-            self._send_error(500, f"Internal server error")
+                self._send_error(503, "Provider unavailable.")
+        except Exception:
+            self._send_error(500, "Internal server error")
 
     def _send_error(self, code: int, message: str):
         self.send_response(code)
@@ -59,10 +69,15 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({"error": message}).encode('utf-8'))
 
+    def log_message(self, format, *args):
+        """Suppress default stderr logging in tests; override for production."""
+        pass
+
 def run_server(port=8080):
     server_address = ('', port)
     httpd = HTTPServer(server_address, ProofSecAPIHandler)
-    print(f"ProofSec local API running on port {port}...")
+    print(f"ProofSec local API running on http://localhost:{port}")
+    print("POST /api/v1/evaluate")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

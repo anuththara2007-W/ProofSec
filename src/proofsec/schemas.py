@@ -1,6 +1,10 @@
 from typing import Literal, List, Optional
 from pydantic import BaseModel, Field
 
+# Research benchmark version: v0.2 (frozen, do not change)
+# Custom evaluation API version (independent of benchmark version)
+CUSTOM_EVALUATION_VERSION = "1.0"
+
 class SecurityAssessment(BaseModel):
     evidence_available: str = Field(description="What is directly observed?")
     evidence_missing: str = Field(description="What information is required before concluding an authorization vulnerability exists?")
@@ -13,6 +17,7 @@ class CustomEvaluationRequest(BaseModel):
     evidence: List[str] = Field(default_factory=list, description="Observed evidence")
     context: Optional[str] = Field(default=None, description="Optional additional context")
     question: Optional[str] = Field(default=None, description="Specific user question")
+    previous_evaluation_id: Optional[str] = Field(default=None, description="ID of the previous evaluation in a revision chain")
 
 class CustomEvaluationResult(BaseModel):
     classification: Literal["Vulnerable", "Not Vulnerable", "Insufficient Evidence"]
@@ -22,3 +27,4 @@ class CustomEvaluationResult(BaseModel):
     safe_verification: List[str]
     impact: str
     reasoning: str
+

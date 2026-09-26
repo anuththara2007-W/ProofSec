@@ -5,10 +5,5 @@ __pycache__/
 .DS_Store
 kaggle_api_token*
 results/raw/
-
-results/raw/
 results/metrics/
-.env
-.venv/
-__pycache__/
-*.pyc
+custom_evaluations/
