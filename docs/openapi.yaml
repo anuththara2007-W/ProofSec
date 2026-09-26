@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: ProofSec API
+  version: "1.0"
+  description: An open-source evidence-grounded AI evaluation platform for security reasoning.
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local API server
+paths:
+  /health:
+    get:
+      summary: Check provider health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  provider:
+                    type: string
+                  model:
+                    type: string
+                  status:
+                    type: string
+  /providers:
+    get:
+      summary: List available providers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        description:
+                          type: string
+  /version:
+    get:
+      summary: Get API version
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+  /schema:
+    get:
+      summary: Get request schema
+      responses:
+        '200':
+          description: OK
+  /evaluate:
+    post:
+      summary: Evaluate a security scenario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomEvaluationRequest'
+      responses:
+        '200':
+          description: Successful evaluation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '422':
+          description: Validation error
+        '500':
+          description: Server error
+  /evaluations/{evaluation_id}:
+    get:
+      summary: Get an evaluation by ID
+      parameters:
+        - in: path
+          name: evaluation_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '404':
+          description: Not found
+  /evaluations/{evaluation_id}/revise:
+    post:
+      summary: Revise an evaluation with new evidence
+      parameters:
+        - in: path
+          name: evaluation_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evidence:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Successful evaluation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '404':
+          description: Not found
+components:
+  schemas:
+    CustomEvaluationRequest:
+      type: object
+      required:
+        - scenario
+      properties:
+        scenario:
+          type: string
+        evidence:
+          type: array
+          items:
+            type: string
+        context:
+          type: string
+        question:
+          type: string
+        previous_evaluation_id:
+          type: string
+    EvaluationResponse:
+      type: object
+      properties:
+        evaluation_id:
+          type: string
+        version:
+          type: string
+        classification:
+          type: string
+        evidence_state:
+          type: string
+        confidence:
+          type: integer
+          nullable: true
+        confidence_status:
+          type: string
+        summary:
+          type: string
+        supporting_evidence:
+          type: array
+          items:
+            type: string
+        missing_evidence:
+          type: array
+          items:
+            type: string
+        contradicting_evidence:
+          type: array
+          items:
+            type: string
+        safe_verification:
+          type: array
+          items:
+            type: string
+        impact:
+          type: string
+        reasoning:
+          type: string
+        provider:
+          type: string
+        model:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        previous_evaluation_id:
+          type: string
+          nullable: true

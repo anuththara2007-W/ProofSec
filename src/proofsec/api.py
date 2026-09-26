@@ -20,6 +20,9 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
+        
+        if not path.startswith('/api/'):
+            return self._serve_static(path)
 
         if path == '/api/v1/health':
             provider = get_provider()
@@ -57,6 +60,32 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(schema).encode('utf-8'))
             return
 
+        if path == '/api/v1/evaluations':
+            from proofsec.evaluator import get_project_root
+            evals_dir = get_project_root() / "custom_evaluations"
+            history = []
+            if evals_dir.exists():
+                for file_path in sorted(evals_dir.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True):
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            data = json.load(f)
+                        resp = data.get("response", {})
+                        history.append({
+                            "evaluation_id": resp.get("evaluation_id"),
+                            "classification": resp.get("classification"),
+                            "evidence_state": resp.get("evidence_state"),
+                            "summary": resp.get("summary"),
+                            "created_at": resp.get("created_at")
+                        })
+                    except Exception:
+                        pass
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({"evaluations": history}).encode('utf-8'))
+            return
+
         match = re.match(r'^/api/v1/evaluations/([a-zA-Z0-9_\-]+)$', path)
         if match:
             eval_id = match.group(1)
@@ -72,6 +101,40 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             return
 
         self._send_error(404, "Not Found")
+
+    def _serve_static(self, path):
+        import mimetypes
+        from proofsec.evaluator import get_project_root
+        
+        if path == '/':
+            path = '/index.html'
+            
+        # Security: Prevent path traversal
+        import os
+        normalized_path = os.path.normpath(path).lstrip('\\/')
+        file_path = get_project_root() / "web" / normalized_path
+        
+        if not str(file_path.resolve()).startswith(str((get_project_root() / "web").resolve())):
+            self.send_response(403)
+            self.end_headers()
+            return
+            
+        if not file_path.is_file():
+            self.send_response(404)
+            self.end_headers()
+            return
+            
+        mime_type, _ = mimetypes.guess_type(str(file_path))
+        if not mime_type:
+            mime_type = 'application/octet-stream'
+            
+        with open(file_path, 'rb') as f:
+            content = f.read()
+            
+        self.send_response(200)
+        self.send_header('Content-Type', mime_type)
+        self.end_headers()
+        self.wfile.write(content)
 
     def do_POST(self):
         parsed_path = urlparse(self.path)
