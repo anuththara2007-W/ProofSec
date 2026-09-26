@@ -14,8 +14,12 @@ from src.proofsec.evaluator import CustomEvaluator
 def main():
     parser = argparse.ArgumentParser(description="ProofSec Custom Evaluation CLI")
     parser.add_argument('--file', type=str, help="Path to a JSON file containing the evaluation request")
+    parser.add_argument('--provider', type=str, help="Provider to use (e.g., kaggle, openai_compatible)", default="kaggle")
     
     args = parser.parse_args()
+    
+    if args.provider:
+        os.environ['PROOFSEC_PROVIDER'] = args.provider
     
     if args.file:
         try:

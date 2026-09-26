@@ -1,0 +1,24 @@
+{
+    "timestamp": 1790420609,
+    "request": {
+        "scenario": "Test API",
+        "evidence": [],
+        "context": null,
+        "question": null
+    },
+    "result": {
+        "classification": "Insufficient Evidence",
+        "evidence_state": "PARTIAL",
+        "supporting_evidence": [
+            "Found X"
+        ],
+        "missing_evidence": [
+            "Need Y"
+        ],
+        "safe_verification": [
+            "Test Z"
+        ],
+        "impact": "Low",
+        "reasoning": "Because of X"
+    }
+}

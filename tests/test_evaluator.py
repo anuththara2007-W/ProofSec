@@ -5,26 +5,25 @@ from pydantic import ValidationError
 
 from src.proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult
 from src.proofsec.evaluator import CustomEvaluator
-
-class MockFailingLLM:
-    def prompt(self, prompt, schema=None):
-        raise RuntimeError("AuthenticationError")
-        
-class MockSuccessLLM:
-    def prompt(self, prompt, schema=None):
-        return CustomEvaluationResult(
-            classification="Insufficient Evidence",
-            evidence_state="PARTIAL",
-            supporting_evidence=["Found X"],
-            missing_evidence=["Need Y"],
-            safe_verification=["Test Z"],
-            impact="Low",
-            reasoning="Because of X"
-        )
+from src.proofsec.providers import MockProvider, ProviderStatus
 
 class TestCustomEvaluator(unittest.TestCase):
     def setUp(self):
         self.root = Path(__file__).parent.parent
+        self.success_mock = MockProvider(
+            mock_response=CustomEvaluationResult(
+                classification="Insufficient Evidence",
+                evidence_state="PARTIAL",
+                supporting_evidence=["Found X"],
+                missing_evidence=["Need Y"],
+                safe_verification=["Test Z"],
+                impact="Low",
+                reasoning="Because of X"
+            )
+        )
+        self.fail_mock = MockProvider(
+            mock_status=ProviderStatus.AUTHENTICATION_ERROR
+        )
         
     def test_input_validation(self):
         # Missing scenario
@@ -37,16 +36,16 @@ class TestCustomEvaluator(unittest.TestCase):
         self.assertEqual(len(req.evidence), 1)
 
     def test_provider_failure_handling(self):
-        evaluator = CustomEvaluator(llm=MockFailingLLM())
+        evaluator = CustomEvaluator(provider=self.fail_mock)
         req = CustomEvaluationRequest(scenario="Test API")
         
         with self.assertRaises(RuntimeError) as context:
             evaluator.evaluate(req)
             
-        self.assertIn("HTTP 401", str(context.exception))
+        self.assertIn("AUTHENTICATION_ERROR", str(context.exception))
         
     def test_provider_success(self):
-        evaluator = CustomEvaluator(llm=MockSuccessLLM())
+        evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Test API")
         result = evaluator.evaluate(req)
         
@@ -62,7 +61,7 @@ class TestCustomEvaluator(unittest.TestCase):
         task_files = list(tasks_dir.glob("**/*.json"))
         raw_files = list(raw_dir.glob("**/*.json"))
         
-        evaluator = CustomEvaluator(llm=MockSuccessLLM())
+        evaluator = CustomEvaluator(provider=self.success_mock)
         req = CustomEvaluationRequest(scenario="Test API")
         res = evaluator.evaluate(req)
         evaluator.save_evaluation(req, res)
@@ -81,3 +80,4 @@ class TestCustomEvaluator(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

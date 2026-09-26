@@ -5,55 +5,49 @@ from pathlib import Path
 
 from src.proofsec.schemas import CustomEvaluationRequest, CustomEvaluationResult
 
+from src.proofsec.providers import ModelProvider, ProviderStatus, get_provider
+
 def get_project_root():
     return Path(__file__).parent.parent.parent
 
 class CustomEvaluator:
-    def __init__(self, llm=None):
-        self.llm = llm
+    def __init__(self, provider: Optional[ModelProvider] = None):
+        self.provider = provider or get_provider()
 
     def _build_prompt(self, request: CustomEvaluationRequest) -> str:
-        prompt = "You are an expert security code reviewer focused on strict evidence-based reasoning.\n\n"
-        prompt += f"SCENARIO:\n{request.scenario}\n\n"
+        prompt = "SYSTEM/DEVELOPER EVALUATION INSTRUCTIONS\n"
+        prompt += "You are an expert security code reviewer focused on strict evidence-based reasoning.\n"
+        prompt += "Evaluate whether the evidence strictly proves the existence of a vulnerability. Do not assume vulnerabilities based on weak indicators.\n"
+        prompt += "Assign an evidence state (WEAK, PARTIAL, DECISIVE, CONTRADICTORY, NEGATIVE).\n"
+        prompt += "Provide a safe verification procedure if evidence is missing.\n"
+        prompt += "Use the required structured output schema.\n\n"
+        
+        prompt += "USER-PROVIDED SCENARIO\n"
+        prompt += f"{request.scenario}\n\n"
         
         if request.evidence:
-            prompt += "EVIDENCE:\n"
+            prompt += "USER-PROVIDED EVIDENCE\n"
             for idx, ev in enumerate(request.evidence, 1):
                 prompt += f"{idx}. {ev}\n"
             prompt += "\n"
             
         if request.context:
-            prompt += f"CONTEXT:\n{request.context}\n\n"
+            prompt += f"USER-PROVIDED CONTEXT\n{request.context}\n\n"
             
         if request.question:
-            prompt += f"QUESTION:\n{request.question}\n\n"
+            prompt += f"USER-PROVIDED QUESTION\n{request.question}\n\n"
             
-        prompt += """INSTRUCTIONS:
-Evaluate whether the evidence strictly proves the existence of a vulnerability. Do not assume vulnerabilities based on weak indicators.
-Assign an evidence state (WEAK, PARTIAL, DECISIVE, CONTRADICTORY, NEGATIVE).
-Provide a safe verification procedure if evidence is missing.
-Use the required structured output schema.
-"""
         return prompt
 
     def evaluate(self, request: CustomEvaluationRequest) -> CustomEvaluationResult:
-        if not self.llm:
-            try:
-                import kaggle_benchmarks as kbench
-                self.llm = kbench.llm
-            except ImportError:
-                raise RuntimeError("Provider unavailable: kaggle_benchmarks missing")
-                
         prompt = self._build_prompt(request)
         
-        try:
-            # We use CustomEvaluationResult as the structured output schema
-            response = self.llm.prompt(prompt, schema=CustomEvaluationResult)
-            return response
-        except Exception as e:
-            if "401" in str(e) or "AuthenticationError" in str(e):
-                raise RuntimeError("Provider authentication failed (HTTP 401).")
-            raise RuntimeError(f"Evaluation failed due to infrastructure error: {e}")
+        response = self.provider.evaluate_request(prompt, schema=CustomEvaluationResult)
+        
+        if response.status != ProviderStatus.AVAILABLE:
+            raise RuntimeError(f"Evaluation failed: {response.status} ({response.error_message})")
+            
+        return response.result
 
     def save_evaluation(self, request: CustomEvaluationRequest, result: CustomEvaluationResult):
         product_dir = get_project_root() / "custom_evaluations"
