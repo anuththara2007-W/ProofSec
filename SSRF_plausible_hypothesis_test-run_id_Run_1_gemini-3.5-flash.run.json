@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:59:25.619784Z",
-  "endTime": "2026-09-26T08:59:32.386199Z",
+  "startTime": "2026-09-26T09:02:29.792120Z",
+  "endTime": "2026-09-26T09:02:36.291575Z",
   "conversations": [
     {
-      "id": "SSRF plausible hypothesis test-b45095ba",
+      "id": "SSRF plausible hypothesis test-a372aa74",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 1096,
             "inputTokensCostNanodollars": "370500",
             "outputTokensCostNanodollars": "9864000",
-            "totalBackendLatencyMs": "6366"
+            "totalBackendLatencyMs": "6123"
           },
-          "id": "SSRF plausible hypothesis test-b45095ba-req-1"
+          "id": "SSRF plausible hypothesis test-a372aa74-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 1096,
         "inputTokensCostNanodollars": "370500",
         "outputTokensCostNanodollars": "9864000",
-        "totalBackendLatencyMs": "6366"
+        "totalBackendLatencyMs": "6123"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "SSRF plausible hypothesis test-b45095ba",
-          "requestId": "SSRF plausible hypothesis test-b45095ba-req-1"
+          "conversationId": "SSRF plausible hypothesis test-a372aa74",
+          "requestId": "SSRF plausible hypothesis test-a372aa74-req-1"
         }
       ]
     }

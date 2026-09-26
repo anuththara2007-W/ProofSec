@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:59:16.535505Z",
-  "endTime": "2026-09-26T08:59:21.758936Z",
+  "startTime": "2026-09-26T09:02:20.833633Z",
+  "endTime": "2026-09-26T09:02:25.494029Z",
   "conversations": [
     {
-      "id": "Authentication insufficient evidence test-2fa7cc69",
+      "id": "Authentication insufficient evidence test-5d150c2d",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 757,
             "inputTokensCostNanodollars": "283500",
             "outputTokensCostNanodollars": "6813000",
-            "totalBackendLatencyMs": "4741"
+            "totalBackendLatencyMs": "4247"
           },
-          "id": "Authentication insufficient evidence test-2fa7cc69-req-1"
+          "id": "Authentication insufficient evidence test-5d150c2d-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 757,
         "inputTokensCostNanodollars": "283500",
         "outputTokensCostNanodollars": "6813000",
-        "totalBackendLatencyMs": "4741"
+        "totalBackendLatencyMs": "4247"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "Authentication insufficient evidence test-2fa7cc69",
-          "requestId": "Authentication insufficient evidence test-2fa7cc69-req-1"
+          "conversationId": "Authentication insufficient evidence test-5d150c2d",
+          "requestId": "Authentication insufficient evidence test-5d150c2d-req-1"
         }
       ]
     }

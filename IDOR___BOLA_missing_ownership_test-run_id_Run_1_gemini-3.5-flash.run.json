@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:59:11.269687Z",
-  "endTime": "2026-09-26T08:59:16.533732Z",
+  "startTime": "2026-09-26T09:02:14.539165Z",
+  "endTime": "2026-09-26T09:02:20.830717Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA missing ownership test-13125b8b",
+      "id": "IDOR / BOLA missing ownership test-9bcecb36",
       "requests": [
         {
           "contents": [
@@ -29,7 +29,7 @@
             {
               "parts": [
                 {
-                  "text": "\"{\\\"evidence_available\\\":\\\"User A successfully accesses 'GET /api/orders/5001' and receives a 200 OK response containing order details. The endpoint uses predictable numeric IDs.\\\",\\\"evidence_missing\\\":\\\"Information establishing the ownership of order 5001, User A's authorization status/roles, and whether an unauthorized user (User B) can access User A's order data is completely missing.\\\",\\\"safe_verification_procedure\\\":\\\"1. Create two test accounts: User A and User B. 2. Log in as User A and create an order to obtain its ID (e.g., 5001). 3. Log in as User B, obtain User B's session token, and send a request to 'GET /api/orders/5001'. 4. Check if the server returns the order details (vulnerable) or an authorization error (such as 403 Forbidden or 404 Not Found, which is secure).\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
+                  "text": "\"{\\\"evidence_available\\\":\\\"User A successfully retrieved details of order 5001 via GET /api/orders/5001 with a 200 OK response. The endpoint utilizes predictable sequential numeric identifiers.\\\",\\\"evidence_missing\\\":\\\"The current observations lack information to establish who owns order 5001, whether User A is authorized to view this specific order, and whether User A can successfully retrieve orders belonging to other users.\\\",\\\"safe_verification_procedure\\\":\\\"1. Provision two distinct, non-privileged test accounts, User A and User B, in an isolated staging environment. 2. Create an order (e.g., ID 5002) belonging strictly to User B. 3. Authenticate as User A and attempt to send a GET request to /api/orders/5002. 4. Observe whether the response is blocked with an appropriate authorization error (such as HTTP 403 Forbidden or HTTP 404 Not Found) or if User A successfully retrieves User B's order data.\\\",\\\"classification\\\":\\\"Insufficient Evidence\\\"}\""
                 }
               ],
               "role": "CONTENT_ROLE_ASSISTANT",
@@ -38,20 +38,20 @@
           ],
           "metrics": {
             "inputTokens": 250,
-            "outputTokens": 962,
+            "outputTokens": 1034,
             "inputTokensCostNanodollars": "375000",
-            "outputTokensCostNanodollars": "8658000",
-            "totalBackendLatencyMs": "4034"
+            "outputTokensCostNanodollars": "9306000",
+            "totalBackendLatencyMs": "4893"
           },
-          "id": "IDOR / BOLA missing ownership test-13125b8b-req-1"
+          "id": "IDOR / BOLA missing ownership test-9bcecb36-req-1"
         }
       ],
       "metrics": {
         "inputTokens": 250,
-        "outputTokens": 962,
+        "outputTokens": 1034,
         "inputTokensCostNanodollars": "375000",
-        "outputTokensCostNanodollars": "8658000",
-        "totalBackendLatencyMs": "4034"
+        "outputTokensCostNanodollars": "9306000",
+        "totalBackendLatencyMs": "4893"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA missing ownership test-13125b8b",
-          "requestId": "IDOR / BOLA missing ownership test-13125b8b-req-1"
+          "conversationId": "IDOR / BOLA missing ownership test-9bcecb36",
+          "requestId": "IDOR / BOLA missing ownership test-9bcecb36-req-1"
         }
       ]
     }

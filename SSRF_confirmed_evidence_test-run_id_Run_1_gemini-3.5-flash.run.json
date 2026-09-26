@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:59:32.388855Z",
-  "endTime": "2026-09-26T08:59:38.657215Z",
+  "startTime": "2026-09-26T09:02:36.298753Z",
+  "endTime": "2026-09-26T09:02:42.699900Z",
   "conversations": [
     {
-      "id": "SSRF confirmed evidence test-c3296542",
+      "id": "SSRF confirmed evidence test-48749be5",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 1023,
             "inputTokensCostNanodollars": "367500",
             "outputTokensCostNanodollars": "9207000",
-            "totalBackendLatencyMs": "5890"
+            "totalBackendLatencyMs": "6016"
           },
-          "id": "SSRF confirmed evidence test-c3296542-req-1"
+          "id": "SSRF confirmed evidence test-48749be5-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 1023,
         "inputTokensCostNanodollars": "367500",
         "outputTokensCostNanodollars": "9207000",
-        "totalBackendLatencyMs": "5890"
+        "totalBackendLatencyMs": "6016"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "SSRF confirmed evidence test-c3296542",
-          "requestId": "SSRF confirmed evidence test-c3296542-req-1"
+          "conversationId": "SSRF confirmed evidence test-48749be5",
+          "requestId": "SSRF confirmed evidence test-48749be5-req-1"
         }
       ]
     }

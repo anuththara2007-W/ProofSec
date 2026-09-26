@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:59:21.760806Z",
-  "endTime": "2026-09-26T08:59:25.617982Z",
+  "startTime": "2026-09-26T09:02:25.496824Z",
+  "endTime": "2026-09-26T09:02:29.785024Z",
   "conversations": [
     {
-      "id": "Authentication confirmed weakness test-8fd9c229",
+      "id": "Authentication confirmed weakness test-a7467286",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 603,
             "inputTokensCostNanodollars": "309000",
             "outputTokensCostNanodollars": "5427000",
-            "totalBackendLatencyMs": "3465"
+            "totalBackendLatencyMs": "3912"
           },
-          "id": "Authentication confirmed weakness test-8fd9c229-req-1"
+          "id": "Authentication confirmed weakness test-a7467286-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 603,
         "inputTokensCostNanodollars": "309000",
         "outputTokensCostNanodollars": "5427000",
-        "totalBackendLatencyMs": "3465"
+        "totalBackendLatencyMs": "3912"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "Authentication confirmed weakness test-8fd9c229",
-          "requestId": "Authentication confirmed weakness test-8fd9c229-req-1"
+          "conversationId": "Authentication confirmed weakness test-a7467286",
+          "requestId": "Authentication confirmed weakness test-a7467286-req-1"
         }
       ]
     }
