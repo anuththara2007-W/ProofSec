@@ -18,6 +18,9 @@ class CustomEvaluationRequest(BaseModel):
     context: Optional[str] = Field(default=None, description="Optional additional context")
     question: Optional[str] = Field(default=None, description="Specific user question")
     previous_evaluation_id: Optional[str] = Field(default=None, description="ID of the previous evaluation in a revision chain")
+    expected_classification: Optional[str] = Field(default=None, description="User provided ground truth classification")
+    expected_evidence_state: Optional[str] = Field(default=None, description="User provided ground truth evidence state")
+    expected_decisive_fact: Optional[str] = Field(default=None, description="User provided ground truth decisive fact")
 
 class CustomEvaluationResult(BaseModel):
     summary: str = Field(description="A concise 1-2 sentence summary of the evaluation.")
@@ -50,5 +53,9 @@ class EvaluationResponse(BaseModel):
     model: str
     created_at: str
     previous_evaluation_id: Optional[str]
+
+class CustomEvaluationRecord(BaseModel):
+    request: CustomEvaluationRequest
+    response: EvaluationResponse
 
 
