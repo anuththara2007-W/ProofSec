@@ -1,0 +1,27 @@
+{
+  "id": "proofsec-v0.3-counterfactual-1b",
+  "category": "authentication",
+  "family": "Counterfactual_reasoning",
+  "scenario": "A user attempts to log into the administrative portal. The system uses single sign-on (SSO) and requires multi-factor authentication (MFA) via SMS. The user provides a valid username and password, but the SMS delivery service is currently experiencing a regional outage. The authentication service falls back to sending an email link, but policy requires this link to be clicked from a separate pre-registered device. The user clicks it from the same device.",
+  "context": "The application relies on Auth0 for identity management. Fallback mechanisms are enabled for all users by default.",
+  "evidence": [
+    "Log line: 'Failed to deliver SMS to +1***5555: Gateway Timeout'",
+    "Log line: 'Fallback initiated: Email link sent to user@example.com'",
+    "Log line: 'Email link verified successfully from IP 192.168.1.50'",
+    "Log line: 'Session granted. Scope: admin'"
+  ],
+  "metadata": {
+    "one_fact_flip": {
+      "paired_task_id": "proofsec-v0.3-counterfactual-1a",
+      "changed_fact": "No separate device was used despite policy",
+      "unchanged_facts": [
+        "SSO and MFA via SMS",
+        "SMS delivery service outage",
+        "Email link verified"
+      ],
+      "expected_transition": "Vulnerable -> Not Vulnerable",
+      "evidence_state_before": "DECISIVE",
+      "evidence_state_after": "WEAK"
+    }
+  }
+}
