@@ -368,17 +368,31 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(resp_dict).encode('utf-8'))
         except ValueError as e:
             self._send_error(422, str(e))
-        except RuntimeError as e:
-            err_msg = str(e)
-            if "AUTHENTICATION_ERROR" in err_msg:
-                self._send_error(502, "Provider authentication failed.")
-            elif "RATE_LIMIT" in err_msg:
-                self._send_error(429, "Provider rate limit exceeded.")
-            elif "TIMEOUT" in err_msg:
-                self._send_error(504, "Provider timeout.")
-            elif "CONFIGURATION_ERROR" in err_msg:
-                self._send_error(503, "Provider not configured.")
-            else:
-                self._send_error(500, err_msg)
         except Exception as e:
-            self._send_error(500, str(e))
+            from proofsec.evaluator import ProviderError
+            if isinstance(e, ProviderError):
+                code_map = {
+                    "AUTHENTICATION_ERROR": 502,
+                    "RATE_LIMIT": 429,
+                    "TIMEOUT": 504,
+                    "CONFIGURATION_ERROR": 503
+                }
+                http_code = code_map.get(e.status, 502)
+                
+                resp = {
+                    "evaluation_id": f"eval-{uuid.uuid4().hex[:12]}",
+                    "status": "failed",
+                    "error": {
+                        "code": e.status,
+                        "message": e.message if e.message else f"{e.provider} error",
+                        "provider": e.provider,
+                        "recoverable": e.status in ["AUTHENTICATION_ERROR", "RATE_LIMIT", "CONFIGURATION_ERROR"],
+                        "action": f"Run `proofsec auth {e.provider}`" if e.status == "AUTHENTICATION_ERROR" else "Check provider configuration"
+                    }
+                }
+                self.send_response(http_code)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(resp).encode('utf-8'))
+            else:
+                self._send_error(500, str(e))

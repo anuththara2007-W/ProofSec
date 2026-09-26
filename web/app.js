@@ -44,7 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            if (!res.ok) throw new Error((await res.json()).error);
+            if (!res.ok) {
+                let errData;
+                try {
+                    errData = await res.json();
+                } catch (e) {
+                    throw new Error("Server error (not JSON)");
+                }
+                
+                if (errData && errData.error) {
+                    throw new Error(`${errData.error.code}: ${errData.error.message}\nAction: ${errData.error.action}`);
+                } else if (errData && errData.error && typeof errData.error === 'string') {
+                    throw new Error(errData.error);
+                } else {
+                    throw new Error(`HTTP Error ${res.status}`);
+                }
+            }
             const result = await res.json();
             
             window.history.pushState({}, '', `/evaluation/${result.evaluation_id}`);
