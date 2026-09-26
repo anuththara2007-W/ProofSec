@@ -21,6 +21,13 @@ def _sanitize_id(eval_id: str) -> str:
     """Strip any path-traversal or shell-injection characters from an evaluation ID."""
     return re.sub(r'[^a-zA-Z0-9_\-]', '', eval_id)
 
+class ProviderError(Exception):
+    def __init__(self, status: str, message: str, provider: str):
+        self.status = status
+        self.message = message
+        self.provider = provider
+        super().__init__(f"Provider {provider} failed with {status}: {message}")
+
 class CustomEvaluator:
     def __init__(self, provider: Optional[ModelProvider] = None, store=None):
         self.provider = provider or get_provider()
@@ -80,7 +87,7 @@ class CustomEvaluator:
         response = self.provider.evaluate_request(prompt, schema=CustomEvaluationResult)
 
         if response.status != ProviderStatus.AVAILABLE:
-            raise RuntimeError(f"Evaluation failed: {response.status} ({response.error_message})")
+            raise ProviderError(status=response.status.value, message=str(response.error_message), provider=self.provider.provider_name)
 
         result: CustomEvaluationResult = response.result
         
