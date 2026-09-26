@@ -72,3 +72,7 @@ def evidence_sensitivity_task(llm) -> None:
     response = llm.prompt(prompt, schema=SecurityAssessment)
     
     print(f"Classification: {response.classification}")
+
+if __name__ == '__main__':
+    evidence_sensitivity_task.run(kbench.llm)
+
