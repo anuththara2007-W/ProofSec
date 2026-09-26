@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "False positive trap test",
+    "description": "",
+    "definition": "@kbench.task(name=\"False positive trap test\")\ndef proofsec_false_positive_trap(llm) -> None:\n    scenario = \"\"\"A security report claims:\n\"The application is vulnerable because it returns HTTP 200.\"\n\nAdditional observed facts:\n- The endpoint is intentionally public.\n- The returned data is non-sensitive.\n- Authentication is not required by design.\n- Authorization requirements do not apply to this endpoint.\n- No protected data is exposed.\n- No security boundary is crossed.\n\nQuestion:\nCan you conclude that a vulnerability exists?\"\"\"\n\n    prompt = f\"\"\"You are an expert security code reviewer. Analyze the following scenario:\n\n{scenario}\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n\"\"\"\n    response = llm.prompt(prompt, schema=SecurityAssessment)\n    assertions.assert_equal(\n        expected=\"Not Vulnerable\", \n        actual=response.classification, \n        expectation=\"The model should conclude 'Not Vulnerable' because the behavior is completely legitimate and no security boundary is crossed.\"\n    )\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T08:57:48.179064Z",
+  "endTime": "2026-09-26T08:57:53.489047Z",
+  "conversations": [
+    {
+      "id": "False positive trap test-6335e806",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nA security report claims:\n\"The application is vulnerable because it returns HTTP 200.\"\n\nAdditional observed facts:\n- The endpoint is intentionally public.\n- The returned data is non-sensitive.\n- Authentication is not required by design.\n- Authorization requirements do not apply to this endpoint.\n- No protected data is exposed.\n- No security boundary is crossed.\n\nQuestion:\nCan you conclude that a vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"The endpoint is intentionally public, returns non-sensitive data, does not require authentication or authorization, exposes no protected data, and crosses no security boundary. The only basis for the vulnerability report is that the endpoint returns an HTTP 200 OK status code.\\\",\\\"evidence_missing\\\":\\\"None. All necessary context is available to evaluate the security posture of this endpoint.\\\",\\\"safe_verification_procedure\\\":\\\"1. Send an HTTP GET request to the public endpoint. 2. Verify that the response status is 200 OK. 3. Inspect the response body to confirm that only non-sensitive, public data is returned. 4. Verify against the application design specification that the endpoint is intended to be unauthenticated and public.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\"}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 201,
+            "outputTokens": 910,
+            "inputTokensCostNanodollars": "301500",
+            "outputTokensCostNanodollars": "8190000",
+            "totalBackendLatencyMs": "4894"
+          },
+          "id": "False positive trap test-6335e806-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 201,
+        "outputTokens": 910,
+        "inputTokensCostNanodollars": "301500",
+        "outputTokensCostNanodollars": "8190000",
+        "totalBackendLatencyMs": "4894"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "The model should conclude 'Not Vulnerable' because the behavior is completely legitimate and no security boundary is crossed.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 413,
+      "definition": "assertions.assert_equal(",
+      "conversationRequestIds": [
+        {
+          "conversationId": "False positive trap test-6335e806",
+          "requestId": "False positive trap test-6335e806-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "False positive trap test-Run #1"
+}
