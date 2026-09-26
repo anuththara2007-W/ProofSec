@@ -78,7 +78,11 @@ def register_kbench_tasks():
                 assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)
                 
             run_task.__name__ = t_data['id'].replace('-', '_')
-            return kbench.task(name=t_data['title'])(run_task)
+            task_func = kbench.task(name=t_data['title'])(run_task)
+            import sys
+            main_mod = sys.modules['__main__']
+            setattr(main_mod, run_task.__name__, task_func)
+            return task_func
             
         make_task(task_data)
 
