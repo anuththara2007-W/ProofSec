@@ -1,24 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Check API Health
     checkHealth();
+    handleRoute();
 
-    // Navigation
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            const targetId = e.target.dataset.target;
-            document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
-            document.getElementById(targetId).classList.remove('hidden');
-
-            if (targetId === 'history-view') {
-                loadHistory();
-            }
-        });
+    window.addEventListener('popstate', handleRoute);
+    
+    document.body.addEventListener('click', e => {
+        if (e.target.matches('[data-route]')) {
+            e.preventDefault();
+            const path = e.target.getAttribute('href');
+            window.history.pushState({}, '', path);
+            handleRoute();
+        }
     });
 
-    // Evidence fields logic
     document.getElementById('add-evidence-btn').addEventListener('click', () => {
         const wrapper = document.createElement('div');
         wrapper.className = 'evidence-input-wrapper';
@@ -26,38 +20,35 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('evidence-list').appendChild(wrapper);
     });
 
-    // Evaluation submission
     document.getElementById('eval-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
         const btn = document.getElementById('evaluate-submit-btn');
         btn.textContent = 'Evaluating...';
         btn.disabled = true;
 
         const scenario = document.getElementById('scenario').value;
-        const provider = document.getElementById('provider').value;
+        const context = document.getElementById('context').value;
         const evidenceInputs = document.querySelectorAll('.evidence-input');
         const evidence = Array.from(evidenceInputs).map(i => i.value.trim()).filter(v => v !== '');
+        
+        const expClass = document.getElementById('expected_classification').value;
+        const expState = document.getElementById('expected_evidence_state').value;
+
+        const payload = { scenario, context, evidence };
+        if (expClass) payload.expected_classification = expClass;
+        if (expState) payload.expected_evidence_state = expState;
 
         try {
-            // Need to set provider in backend somehow if not globally configured.
-            // Actually, we should probably pass provider in the request, but our schema doesn't accept provider.
-            // The API doesn't take provider in payload yet, it relies on env. 
-            // We'll leave it as is for MVP, assuming Kaggle or Mock is set globally.
-            
             const res = await fetch('/api/v1/evaluate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ scenario, evidence })
+                body: JSON.stringify(payload)
             });
-            
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || 'Evaluation failed');
-            }
-
+            if (!res.ok) throw new Error((await res.json()).error);
             const result = await res.json();
-            displayResult(result);
+            
+            window.history.pushState({}, '', `/evaluation/${result.evaluation_id}`);
+            handleRoute();
         } catch (error) {
             alert('Error: ' + error.message);
         } finally {
@@ -76,144 +67,188 @@ async function checkHealth() {
             statusDot.className = 'dot online';
             const data = await res.json();
             statusText.innerHTML = `<span class="dot online"></span> ${data.provider} (${data.status})`;
-        } else {
-            throw new Error();
-        }
+        } else throw new Error();
     } catch {
         statusDot.className = 'dot error';
         statusText.innerHTML = `<span class="dot error"></span> API Offline`;
     }
 }
 
-function displayResult(result) {
-    const container = document.getElementById('result-container');
-    container.classList.remove('hidden');
+function handleRoute() {
+    const path = window.location.pathname;
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-    let badgeClass = 'insufficient';
-    if (result.classification === 'Vulnerable') badgeClass = 'vulnerable';
-    if (result.classification === 'Not Vulnerable') badgeClass = 'not-vulnerable';
+    let activeNav = '/';
+    let targetPage = 'page-home';
 
-    let stateClass = result.evidence_state.toLowerCase();
-
-    let html = `
-        <div class="card glass">
-            <div class="result-header">
-                <div>
-                    <h2>Evaluation Result</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">ID: ${result.evaluation_id} | ${result.provider} (${result.model})</p>
-                </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <span class="badge ${badgeClass}">${result.classification}</span>
-                    <span class="badge ${stateClass}">${result.evidence_state}</span>
-                </div>
-            </div>
-
-            <div class="result-section">
-                <h3>Summary</h3>
-                <p>${result.summary || 'N/A'}</p>
-            </div>
-
-            <div class="result-section">
-                <h3>Reasoning</h3>
-                <p>${result.reasoning}</p>
-            </div>
-    `;
-
-    if (result.supporting_evidence && result.supporting_evidence.length > 0) {
-        html += `
-            <div class="result-section">
-                <h3>Supporting Evidence</h3>
-                <ul class="result-list">
-                    ${result.supporting_evidence.map(e => `<li>${e}</li>`).join('')}
-                </ul>
-            </div>
-        `;
+    if (path === '/evaluate') {
+        activeNav = '/evaluate';
+        targetPage = 'page-evaluate';
+        loadHistory();
+    } else if (path.startsWith('/evaluation/')) {
+        const parts = path.split('/');
+        const id = parts[2];
+        if (parts[3] === 'compare') {
+            targetPage = 'page-compare';
+            loadCompare(id); // Actually needs a target_id, simplified for now
+        } else {
+            targetPage = 'page-evaluation';
+            loadEvaluation(id);
+        }
+    } else if (path === '/benchmark') {
+        activeNav = '/benchmark';
+        targetPage = 'page-benchmark';
+        loadBenchmark();
+    } else if (path === '/research') {
+        activeNav = '/research';
+        targetPage = 'page-research';
+        loadResearch();
+    } else if (path === '/docs') {
+        activeNav = '/docs';
+        targetPage = 'page-docs';
     }
 
-    if (result.missing_evidence && result.missing_evidence.length > 0) {
-        html += `
-            <div class="result-section">
-                <h3>Missing Evidence</h3>
-                <ul class="result-list">
-                    ${result.missing_evidence.map(e => `<li>${e}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-
-    html += `</div>`;
+    const nav = document.querySelector(`[data-route="${activeNav}"]`);
+    if (nav) nav.classList.add('active');
     
-    // Check for timeline (if there is a previous evaluation ID)
-    if (result.previous_evaluation_id) {
-        html += `
-            <div class="card glass">
-                <h2>Proof Timeline</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Original Evaluation</h4>
-                            <p>ID: ${result.previous_evaluation_id}</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Revised with new Evidence</h4>
-                            <p><span class="badge ${badgeClass}">${result.classification}</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    container.innerHTML = html;
+    document.getElementById(targetPage).classList.remove('hidden');
 }
 
 async function loadHistory() {
     const tbody = document.getElementById('history-body');
-    tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
-
     try {
         const res = await fetch('/api/v1/evaluations');
-        if (!res.ok) throw new Error('Failed to load history');
-        
+        if (!res.ok) return;
         const data = await res.json();
-        
-        if (data.evaluations.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5">No evaluations found.</td></tr>';
-            return;
-        }
-
         tbody.innerHTML = data.evaluations.map(e => `
             <tr>
                 <td style="font-family: monospace;">${e.evaluation_id}</td>
-                <td><span class="badge ${e.classification === 'Vulnerable' ? 'vulnerable' : (e.classification === 'Not Vulnerable' ? 'not-vulnerable' : 'insufficient')}">${e.classification}</span></td>
+                <td><span class="badge ${e.classification === 'Vulnerable' ? 'vulnerable' : 'not-vulnerable'}">${e.classification}</span></td>
                 <td>${e.evidence_state}</td>
                 <td>${new Date(e.created_at).toLocaleString()}</td>
-                <td>
-                    <button class="btn btn-secondary btn-sm" onclick="viewEvaluation('${e.evaluation_id}')">View</button>
-                </td>
+                <td><a href="/evaluation/${e.evaluation_id}" class="btn btn-secondary btn-sm" data-route="/evaluation/${e.evaluation_id}">View</a></td>
             </tr>
         `).join('');
-    } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger);">Error loading history: ${error.message}</td></tr>`;
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5">Error loading history</td></tr>';
     }
 }
 
-window.viewEvaluation = async function(id) {
+async function loadEvaluation(id) {
+    document.getElementById('eval-header-id').textContent = id;
+    const content = document.getElementById('evaluation-content');
+    content.innerHTML = 'Loading...';
     try {
         const res = await fetch(`/api/v1/evaluations/${id}`);
-        if (!res.ok) throw new Error('Failed to load evaluation');
+        if (!res.ok) throw new Error('Evaluation not found');
         const data = await res.json();
         
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('[data-target="evaluate-view"]').classList.add('active');
+        let html = `
+            <div class="card glass">
+                <div class="result-header">
+                    <div>
+                        <h2>${data.classification}</h2>
+                    </div>
+                    <span class="badge ${data.evidence_state.toLowerCase()}">${data.evidence_state}</span>
+                </div>
+                <p><strong>Provider:</strong> ${data.provider} (${data.model})</p>
+                <p><strong>Summary:</strong> ${data.summary}</p>
+                <p><strong>Reasoning:</strong> ${data.reasoning}</p>
+        `;
         
-        document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
-        document.getElementById('evaluate-view').classList.remove('hidden');
+        if (data.metrics && data.metrics.status !== "Ground truth not provided") {
+            html += `<div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.1); border-radius: 4px;">
+                <h4>Metrics vs Ground Truth</h4>
+                <p>Classification Correct: ${data.metrics.classification_correct}</p>
+                <p>Evidence State Correct: ${data.metrics.evidence_state_correct}</p>
+            </div>`;
+        }
 
-        displayResult(data);
-    } catch (error) {
-        alert(error.message);
+        html += `</div>`;
+        content.innerHTML = html;
+
+        // Load timeline
+        loadTimeline(id);
+
+        // Setup revision btn
+        const revBtn = document.getElementById('revise-btn');
+        revBtn.onclick = async () => {
+            const ev = document.getElementById('revision-evidence').value;
+            if(!ev) return;
+            revBtn.disabled = true;
+            try {
+                const res = await fetch(`/api/v1/evaluations/${id}/revise`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({evidence: [ev]})
+                });
+                if(!res.ok) throw new Error("Revise failed");
+                const result = await res.json();
+                window.history.pushState({}, '', `/evaluation/${result.evaluation_id}`);
+                handleRoute();
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                revBtn.disabled = false;
+            }
+        };
+
+    } catch (e) {
+        content.innerHTML = `<p style="color:red">${e.message}</p>`;
     }
-};
+}
+
+async function loadTimeline(id) {
+    const tl = document.getElementById('evaluation-timeline');
+    try {
+        const res = await fetch(`/api/v1/evaluations/${id}/revisions`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.revisions.length <= 1) {
+            tl.innerHTML = '';
+            return;
+        }
+        
+        tl.innerHTML = `<h2>Revision Timeline</h2>` + data.revisions.map(r => `
+            <div class="card glass" style="margin-bottom: 1rem;">
+                <h4>${r.evaluation_id}</h4>
+                <p><span class="badge ${r.classification === 'Vulnerable'?'vulnerable':'not-vulnerable'}">${r.classification}</span> | ${r.evidence_state}</p>
+            </div>
+        `).join('');
+    } catch (e) { }
+}
+
+async function loadBenchmark() {
+    const content = document.getElementById('benchmark-content');
+    try {
+        const res = await fetch('/api/v1/benchmark');
+        const data = await res.json();
+        const hashRes = await fetch('/api/v1/benchmark/hash');
+        const hashData = await hashRes.json();
+        
+        content.innerHTML = `
+            <h2>Version: ${data.version}</h2>
+            <p><strong>Tasks:</strong> ${data.tasks}</p>
+            <p><strong>Integrity SHA256:</strong> <code>${hashData.hash}</code></p>
+            <p>The ProofSec frozen benchmark contains highly rigorous security reasoning tasks isolated from user inputs.</p>
+        `;
+    } catch(e) {}
+}
+
+async function loadResearch() {
+    const content = document.getElementById('research-content');
+    try {
+        const res = await fetch('/api/v1/research/metrics');
+        const data = await res.json();
+        content.innerHTML = `
+            <h2>${data.experiment}</h2>
+            <p>Status: <strong>${data.status}</strong> (${data.completed}/${data.total})</p>
+            <ul>
+                <li>Accuracy: ${data.metrics.accuracy}</li>
+                <li>PVR: ${data.metrics.pvr}</li>
+                <li>Flip Miss Rate: ${data.metrics.flip_miss_rate}</li>
+            </ul>
+        `;
+    } catch(e) {}
+}

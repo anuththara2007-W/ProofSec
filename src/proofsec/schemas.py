@@ -1,4 +1,4 @@
-from typing import Literal, List, Optional
+from typing import Literal, List, Optional, Dict
 from pydantic import BaseModel, Field
 
 # Research benchmark version: v0.2 (frozen, do not change)
@@ -57,5 +57,29 @@ class EvaluationResponse(BaseModel):
 class CustomEvaluationRecord(BaseModel):
     request: CustomEvaluationRequest
     response: EvaluationResponse
+
+class OneFactFlipMetadata(BaseModel):
+    task_id: str
+    paired_task_id: str
+    changed_fact: str
+    unchanged_facts: List[str]
+    expected_transition: str
+    evidence_state_before: str
+    evidence_state_after: str
+
+class ExperimentManifest(BaseModel):
+    experiment_id: str
+    benchmark_version: str
+    dataset_hash: str
+    model: str
+    provider: str
+    provider_version: Optional[str] = None
+    runner_version: str
+    timestamp: str
+    task_count: int
+    completed_count: int
+    failed_count: int
+    failure_reasons: Dict[str, int]
+    configuration_hash: str
 
 

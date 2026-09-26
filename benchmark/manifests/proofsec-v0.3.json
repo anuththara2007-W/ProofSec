@@ -1,0 +1,13 @@
+{
+  "benchmark_version": "v0.3",
+  "description": "ProofSec Next-Generation Evidence Reasoning Benchmark",
+  "dataset_sha256": "PENDING",
+  "task_count": 0,
+  "families": [
+    "Counterfactual_reasoning",
+    "Multi-step_evidence_chains",
+    "Conflicting_evidence",
+    "Evidence_relevance",
+    "Temporal_evidence"
+  ]
+}
