@@ -189,4 +189,17 @@ def get_provider() -> ModelProvider:
     provider_name = os.environ.get("PROOFSEC_PROVIDER", "kaggle").lower()
     if provider_name == "openai_compatible":
         return OpenAIProvider()
+    if provider_name == "mock":
+        from src.proofsec.schemas import CustomEvaluationResult
+        return MockProvider(
+            mock_response=CustomEvaluationResult(
+                classification="Insufficient Evidence",
+                evidence_state="PARTIAL",
+                supporting_evidence=[],
+                missing_evidence=[],
+                safe_verification=[],
+                impact="TEST FIXTURE",
+                reasoning="Mock response"
+            )
+        )
     return KaggleProvider()

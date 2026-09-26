@@ -1,0 +1,20 @@
+{
+    "timestamp": 1790420972,
+    "request": {
+        "scenario": "Test",
+        "evidence": [
+            "None"
+        ],
+        "context": null,
+        "question": null
+    },
+    "result": {
+        "classification": "Insufficient Evidence",
+        "evidence_state": "PARTIAL",
+        "supporting_evidence": [],
+        "missing_evidence": [],
+        "safe_verification": [],
+        "impact": "TEST FIXTURE",
+        "reasoning": "Mock response"
+    }
+}

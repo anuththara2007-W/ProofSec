@@ -74,6 +74,10 @@ class TestAPI(unittest.TestCase):
         
         self.assertEqual(len(task_files), len(task_files_after))
         self.assertEqual(len(raw_files), len(raw_files_after))
+        
+        # Verify hash
+        from evaluation.validate_dataset import calculate_dataset_hash
+        self.assertEqual(calculate_dataset_hash(str(tasks_dir)), "422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80")
 
 if __name__ == '__main__':
     unittest.main()
