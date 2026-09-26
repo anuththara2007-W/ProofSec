@@ -33,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const expClass = document.getElementById('expected_classification').value;
         const expState = document.getElementById('expected_evidence_state').value;
+        const provider = document.getElementById('provider-select') ? document.getElementById('provider-select').value : 'kaggle';
 
-        const payload = { scenario, context, evidence };
+        const payload = { scenario, context, evidence, provider };
         if (expClass) payload.expected_classification = expClass;
         if (expState) payload.expected_evidence_state = expState;
 

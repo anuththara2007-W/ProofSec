@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 import json
 from pathlib import Path
 from http.server import HTTPServer
@@ -70,7 +71,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(raw_count, len(list(raw_dir.glob("**/*.json"))))
 
     def test_benchmark_hash_unchanged(self):
-        from evaluation.verify_frozen_benchmark import calculate_dataset_hash
+        from proofsec.research import calculate_dataset_hash
         tasks_dir = self.root / "tasks"
         h = calculate_dataset_hash(str(tasks_dir))
         self.assertEqual(h, "422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80")
@@ -112,3 +113,33 @@ class TestAPI(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+    def test_research_api_returns_200(self):
+        req = urllib.request.Request(f'http://127.0.0.1:{self.port}/api/v1/research/metrics', method='GET')
+        with urllib.request.urlopen(req) as resp:
+            self.assertEqual(resp.status, 200)
+            body = json.loads(resp.read().decode('utf-8'))
+            self.assertIn('benchmark', body)
+
+
+    def test_mock_evaluate_returns_200(self):
+        with self._post({'scenario': 'Test', 'provider': 'mock'}) as resp:
+            self.assertEqual(resp.status, 200)
+            body = json.loads(resp.read().decode('utf-8'))
+            self.assertEqual(body['status'], 'completed')
+            self.assertIn('classification', body['result'])
+
+    @unittest.mock.patch('proofsec.api.CustomEvaluator.evaluate', side_effect=RuntimeError('simulated error'))
+    def test_unexpected_exception_returns_500(self, mock_eval):
+        try:
+            req = urllib.request.Request(self.url, method='POST')
+            req.add_header('Content-Type', 'application/json')
+            urllib.request.urlopen(req, b'{"scenario": "Test"}')
+            self.fail('Expected HTTPError')
+        except urllib.error.HTTPError as e:
+            self.assertEqual(e.code, 500)
+            body = json.loads(e.read().decode('utf-8'))
+            self.assertEqual(body['status'], 'failed')
+            self.assertEqual(body['error']['code'], 'INTERNAL_ERROR')
+
+
