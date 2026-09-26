@@ -124,6 +124,7 @@ Additional observed facts:
 - The authenticated user is 2841.
 - The invoice owner is 2841.
 - Application authorization rule: A user may access an invoice only when: invoice.owner_id == authenticated_user.id
+- Extensive testing confirms that if invoice.owner_id != authenticated_user.id, the server correctly returns 403 Forbidden.
 
 Question:
 Can you conclude that an authorization vulnerability exists?"""
@@ -360,6 +361,7 @@ In an isolated test environment:
 - The application server retrieves the internal service response.
 - The response from the internal service is returned to the external requester.
 - The internal service was not directly accessible by the requester.
+- The application's design specification explicitly forbids the server from accessing internal network resources.
 
 Question:
 Can you conclude that a Server-Side Request Forgery (SSRF) vulnerability exists?"""

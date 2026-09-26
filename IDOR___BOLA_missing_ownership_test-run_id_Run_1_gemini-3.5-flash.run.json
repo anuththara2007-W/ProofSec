@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:57:18.603571Z",
-  "endTime": "2026-09-26T08:57:23.421005Z",
+  "startTime": "2026-09-26T08:59:11.269687Z",
+  "endTime": "2026-09-26T08:59:16.533732Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA missing ownership test-0ae6e830",
+      "id": "IDOR / BOLA missing ownership test-13125b8b",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 962,
             "inputTokensCostNanodollars": "375000",
             "outputTokensCostNanodollars": "8658000",
-            "totalBackendLatencyMs": "4445"
+            "totalBackendLatencyMs": "4034"
           },
-          "id": "IDOR / BOLA missing ownership test-0ae6e830-req-1"
+          "id": "IDOR / BOLA missing ownership test-13125b8b-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 962,
         "inputTokensCostNanodollars": "375000",
         "outputTokensCostNanodollars": "8658000",
-        "totalBackendLatencyMs": "4445"
+        "totalBackendLatencyMs": "4034"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Insufficient Evidence' because ownership and authorization boundaries are entirely unknown.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 232,
+      "lineNumber": 233,
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA missing ownership test-0ae6e830",
-          "requestId": "IDOR / BOLA missing ownership test-0ae6e830-req-1"
+          "conversationId": "IDOR / BOLA missing ownership test-13125b8b",
+          "requestId": "IDOR / BOLA missing ownership test-13125b8b-req-1"
         }
       ]
     }

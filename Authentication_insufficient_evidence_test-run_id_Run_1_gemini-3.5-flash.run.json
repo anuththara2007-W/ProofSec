@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:57:23.424213Z",
-  "endTime": "2026-09-26T08:57:28.344863Z",
+  "startTime": "2026-09-26T08:59:16.535505Z",
+  "endTime": "2026-09-26T08:59:21.758936Z",
   "conversations": [
     {
-      "id": "Authentication insufficient evidence test-57bb598e",
+      "id": "Authentication insufficient evidence test-2fa7cc69",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 757,
             "inputTokensCostNanodollars": "283500",
             "outputTokensCostNanodollars": "6813000",
-            "totalBackendLatencyMs": "4549"
+            "totalBackendLatencyMs": "4741"
           },
-          "id": "Authentication insufficient evidence test-57bb598e-req-1"
+          "id": "Authentication insufficient evidence test-2fa7cc69-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 757,
         "inputTokensCostNanodollars": "283500",
         "outputTokensCostNanodollars": "6813000",
-        "totalBackendLatencyMs": "4549"
+        "totalBackendLatencyMs": "4741"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Insufficient Evidence' (or Not Vulnerable depending on interpretation, but explicitly we expect Insufficient Evidence) because nothing anomalous has occurred and no weakness is shown.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 267,
+      "lineNumber": 268,
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "Authentication insufficient evidence test-57bb598e",
-          "requestId": "Authentication insufficient evidence test-57bb598e-req-1"
+          "conversationId": "Authentication insufficient evidence test-2fa7cc69",
+          "requestId": "Authentication insufficient evidence test-2fa7cc69-req-1"
         }
       ]
     }

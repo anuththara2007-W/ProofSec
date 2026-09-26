@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T08:57:13.687758Z",
-  "endTime": "2026-09-26T08:57:18.601455Z",
+  "startTime": "2026-09-26T08:59:06.816632Z",
+  "endTime": "2026-09-26T08:59:11.267683Z",
   "conversations": [
     {
-      "id": "IDOR / BOLA contradictory evidence test-ca95424e",
+      "id": "IDOR / BOLA contradictory evidence test-1739f62c",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 788,
             "inputTokensCostNanodollars": "498000",
             "outputTokensCostNanodollars": "7092000",
-            "totalBackendLatencyMs": "4022"
+            "totalBackendLatencyMs": "3735"
           },
-          "id": "IDOR / BOLA contradictory evidence test-ca95424e-req-1"
+          "id": "IDOR / BOLA contradictory evidence test-1739f62c-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 788,
         "inputTokensCostNanodollars": "498000",
         "outputTokensCostNanodollars": "7092000",
-        "totalBackendLatencyMs": "4022"
+        "totalBackendLatencyMs": "3735"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -66,12 +66,12 @@
     {
       "expectation": "The model should conclude 'Not Vulnerable' because the actual protected endpoint correctly restricts access (403 Forbidden), and the 200 OK was from a harmless test fixture.",
       "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
-      "lineNumber": 189,
+      "lineNumber": 190,
       "definition": "assertions.assert_equal(",
       "conversationRequestIds": [
         {
-          "conversationId": "IDOR / BOLA contradictory evidence test-ca95424e",
-          "requestId": "IDOR / BOLA contradictory evidence test-ca95424e-req-1"
+          "conversationId": "IDOR / BOLA contradictory evidence test-1739f62c",
+          "requestId": "IDOR / BOLA contradictory evidence test-1739f62c-req-1"
         }
       ]
     }
