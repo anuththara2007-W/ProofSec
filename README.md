@@ -1,43 +1,59 @@
 # ProofSec
 
-### Evidence-Grounded Security Reasoning Benchmark for AI Models
+ProofSec is an evidence-grounded AI evaluation framework and security reasoning benchmark. It goes beyond simple multiple-choice questions or unstructured text generation by requiring Large Language Models (LLMs) to substantiate their security claims with concrete, verifiable evidence.
 
-## The Problem
-Security models often identify suspicious behavior but may confuse a **security signal** with a **demonstrated vulnerability**. ProofSec evaluates whether models reason from evidence, testing their ability to distinguish incomplete, missing, or contradictory evidence from definitive proof.
+## What problem does it solve?
+Ordinary LLM benchmarks for cybersecurity often suffer from:
+- **Guessing**: Models can guess the right answer without understanding the logic.
+- **Hallucination**: Models claim a vulnerability exists without proof.
+- **Authority Bias**: Models defer to human statements rather than evaluating the raw technical facts.
 
-## Core Idea
-The benchmark evaluates how models traverse the evidence ladder:
-```text
-Weak Signal -> More Evidence -> Decisive Evidence -> Security Classification
-```
+ProofSec solves this by enforcing an **evidence-state** evaluation (e.g., Decisive, Partial, Insufficient, Contradictory) alongside the classification (Vulnerable / Not Vulnerable).
 
-## Classes
-Models must classify scenarios strictly into one of three classes:
-- **Vulnerable**: Definitively proven by evidence.
-- **Not Vulnerable**: Benign context confirmed by evidence.
-- **Insufficient Evidence**: Missing the decisive facts needed to conclude either.
+## Frozen Benchmark vs User Evaluations
+ProofSec is designed with two distinct operational modes that are strictly isolated:
+- **Frozen Benchmark (v0.2)**: A scientifically rigorous, immutably hashed dataset of 110 tasks used for standardized researcher evaluation.
+- **Custom User Evaluations**: Developer-driven custom scenarios evaluated safely without polluting or altering the historical research benchmark.
 
-## What Makes ProofSec Different
-ProofSec evaluates reasoning phenomena rather than simple vulnerability detection:
-- **Evidence Ladders**: Gradual injection of stronger evidence.
-- **One-Fact Counterfactuals**: Holding all context constant except one decisive fact.
-- **Contradiction Resolution**: Forcing the model to prioritize system facts over human claims.
-- **False-Positive Traps**: Designing intentionally misleading benign scenarios.
-- **Authority Bias**: Measuring model susceptibility to fake expert claims.
-- **Terminology Traps**: Using security keywords without sufficient evidence.
-- **Cross-domain Testing**: Evaluation across Auth, SSRF, SQLi, and Business Logic.
-- **Multi-Model Comparison**: Comparing the evidence discipline across different foundation models.
+## Quick Start
 
-## How to Run
-
+### Local Installation
+Requires Python 3.9+
 ```bash
-# Validate the dataset
-python evaluation/validate_dataset.py
-
-# Run the benchmark (example: v1 calibration set)
-python scripts/run_benchmark.py --experiment v1_calibration
-
-# Calculate metrics and generate report
-python evaluation/calculate_metrics.py
-python scripts/generate_report.py
+pip install -r requirements.txt
+pip install -e .
 ```
+
+### Running with Docker
+```bash
+docker build -t proofsec .
+docker run -p 8000:8000 proofsec
+```
+Or using docker-compose:
+```bash
+docker-compose up -d
+```
+Access the web dashboard at `http://localhost:8000`.
+
+## Developer SDK
+```python
+from proofsec import ProofSec
+
+client = ProofSec(provider="openai_compatible")
+result = client.evaluate(
+    scenario="User input is concatenated into SQL query.",
+    evidence=["Input is unsanitized", "Database returns syntax error on quote"]
+)
+print(result.classification)
+```
+
+## Researcher Mode
+To analyze the frozen benchmark:
+```bash
+proofsec benchmark status
+proofsec benchmark hash
+proofsec research metrics
+```
+
+## Adding a Provider
+New providers can be added in `src/proofsec/providers.py` by implementing the `ModelProvider` interface. See `docs/PROVIDERS.md` for details.
