@@ -90,7 +90,8 @@ class TestResearchFeatures(unittest.TestCase):
             reasoning="",
             provider="mock",
             model="mock",
-            created_at="2023-01-01T00:00:00Z"
+            created_at="2023-01-01T00:00:00Z",
+            previous_evaluation_id=None
         )
         
         res_b = EvaluationResponse(
@@ -109,7 +110,8 @@ class TestResearchFeatures(unittest.TestCase):
             reasoning="",
             provider="mock",
             model="mock",
-            created_at="2023-01-01T01:00:00Z"
+            created_at="2023-01-01T01:00:00Z",
+            previous_evaluation_id="e1"
         )
         
         diff = CompareEngine.compare_evaluations(res_a, res_b)
