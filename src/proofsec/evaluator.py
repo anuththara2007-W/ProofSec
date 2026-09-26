@@ -90,6 +90,8 @@ class CustomEvaluator:
             raise ProviderError(status=response.status.value, message=str(response.error_message), provider=self.provider.provider_name)
 
         result: CustomEvaluationResult = response.result
+        if result is None:
+            raise ProviderError(status=ProviderStatus.PARSER_FAILURE.value, message="Provider returned an empty result", provider=self.provider.provider_name)
         
         eval_id = evaluation_id or f"eval-{uuid.uuid4().hex[:12]}"
         safe_id = _sanitize_id(eval_id)

@@ -184,11 +184,11 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             return
 
         if path == '/api/v1/benchmark/hash':
-            import evaluation.verify_frozen_benchmark as verify
+            from proofsec.research import calculate_dataset_hash
             from proofsec.evaluator import get_project_root
             root = get_project_root()
             tasks_dir = root / "tasks"
-            current_hash = verify.calculate_dataset_hash(str(tasks_dir))
+            current_hash = calculate_dataset_hash(str(tasks_dir))
             
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
@@ -197,25 +197,12 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
             return
             
         if path == '/api/v1/research/metrics':
+            from proofsec.research import get_research_status
+            status = get_research_status()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps({
-                "experiment": "Gemini 3.5 Flash Historical",
-                "status": "PARTIAL EXPERIMENT",
-                "completed": 88,
-                "total": 110,
-                "metrics": {
-                    "accuracy": "65.91%",
-                    "pvr": "1.61%",
-                    "flip_miss_rate": "50.00%",
-                    "flip_error_rate": "11.11%",
-                    "pair_consistency": "22.22%",
-                    "authority_bias": "40.00%",
-                    "terminology_bias": "0.00%",
-                    "confidence": "UNAVAILABLE"
-                }
-            }).encode('utf-8'))
+            self.wfile.write(json.dumps(status).encode('utf-8'))
             return
 
         self._send_error(404, "Not Found")
@@ -292,13 +279,19 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self._send_error(404, "Not Found")
 
     def _handle_evaluate(self, payload: dict):
+        provider = payload.get("provider")
         try:
+            # We don't want to pass 'provider' to CustomEvaluationRequest if it's not a valid field, 
+            # so we pop it. Or just rely on Pydantic to ignore it if extra="ignore".
+            # To be safe:
+            if "provider" in payload:
+                payload = {k: v for k, v in payload.items() if k != "provider"}
             request = CustomEvaluationRequest(**payload)
         except ValidationError as e:
             self._send_error(422, f"Schema validation error: {str(e)}")
             return
 
-        self._run_evaluation(request)
+        self._run_evaluation(request, provider_name=provider)
 
     def _handle_revise(self, original_id: str, payload: dict):
         evaluator = CustomEvaluator()
@@ -353,8 +346,13 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(comparison).encode('utf-8'))
 
-    def _run_evaluation(self, request: CustomEvaluationRequest):
-        evaluator = CustomEvaluator()
+    def _run_evaluation(self, request: CustomEvaluationRequest, provider_name: Optional[str] = None):
+        if provider_name:
+            provider = get_provider(provider_name)
+            evaluator = CustomEvaluator(provider=provider)
+        else:
+            evaluator = CustomEvaluator()
+            
         try:
             eval_response = evaluator.evaluate(request)
             
@@ -396,4 +394,19 @@ class ProofSecAPIHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps(resp).encode('utf-8'))
             else:
-                self._send_error(500, str(e))
+                import logging
+                # Safe structured logging
+                logging.error(f"evaluation_id=unknown provider=unknown status=INTERNAL_ERROR type={type(e).__name__}")
+                
+                resp = {
+                    "status": "failed",
+                    "error": {
+                        "code": "INTERNAL_ERROR",
+                        "message": "The evaluation could not be completed.",
+                        "recoverable": True
+                    }
+                }
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(resp).encode('utf-8'))
