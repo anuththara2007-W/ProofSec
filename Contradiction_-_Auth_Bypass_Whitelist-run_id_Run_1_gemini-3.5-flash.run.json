@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:23:06.817752Z",
-  "endTime": "2026-09-26T09:23:13.263573Z",
+  "startTime": "2026-09-26T09:33:49.444189Z",
+  "endTime": "2026-09-26T09:33:55.735368Z",
   "conversations": [
     {
-      "id": "Contradiction - Auth Bypass Whitelist-4f80621a",
+      "id": "Contradiction - Auth Bypass Whitelist-1320b9c7",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 1117,
             "inputTokensCostNanodollars": "370500",
             "outputTokensCostNanodollars": "10053000",
-            "totalBackendLatencyMs": "5970"
+            "totalBackendLatencyMs": "5820"
           },
-          "id": "Contradiction - Auth Bypass Whitelist-4f80621a-req-1"
+          "id": "Contradiction - Auth Bypass Whitelist-1320b9c7-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 1117,
         "inputTokensCostNanodollars": "370500",
         "outputTokensCostNanodollars": "10053000",
-        "totalBackendLatencyMs": "5970"
+        "totalBackendLatencyMs": "5820"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Contradiction - Auth Bypass Whitelist-4f80621a",
-          "requestId": "Contradiction - Auth Bypass Whitelist-4f80621a-req-1"
+          "conversationId": "Contradiction - Auth Bypass Whitelist-1320b9c7",
+          "requestId": "Contradiction - Auth Bypass Whitelist-1320b9c7-req-1"
         }
       ]
     }

@@ -9,11 +9,11 @@
     "slug": "gemini-3.5-flash"
   },
   "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
-  "startTime": "2026-09-26T09:23:13.265714Z",
-  "endTime": "2026-09-26T09:23:18.389079Z",
+  "startTime": "2026-09-26T09:33:55.737196Z",
+  "endTime": "2026-09-26T09:34:00.990447Z",
   "conversations": [
     {
-      "id": "Terminology Trap - HttpOnly-756ef574",
+      "id": "Terminology Trap - HttpOnly-034216df",
       "requests": [
         {
           "contents": [
@@ -41,9 +41,9 @@
             "outputTokens": 904,
             "inputTokensCostNanodollars": "288000",
             "outputTokensCostNanodollars": "8136000",
-            "totalBackendLatencyMs": "4737"
+            "totalBackendLatencyMs": "4889"
           },
-          "id": "Terminology Trap - HttpOnly-756ef574-req-1"
+          "id": "Terminology Trap - HttpOnly-034216df-req-1"
         }
       ],
       "metrics": {
@@ -51,7 +51,7 @@
         "outputTokens": 904,
         "inputTokensCostNanodollars": "288000",
         "outputTokensCostNanodollars": "8136000",
-        "totalBackendLatencyMs": "4737"
+        "totalBackendLatencyMs": "4889"
       },
       "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
     }
@@ -70,8 +70,8 @@
       "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
       "conversationRequestIds": [
         {
-          "conversationId": "Terminology Trap - HttpOnly-756ef574",
-          "requestId": "Terminology Trap - HttpOnly-756ef574-req-1"
+          "conversationId": "Terminology Trap - HttpOnly-034216df",
+          "requestId": "Terminology Trap - HttpOnly-034216df-req-1"
         }
       ]
     }
