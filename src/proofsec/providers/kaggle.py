@@ -59,7 +59,9 @@ class KaggleProvider(ModelProvider):
             return HealthStatus(provider=self.provider_name, model=self.model_name, status=ProviderStatus.UNKNOWN_ERROR)
 
     def authenticate(self) -> bool:
-        """Kaggle uses its own ~/.kaggle/kaggle.json authentication"""
+        """Kaggle uses its own ~/.kaggle/kaggle.json authentication or KAGGLE_USERNAME/KAGGLE_KEY environment variables"""
+        if os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY"):
+            return True
         kaggle_json = os.path.expanduser("~/.kaggle/kaggle.json")
         return os.path.exists(kaggle_json)
 

@@ -21,7 +21,7 @@ def handle_auth_kaggle():
 
     # Check authentication
     kaggle_json = os.path.expanduser("~/.kaggle/kaggle.json")
-    if os.path.exists(kaggle_json):
+    if os.path.exists(kaggle_json) or (os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY")):
         console.print("✓ Kaggle authentication detected")
         # Could read username here if we wanted to parse JSON, but we shouldn't log secrets
         import json
@@ -42,7 +42,7 @@ def handle_auth_kaggle():
         console.print("1. Go to https://www.kaggle.com/settings in your browser.")
         console.print("2. Click 'Create New Token' to download kaggle.json.")
         console.print("3. Place kaggle.json in ~/.kaggle/ (or C:\\Users\\<User>\\.kaggle\\ on Windows).")
-        console.print("4. Ensure the file has restricted permissions (chmod 600 ~/.kaggle/kaggle.json).")
+        console.print("4. Ensure the file has restricted permissions (chmod 600 ~/.kaggle/kaggle.json).")`n        console.print("Alternatively, set the KAGGLE_USERNAME and KAGGLE_KEY environment variables.")
         console.print("\nThen retry.")
 
 def handle_auth_status():
@@ -55,3 +55,4 @@ def handle_auth_status():
         color = "green" if auth_status in ["authenticated", "API key", "none"] else "red"
         console.print(f"Provider: [bold]{name}[/bold]")
         console.print(f"Status: [{color}]{auth_status}[/{color}]\n")
+
