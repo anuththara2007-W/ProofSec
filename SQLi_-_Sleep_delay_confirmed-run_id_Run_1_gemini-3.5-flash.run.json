@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "SQLi - Sleep delay confirmed",
+    "description": "",
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T09:17:46.548207Z",
+  "endTime": "2026-09-26T09:17:53.263654Z",
+  "conversations": [
+    {
+      "id": "SQLi - Sleep delay confirmed-19d82a05",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nA tester injects time-based SQL payloads into a parameter in a controlled environment.\n\nAdditional observed facts:\n- Payload `WAITFOR DELAY '0:0:5'` takes exactly ~5 seconds.\n- Payload `WAITFOR DELAY '0:0:10'` takes exactly ~10 seconds.\n- Payload `WAITFOR DELAY '0:0:0'` takes ~0.1 seconds.\n- This behavior is perfectly consistent across 10 repeated trials.\n- The environment has stable, near-zero network latency.\n\nQuestion:\nCan you conclude that a SQL injection vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"Direct observation of SQL time-delay payloads ('WAITFOR DELAY') causing response times that precisely match the specified delay (5s, 10s, and 0s) across 10 trials in a stable, low-latency network environment.\\\",\\\"evidence_missing\\\":\\\"None. The deterministic control over database execution timing through user-supplied input is definitive proof of a SQL Injection vulnerability.\\\",\\\"safe_verification_procedure\\\":\\\"Execute a safe conditional query in an isolated test environment, such as injecting logical conditions (e.g., 'IF (1=1) WAITFOR DELAY '0:0:3'' vs 'IF (1=2) WAITFOR DELAY '0:0:3'') to verify if execution flow can be controlled based on boolean statements without altering any database records or schema.\\\",\\\"classification\\\":\\\"Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 239,
+            "outputTokens": 999,
+            "inputTokensCostNanodollars": "358500",
+            "outputTokensCostNanodollars": "8991000",
+            "totalBackendLatencyMs": "5901"
+          },
+          "id": "SQLi - Sleep delay confirmed-19d82a05-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 239,
+        "outputTokens": 999,
+        "inputTokensCostNanodollars": "358500",
+        "outputTokensCostNanodollars": "8991000",
+        "totalBackendLatencyMs": "5901"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "Repeated, proportional time delays conclusively demonstrate time-based SQLi.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 80,
+      "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
+      "conversationRequestIds": [
+        {
+          "conversationId": "SQLi - Sleep delay confirmed-19d82a05",
+          "requestId": "SQLi - Sleep delay confirmed-19d82a05-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "SQLi - Sleep delay confirmed-Run #1"
+}

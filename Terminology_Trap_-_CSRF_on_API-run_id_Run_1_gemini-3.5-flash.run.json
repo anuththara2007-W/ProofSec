@@ -1,0 +1,80 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Terminology Trap - CSRF on API",
+    "description": "",
+    "definition": "            def run_task(llm) -> None:\n                scenario = t_data['scenario']\n                prompt = (\n                    \"You are an expert security code reviewer. Analyze the following scenario:\\n\\n\"\n                    f\"{scenario}\\n\\n\"\n                    \"Please provide your analysis and classify it using the required schema format.\\n\"\n                    \"Identify:\\n\"\n                    \"- evidence currently available (What is directly observed?)\\n\"\n                    \"- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\\n\"\n                    \"- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\\n\"\n                    \"- final classification (Must be exactly one of: \\\"Vulnerable\\\", \\\"Not Vulnerable\\\", \\\"Insufficient Evidence\\\")\\n\"\n                )\n                \n                # Model prompt does NOT contain expected answer!\n                response = llm.prompt(prompt, schema=SecurityAssessment)\n                \n                expected = t_data['ground_truth']['classification']\n                rationale = t_data['ground_truth']['rationale']\n                \n                # Save raw response\n                save_raw_result(t_data['id'], response)\n                \n                # Deterministic check\n                assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)\n"
+  },
+  "modelVersion": {
+    "slug": "gemini-3.5-flash"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-09-26T09:18:33.359526Z",
+  "endTime": "2026-09-26T09:18:39.668419Z",
+  "conversations": [
+    {
+      "id": "Terminology Trap - CSRF on API-fa41a28c",
+      "requests": [
+        {
+          "contents": [
+            {
+              "parts": [
+                {
+                  "text": "You are an expert security code reviewer. Analyze the following scenario:\n\nA security scanner reports: \"Missing Anti-CSRF Token\".\n\nAdditional observed facts:\n- The target endpoint is a REST API: `POST /api/transfer_funds`.\n- The API relies entirely on the `Authorization: Bearer <token>` header for authentication.\n- The API does not use cookies for session management.\n- Browsers do not automatically attach the `Authorization` header to cross-site requests.\n\nQuestion:\nCan you conclude that a Cross-Site Request Forgery (CSRF) vulnerability exists?\n\nPlease provide your analysis and classify it using the required schema format.\nIdentify:\n- evidence currently available (What is directly observed?)\n- evidence that is missing (What information is required before concluding an authorization vulnerability exists?)\n- a safe verification procedure (Describe a safe test that could establish whether unauthorized access occurs in an isolated test environment)\n- final classification (Must be exactly one of: \"Vulnerable\", \"Not Vulnerable\", \"Insufficient Evidence\")\n"
+                }
+              ],
+              "role": "CONTENT_ROLE_USER",
+              "senderName": "User"
+            },
+            {
+              "parts": [
+                {
+                  "text": "\"{\\\"evidence_available\\\":\\\"The endpoint POST /api/transfer_funds uses the 'Authorization: Bearer <token>' header for authentication. No cookies are used for session management. Browsers do not automatically attach custom headers like 'Authorization' to cross-site requests.\\\",\\\"evidence_missing\\\":\\\"No additional evidence is missing; the available evidence is sufficient to conclude that CSRF is not possible.\\\",\\\"safe_verification_procedure\\\":\\\"In an isolated test environment, host an HTML page on a different origin that attempts to perform a cross-site POST request to the API endpoint via a standard form submission or standard cross-origin fetch. Verify that the browser does not automatically include the Bearer token in the request, resulting in an unauthorized request rejection.\\\",\\\"classification\\\":\\\"Not Vulnerable\\\",\\\"reasoning_confidence\\\":100}\""
+                }
+              ],
+              "role": "CONTENT_ROLE_ASSISTANT",
+              "senderName": "gemini-3.5-flash"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 220,
+            "outputTokens": 1045,
+            "inputTokensCostNanodollars": "330000",
+            "outputTokensCostNanodollars": "9405000",
+            "totalBackendLatencyMs": "5816"
+          },
+          "id": "Terminology Trap - CSRF on API-fa41a28c-req-1"
+        }
+      ],
+      "metrics": {
+        "inputTokens": 220,
+        "outputTokens": 1045,
+        "inputTokensCostNanodollars": "330000",
+        "outputTokensCostNanodollars": "9405000",
+        "totalBackendLatencyMs": "5816"
+      },
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "booleanResult": true
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "CSRF relies on ambient credentials (cookies). Bearer tokens are immune by design.",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_PASSED",
+      "lineNumber": 80,
+      "definition": "assertions.assert_equal(expected=expected, actual=response.classification, expectation=rationale)",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Terminology Trap - CSRF on API-fa41a28c",
+          "requestId": "Terminology Trap - CSRF on API-fa41a28c-req-1"
+        }
+      ]
+    }
+  ],
+  "pyRunId": "Terminology Trap - CSRF on API-Run #1"
+}
