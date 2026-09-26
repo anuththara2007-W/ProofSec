@@ -110,7 +110,8 @@ def health_cmd(args):
     color = "green" if health.status == ProviderStatus.AVAILABLE else "red"
     console.print(f"Provider: [bold]{health.provider}[/bold]")
     console.print(f"Model: {health.model}")
-    console.print(f"Status: [{color}]{health.status.name}[/{color}]")
+    status_str = health.status.value if hasattr(health.status, 'value') else str(health.status)
+    console.print(f"Status: [{color}]{status_str}[/{color}]")
 
 def version_cmd(args):
     console.print(f"ProofSec Custom Evaluation Version: {CUSTOM_EVALUATION_VERSION}")
@@ -167,6 +168,52 @@ def research_cmd(args):
     else:
         console.print("Available subcommands: metrics")
 
+def export_cmd(args):
+    import proofsec.evaluator as evaluator
+    import json
+    
+    ev = evaluator.CustomEvaluator()
+    evaluation = ev.get_evaluation(args.evaluation_id)
+    if not evaluation:
+        console.print(f"[red]Evaluation {args.evaluation_id} not found.[/red]")
+        return
+        
+    out_format = args.format.lower()
+    
+    if out_format == "json":
+        output = evaluation.model_dump_json(indent=2)
+    elif out_format == "md" or out_format == "markdown":
+        output = f"# Evaluation Report: {evaluation.evaluation_id}\n\n"
+        output += f"**Date:** {evaluation.created_at}\n"
+        output += f"**Provider:** {evaluation.provider} ({evaluation.model})\n\n"
+        output += f"## Result\n"
+        output += f"- **Classification:** {evaluation.classification}\n"
+        output += f"- **Evidence State:** {evaluation.evidence_state}\n"
+        output += f"- **Confidence:** {evaluation.confidence}\n"
+        output += f"- **Impact:** {evaluation.impact}\n\n"
+        output += f"## Summary\n{evaluation.summary}\n\n"
+        output += f"## Reasoning\n{evaluation.reasoning}\n\n"
+        if evaluation.supporting_evidence:
+            output += f"## Supporting Evidence\n"
+            for e in evaluation.supporting_evidence:
+                output += f"- {e}\n"
+            output += "\n"
+        if evaluation.missing_evidence:
+            output += f"## Missing Evidence\n"
+            for e in evaluation.missing_evidence:
+                output += f"- {e}\n"
+            output += "\n"
+    else:
+        console.print("[red]Unsupported format.[/red]")
+        return
+        
+    if args.out:
+        with open(args.out, 'w', encoding='utf-8') as f:
+            f.write(output)
+        console.print(f"[green]Exported to {args.out}[/green]")
+    else:
+        console.print(output)
+
 def main():
     parser = argparse.ArgumentParser(description="ProofSec Evaluation Platform CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -200,6 +247,12 @@ def main():
     res_parser.add_argument("subcommand", type=str, choices=["inspect", "metrics", "report"])
     res_parser.add_argument("experiment_id", type=str, nargs="?", default="v0_2_gemini-3.5-flash_1727357497")
 
+    # export command
+    export_parser = subparsers.add_parser("export", help="Export an evaluation")
+    export_parser.add_argument("evaluation_id", type=str, help="Evaluation ID to export")
+    export_parser.add_argument("--format", type=str, choices=["json", "md", "markdown"], default="md", help="Export format")
+    export_parser.add_argument("--out", type=str, help="Output file path (optional)")
+    
     # version command
     subparsers.add_parser("version", help="Show version info")
     
@@ -221,6 +274,8 @@ def main():
         benchmark_cmd(args)
     elif args.command == "research":
         research_cmd(args)
+    elif args.command == "export":
+        export_cmd(args)
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,9 @@
+{
+  "scenario": "A user can modify their user_id parameter in the POST /profile/update request.",
+  "evidence": [
+    "Changing user_id from 123 to 456 successfully updates the profile of user 456.",
+    "The application does not verify if the currently authenticated session owns user 456."
+  ],
+  "context": "This is a multi-tenant B2B application.",
+  "question": "Is this a valid IDOR vulnerability?"
+}
