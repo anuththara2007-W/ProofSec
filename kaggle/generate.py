@@ -80,7 +80,7 @@ def proofsec_v0_2_task(llm) -> None:
         expected = task_data.get("ground_truth", {{}}).get("classification")
         
         try:
-            response = llm.prompt(prompt, schema=SecurityAssessment)
+            response = llm.prompt(prompt, schema=SecurityAssessment, extra_api_params={"max_tokens": 4096})
             classification = response.classification
         except Exception as e:
             classification = "Parsing Error"
