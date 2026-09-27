@@ -7,13 +7,12 @@ from collections import defaultdict
 def get_project_root():
     return Path(__file__).parent.parent
 
-def calculate_metrics(results_dir=None, output_file=None):
-    if results_dir is None:
-        results_dir = get_project_root() / "results" / "raw"
-    else:
-        results_dir = Path(results_dir)
-        
-    files = glob.glob(str(results_dir / "*.json"))
+def _calculate_for_single_dir(single_results_dir, output_file):
+    single_results_dir = Path(single_results_dir)
+    files = glob.glob(str(single_results_dir / "*.json"))
+    if not files:
+        print(f"Warning: No JSON files found in {single_results_dir}")
+        return
     
     tasks_results = {}
     for f in files:
@@ -160,7 +159,8 @@ def calculate_metrics(results_dir=None, output_file=None):
     if output_file is None:
         metrics_dir = get_project_root() / "results" / "metrics"
         metrics_dir.mkdir(parents=True, exist_ok=True)
-        out_path = metrics_dir / "latest_metrics.json"
+        safe_name = single_results_dir.name.replace('@default', '')
+        out_path = metrics_dir / f"{safe_name}_metrics.json"
     else:
         out_path = Path(output_file)
         out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -168,8 +168,26 @@ def calculate_metrics(results_dir=None, output_file=None):
     with open(out_path, 'w', encoding='utf-8') as file:
         json.dump(metrics, file, indent=4)
         
-    print(f"Metrics calculated for {metrics['total_tasks']} tasks.")
+    print(f"Metrics calculated for {metrics['total_tasks']} tasks from {single_results_dir.name}")
     print(f"Saved to {out_path}")
+
+def calculate_metrics(results_dir=None, output_file=None):
+    if results_dir is None:
+        results_dir = get_project_root() / "results" / "raw"
+    else:
+        results_dir = Path(results_dir)
+        
+    files = glob.glob(str(results_dir / "*.json"))
+    if files:
+        _calculate_for_single_dir(results_dir, output_file)
+    else:
+        subdirs = [d for d in results_dir.iterdir() if d.is_dir()]
+        if not subdirs:
+            print(f"No JSON files or subdirectories found in {results_dir}")
+            return
+            
+        for subdir in subdirs:
+            _calculate_for_single_dir(subdir, None)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
