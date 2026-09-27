@@ -1,0 +1,5 @@
+{
+  "versionNumber": 1,
+  "name": "proofsec-v0-2",
+  "definition": "@kbench.task(\"proofsec-v0-2\")\ndef proofsec_v0_2_task(llm) -> None:\n    tasks = json.loads(ALL_TASKS_JSON)\n    for task_data in tasks:\n        prompt = build_prompt(task_data)\n        expected = task_data.get(\"ground_truth\", {}).get(\"classification\")\n        \n        try:\n            response = llm.prompt(prompt, schema=SecurityAssessment, extra_api_params={\"max_tokens\": 4096})\n            classification = response.classification\n        except Exception as e:\n            classification = \"Parsing Error\"\n            \n        kbench.assertions.assert_equal(\n            f\"{task_data['id']}: {expected}\", \n            f\"{task_data['id']}: {classification}\"\n        )\n"
+}

@@ -1,0 +1,33 @@
+{
+  "task_name": "proofsec-v0-2",
+  "trial_name": "proofsec-v0-2-Run #1",
+  "trial_uri": "kbench://not-a-harbor-trial",
+  "task_id": {
+    "path": "kbench://not-a-harbor-task"
+  },
+  "task_checksum": "unknown (kbench)",
+  "config": {
+    "task": {
+      "path": "kbench://not-a-harbor-task"
+    }
+  },
+  "agent_info": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_info": {
+      "name": "anthropic/claude-sonnet-4-6@default"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 4389712,
+    "n_output_tokens": 62706,
+    "cost_usd": 2.478531
+  },
+  "verifier_result": {
+    "rewards": {
+      "score": 0.0
+    }
+  },
+  "started_at": "2026-09-27T09:02:56.468673Z",
+  "finished_at": "2026-09-27T09:23:42.084986Z"
+}
