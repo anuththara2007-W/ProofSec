@@ -1,0 +1,28 @@
+{
+  "task_name": "proofsec-v0-2",
+  "trial_name": "proofsec-v0-2-Run #1",
+  "trial_uri": "kbench://not-a-harbor-trial",
+  "task_id": {
+    "path": "kbench://not-a-harbor-task"
+  },
+  "task_checksum": "unknown (kbench)",
+  "config": {
+    "task": {
+      "path": "kbench://not-a-harbor-task"
+    }
+  },
+  "agent_info": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_info": {
+      "name": "google/gemini-3.7-flash"
+    }
+  },
+  "verifier_result": {
+    "rewards": {
+      "score": 0.0
+    }
+  },
+  "started_at": "2026-09-27T05:27:36.999695Z",
+  "finished_at": "2026-09-27T05:30:32.922605Z"
+}
