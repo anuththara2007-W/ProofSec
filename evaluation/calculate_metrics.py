@@ -1,13 +1,18 @@
 import json
 import glob
+import argparse
 from pathlib import Path
 from collections import defaultdict
 
 def get_project_root():
     return Path(__file__).parent.parent
 
-def calculate_metrics():
-    results_dir = get_project_root() / "results" / "raw"
+def calculate_metrics(results_dir=None, output_file=None):
+    if results_dir is None:
+        results_dir = get_project_root() / "results" / "raw"
+    else:
+        results_dir = Path(results_dir)
+        
     files = glob.glob(str(results_dir / "*.json"))
     
     tasks_results = {}
@@ -152,12 +157,24 @@ def calculate_metrics():
             metrics['ladder_monotonicity']['monotonic_ladders'] += 1
 
     # Save metrics
-    metrics_dir = get_project_root() / "results" / "metrics"
-    metrics_dir.mkdir(parents=True, exist_ok=True)
-    with open(metrics_dir / "latest_metrics.json", 'w', encoding='utf-8') as file:
+    if output_file is None:
+        metrics_dir = get_project_root() / "results" / "metrics"
+        metrics_dir.mkdir(parents=True, exist_ok=True)
+        out_path = metrics_dir / "latest_metrics.json"
+    else:
+        out_path = Path(output_file)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        
+    with open(out_path, 'w', encoding='utf-8') as file:
         json.dump(metrics, file, indent=4)
         
     print(f"Metrics calculated for {metrics['total_tasks']} tasks.")
+    print(f"Saved to {out_path}")
 
 if __name__ == "__main__":
-    calculate_metrics()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--results-dir', type=str, help='Directory containing raw results JSONs')
+    parser.add_argument('--output-file', type=str, help='Path to output JSON file')
+    args = parser.parse_args()
+    
+    calculate_metrics(args.results_dir, args.output_file)
