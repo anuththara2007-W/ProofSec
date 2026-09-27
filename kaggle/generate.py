@@ -78,9 +78,7 @@ def proofsec_v0_2_task(llm) -> None:
     for task_data in tasks:
         prompt = build_prompt(task_data)
         
-        # Start a new chat explicitly to guarantee stateless isolation per task
-        chat = llm.chat()
-        response = chat.prompt(prompt, schema=SecurityAssessment)
+        response = llm.prompt(prompt, schema=SecurityAssessment)
         
         expected = task_data.get("ground_truth", {{}}).get("classification")
         kbench.assertions.assert_equal(
