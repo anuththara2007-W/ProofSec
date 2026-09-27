@@ -39,13 +39,17 @@ def proofsec_v0_2_task(llm) -> None:
     tasks = json.loads(ALL_TASKS_JSON)
     for task_data in tasks:
         prompt = build_prompt(task_data)
-        
-        response = llm.prompt(prompt, schema=SecurityAssessment)
-        
         expected = task_data.get("ground_truth", {}).get("classification")
+        
+        try:
+            response = llm.prompt(prompt, schema=SecurityAssessment)
+            classification = response.classification
+        except Exception as e:
+            classification = "Parsing Error"
+            
         kbench.assertions.assert_equal(
             f"{task_data['id']}: {expected}", 
-            f"{task_data['id']}: {response.classification}"
+            f"{task_data['id']}: {classification}"
         )
 
 if __name__ == '__main__':
