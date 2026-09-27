@@ -9,7 +9,7 @@ A parser failure affected Gemini 3.7 Flash due to token truncation (`EOF while p
 
 * **Kaggle Task URL**: https://www.kaggle.com/benchmarks/tasks/anuththara2007/proofsec-v0-2/4
 * **Dataset Hash (SHA256)**: `422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80`
-* **Infrastructure / Parser Failures**: Gemini 3.7 Flash (Version 3) hit 110 parsing errors due to max-token truncation on schema generation. Fixed in Version 4 via `max_tokens: 4096`. Version 4 Kaggle container image build is currently stalled/queued on Kaggle infrastructure, blocking the immediate rerun.
+* **Infrastructure / Parser Failures**: Gemini 3.7 Flash (Version 3) hit 110 parsing errors due to max-token truncation on schema generation. Fully fixed in Version 4 via `max_tokens: 4096`, yielding 0 parser failures.
 
 ### 1. claude-sonnet-4-6-default
 * **Completed Runs / Evaluated Cases**: 110
@@ -25,9 +25,12 @@ A parser failure affected Gemini 3.7 Flash due to token truncation (`EOF while p
 * **Overall Accuracy**: 60.9% (67/110)
 * **Macro F1**: 64.1%
 
-### 3. gemini-3.7-flash (PENDING FIX EXECUTION)
-* **Status**: Blocked / In Queue
-* **Reason**: Kaggle Benchmarks is currently taking 15+ minutes to transition Task Version 4 from `Status: Running` (Image Building) to `Status: Completed`, which is required before `$ kaggle b t run` can be invoked. Once unblocked by Kaggle, the execution will yield the real token-adjusted results.
+### 3. gemini-3.7-flash (Fixed Execution)
+* **Completed Runs / Evaluated Cases**: 110
+* **Result Locations**: `results/raw/gemini-3-7-flash_kaggle/`
+* **Metrics Location**: `results/metrics/gemini-3-7-flash_metrics.json`
+* **Overall Accuracy**: 78.2% (86/110)
+* **Macro F1**: 78.5%
 
 ## Key Assets
 * Adapter Tests: `49/49 passing` (`tests/`)
