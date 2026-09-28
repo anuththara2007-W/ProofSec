@@ -1,0 +1,19 @@
+{
+    "benchmark_version": "0.2.0",
+    "task_id": "task-flip-ssrf-4-a",
+    "model": "gpt-5-5-2026-04-23",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "ssrf",
+    "response": {
+        "classification": "Insufficient Evidence"
+    }
+}

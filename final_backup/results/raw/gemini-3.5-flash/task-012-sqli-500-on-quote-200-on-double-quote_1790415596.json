@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-012-sqli-500-on-quote-200-on-double-quote",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "A single quote (') input to a search field results in a 500 Internal Server Error, while a double quote (\") results in a 200 OK. No SQL syntax error messages are displayed, no time delay is observed, and the database engine is unknown.",
+        "evidence_missing": "Definitive proof that the 500 error is caused by a SQL parser failure rather than an application-level parsing error (e.g., unhandled character exception, JSON parsing failure). We need to observe predictable behavioral changes when logical SQL operators are injected, such as a query resolving to TRUE returning a 200 OK and different search results compared to a query resolving to FALSE.",
+        "safe_verification_procedure": "In an isolated test environment, submit payloads representing logical SQL conditions to test for Boolean-based or Time-based blind SQL injection. For example, submit `' OR '1'='1` and check if it returns a 200 OK with all results, and submit `' OR '1'='2` to verify if it returns a 200 OK with no results, or use safe sleep/benchmark functions tailored to potential database types to observe controlled execution delays.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

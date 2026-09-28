@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-2-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user has requested access to 'record 2', but the owner of this record is unknown, and no context is provided about the user's identity or authorization status.",
+        "evidence_missing": "Details of the application's access control policy, the identity and roles/permissions of the requesting user, the actual owner of 'record 2', the application's response to the request, and the source code responsible for authorizing access to records.",
+        "safe_verification_procedure": "In an isolated test environment, provision two separate user accounts (User A and User B). Create 'record 2' under the ownership of User A. Authenticate as User B and attempt to retrieve or modify 'record 2' via the API or UI. Check if the system denies the request with an appropriate authorization error (e.g., 403 Forbidden).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

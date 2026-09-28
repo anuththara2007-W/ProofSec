@@ -1,0 +1,18 @@
+{
+    "benchmark": "ProofSec v0.2",
+    "models": [
+        {
+            "model": "gemini-3.5-flash",
+            "task_count": 88,
+            "accuracy": 0.6590909090909091,
+            "macro_f1": 0.6617216117216117,
+            "evidence_sensitivity": 0.3076923076923077,
+            "flip_miss_rate": 0.6923076923076923,
+            "authority_bias_rate": 0.4,
+            "terminology_sensitivity_rate": 0.0,
+            "contradiction_accuracy": 0.0,
+            "ladder_monotonicity": 1.0,
+            "premature_vulnerability_rate": 0.016129032258064516
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-019-rate-limiting-policy-violation",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "rate_limiting",
+    "response": {
+        "evidence_available": "A tester successfully sent 100 login requests within one minute from a single IP address, and all 100 requests were processed normally with HTTP 200 responses. This directly violates the application's documented security policy, which mandates a strict limit of 10 login requests per minute per IP address.",
+        "evidence_missing": "Confirmation that the tester's IP address was not explicitly whitelisted in the rate limiter configuration, and verification that rate limiting features were enabled and configured in the tested environment.",
+        "safe_verification_procedure": "In an isolated testing environment with rate limiting enabled, use a script to send 15 consecutive login requests from a single IP address within a 10-second window. Verify if the API blocks requests exceeding the threshold of 10 (e.g., by returning HTTP status code 429 Too Many Requests).",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

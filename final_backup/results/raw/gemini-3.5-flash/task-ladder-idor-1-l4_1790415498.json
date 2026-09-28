@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-idor-1-l4",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "idor",
+    "response": {
+        "evidence_available": "An API request targeting a resource belonging to another user returned an HTTP 200 OK status code, despite the authorization policy explicitly forbidding this access.",
+        "evidence_missing": "Confirmation of the requester's authentication state (ensuring the request was sent using the credentials of the unauthorized user) and verification of the response body content (confirming that actual restricted data was disclosed, rather than an empty response, masked data, or an application-level error message encapsulated in a 200 OK status).",
+        "safe_verification_procedure": "1. In an isolated test environment, provision two distinct test accounts (User A and User B).\n2. Create a private resource associated exclusively with User B and note its unique identifier.\n3. Authenticate as User A and obtain their active authorization token.\n4. Send the API request to retrieve User B's resource using User A's authorization token.\n5. Analyze the response payload to verify whether User B's sensitive data is exposed.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

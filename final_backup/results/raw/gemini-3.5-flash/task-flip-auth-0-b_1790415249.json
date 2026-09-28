@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-0-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in with a token missing the field 'X_0', which triggers a server-side crash and subsequently bypasses security/authorization controls.",
+        "evidence_missing": "The exact server-side source code, configuration files, error logs demonstrating the crash exception, and details of the proxy/gateway behavior that routes or allows traffic despite the backend crash (fail-open behavior).",
+        "safe_verification_procedure": "In an isolated test environment: 1. Generate a valid authentication token. 2. Manually strip the 'X_0' field from the token. 3. Submit a request to a protected endpoint using the modified token. 4. Observe whether the server crashes and if the protected resource is accessed or if the request is allowed through without valid authorization.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 90
+    }
+}

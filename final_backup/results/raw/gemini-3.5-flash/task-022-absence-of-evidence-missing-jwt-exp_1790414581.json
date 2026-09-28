@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-022-absence-of-evidence-missing-jwt-exp",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "The application issues a JSON Web Token (JWT) during login that does not contain an 'exp' (expiration) claim in its payload.",
+        "evidence_missing": "Information on whether the server enforces token expiration or revocation via stateful mechanisms (e.g., database-backed blocklists, Redis session stores with TTLs, or active session tracking), and the actual behavior of the server when a token is reused after a prolonged period.",
+        "safe_verification_procedure": "In an isolated test environment, authenticate to obtain a valid JWT. Store the token, wait for a period exceeding the target session idle timeout, and then send an authenticated request containing the token. Check if the server successfully rejects the request. Also, perform a logout and attempt to reuse the same token to verify if server-side invalidation is active.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

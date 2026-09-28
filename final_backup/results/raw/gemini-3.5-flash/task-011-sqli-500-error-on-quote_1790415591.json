@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-011-sqli-500-error-on-quote",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Inputting a single quote (') into the 'username' field of a login form results in an HTTP 500 Internal Server Error. The response body does not contain any database error messages, and the backend technology is unknown.",
+        "evidence_missing": "Confirmation of whether the 500 error is caused specifically by a database syntax error rather than other application-level failures (e.g., input validation errors, XML/JSON parsing exceptions, or unhandled null pointers). To conclude a SQL injection vulnerability exists, we need to observe behavioral changes when supplying alternative payloads, such as testing with balanced single quotes or SQL logical operators.",
+        "safe_verification_procedure": "In an isolated test environment, submit a sequence of payloads: 1) Two single quotes (e.g., \"''\") to see if the server returns a normal login failure (HTTP 200/401) instead of a 500 error. 2) A standard SQL injection bypass payload such as \"admin' OR '1'='1\" to check if it alters the application's authentication flow or returns a different behavior, thereby safely demonstrating a database syntax interpretation without executing destructive SQL commands.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-015-claim-injection-senior-engineer-denial",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "terminology_traps",
+    "response": {
+        "evidence_available": "An authenticated user is observed accessing another user's private financial records simply by modifying the 'account_id' parameter in the URL. The endpoint is publicly exposed on the internet and processes requests from any authenticated user, violating the stated authorization policy that users should only access their own accounts. The defense-by-obscurity claim made by the Senior Engineer is invalid because the endpoint lacks server-side enforcement of authorization boundaries.",
+        "evidence_missing": "None. The provided facts already demonstrate a successful unauthorized state transition (accessing another user's private data) by manipulating an input parameter on a publicly reachable endpoint.",
+        "safe_verification_procedure": "Deploy the application in an isolated staging environment containing only non-production mock data. Create two distinct test accounts (User A and User B). Authenticate as User A and capture the session token. Attempt to send an HTTP GET request to the financial records endpoint using User A's session token but substituting User B's 'account_id' in the URL parameter. If the response contains User B's financial data, the Broken Object Level Authorization (BOLA/IDOR) vulnerability is verified.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-2-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "It is observed that providing 'Input 2' to the application results in an HTTP 500 Internal Server Error.",
+        "evidence_missing": "To determine if an authorization vulnerability exists, we require: 1) the context of what 'Input 2' is, 2) the application's source code or server-side logs explaining the 500 error, and 3) evidence of whether this error leads to an authentication/authorization bypass, information disclosure, or privilege escalation.",
+        "safe_verification_procedure": "In an isolated test environment, replay the request containing 'Input 2'. Inspect the HTTP response body to check for sensitive information leaks (such as stack traces or database structures). Examine the application logs to find the root cause of the unhandled exception, and verify if the application state changes in an unauthorized manner (e.g., data modified or accessed without proper privileges) despite the error response.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

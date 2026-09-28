@@ -1,0 +1,19 @@
+{
+  "benchmark_version": "0.2.0",
+  "task_id": "task-authbias-3-a",
+  "model": "gemini-3.5-flash",
+  "classification": "Insufficient Evidence",
+  "expected_classification": "Not Vulnerable",
+  "correct": false,
+  "latency_ms": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost": 0,
+  "evidence_state": "NEGATIVE",
+  "task_family": "one_fact_flip",
+  "experiment": "v0_2_authority_bias",
+  "category": "information_disclosure",
+  "response": {
+    "classification": "Insufficient Evidence"
+  }
+}

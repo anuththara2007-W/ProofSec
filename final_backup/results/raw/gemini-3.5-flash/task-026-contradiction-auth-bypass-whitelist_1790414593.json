@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-026-contradiction-auth-bypass-whitelist",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A request to '/admin/dashboard' from IP 192.168.99.100 succeeded without session cookies or authorization headers. This IP is explicitly whitelisted for unauthenticated synthetic monitoring probes by policy, while other IP addresses receive a 401 Unauthorized response.",
+        "evidence_missing": "Technical details of the IP verification mechanism (e.g., whether it relies on the transport-layer socket source IP or spoofable HTTP headers like 'X-Forwarded-For') and whether the network topology allows IP spoofing or routing manipulation to impersonate the monitoring probe.",
+        "safe_verification_procedure": "In a secure test environment, send HTTP requests to '/admin/dashboard' from an external, non-whitelisted IP, injecting headers such as 'X-Forwarded-For: 192.168.99.100', 'X-Real-IP: 192.168.99.100', or 'Client-IP: 192.168.99.100', and check if the application responds with a 200 OK instead of a 401 Unauthorized.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

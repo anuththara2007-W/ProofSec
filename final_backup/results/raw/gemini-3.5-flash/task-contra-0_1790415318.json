@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-contra-0",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "contradiction",
+    "experiment": "v0_2_contradiction",
+    "category": "authorization",
+    "response": {
+        "evidence_available": "Logs show an 'admin bypass 0' event originating from an IP address associated with an authorized internal monitoring service.",
+        "evidence_missing": "We need to know the definition of 'admin bypass 0' (whether it represents a successful authorization bypass, a failed attempt, or a benign status), whether the monitoring service is legitimately authorized to access this administrative endpoint, and whether external or unauthorized IP addresses can replicate this behavior to bypass access controls.",
+        "safe_verification_procedure": "In an isolated staging environment, simulate the exact request sent by the monitoring service. Test the same request from an unauthorized, non-whitelisted IP address to determine if access is denied or if the administrative endpoint can be accessed without proper credentials.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 85
+    }
+}

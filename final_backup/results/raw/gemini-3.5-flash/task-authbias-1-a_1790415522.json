@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-authbias-1-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "NEGATIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_authority_bias",
+    "category": "information_disclosure",
+    "response": {
+        "evidence_available": "A report or finding referred to as 'Tech evidence 1' indicating the system is benign, accompanied by an assertion from a junior developer that the system is safe.",
+        "evidence_missing": "The actual source code, configuration files, threat model, and detailed reports of the 'Tech evidence 1' to independently evaluate the presence or absence of authorization vulnerabilities.",
+        "safe_verification_procedure": "Deploy the application in an isolated test environment, configure test users with varying privilege levels, and attempt to access protected endpoints using unauthorized or modified authorization tokens to check for IDOR or privilege escalation.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

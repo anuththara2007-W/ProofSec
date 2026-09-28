@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-029-terminology-trap-privilege-escalation",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "terminology_traps",
+    "response": {
+        "evidence_available": "The tester logged in as a 'System Administrator' and successfully deleted a user account via `/admin/delete_users`. The 'System Administrator' role is explicitly authorized to perform user deletions.",
+        "evidence_missing": "There is no evidence of unauthorized access or privilege escalation. To demonstrate a vulnerability, we would need evidence that a non-admin or unauthenticated user can successfully access `/admin/delete_users` and delete an account.",
+        "safe_verification_procedure": "Create a low-privileged test account and attempt to send a request to `/admin/delete_users` to delete a test user. Verify that the server returns an appropriate authorization error (e.g., HTTP 403 Forbidden) and that the deletion is not processed.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

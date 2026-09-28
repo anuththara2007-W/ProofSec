@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-0-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Inputting '0' results in a 500 Internal Server Error, while inputting '0 OR 1=1' results in a 200 OK response.",
+        "evidence_missing": "Database logs, application source code, or behavior with other logical operators (like '0 OR 1=2') to confirm that a SQL injection vulnerability exists, and evidence that this injection can bypass authorization or access unauthorized resources.",
+        "safe_verification_procedure": "In an isolated test environment, send '0 OR 1=2' and observe if the application returns a 500 error similar to '0'. Additionally, check database query logs to verify if user input is being directly concatenated into the SQL statement, and test whether authorization boundaries can be crossed via the payload.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

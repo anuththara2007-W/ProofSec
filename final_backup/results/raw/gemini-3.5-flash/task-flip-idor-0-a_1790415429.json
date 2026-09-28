@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-0-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "The only available information is that a user is requesting 'record 0' and the owner of this record is currently unknown.",
+        "evidence_missing": "To determine if a vulnerability exists, we require the application source code, the system's authorization model, the permissions of the requesting user, the actual ownership of record 0, and how the system responds to this request.",
+        "safe_verification_procedure": "In an isolated test environment, authenticate as a user who should not have access to record 0, make a request for record 0, and verify whether the system blocks the request (e.g., returning HTTP 403 Forbidden or 404 Not Found) or improperly leaks the record's details.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-2-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Observed that input '2' results in an HTTP 500 Internal Server Error, whereas input '2 OR 1=1' results in an HTTP 200 OK.",
+        "evidence_missing": "To conclude that an authorization vulnerability exists, we need the database query structure, backend source code, database logs, and verification of whether this behavior allows a user to access resources, records, or privileges belonging to another identity.",
+        "safe_verification_procedure": "In an isolated test environment with synthetic data and query logging enabled, execute the request with a non-destructive boolean condition (e.g., '2 OR 1=2' vs '2 OR 1=1') to observe if the database interprets the input as code. Verify if the application returns data belonging to other test accounts or if the query structure itself is modifiable.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-idor-1-l3",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "idor",
+    "response": {
+        "evidence_available": "The API returns an HTTP 200 OK status code when a sequential ID belonging to another user is requested.",
+        "evidence_missing": "Information on whether the accessed resource is restricted/private or public by design, and whether the API response contains sensitive data belonging to the other user.",
+        "safe_verification_procedure": "1. Set up two distinct test accounts (User A and User B) in an isolated test environment. 2. Log in as User A and create a private resource, noting its ID. 3. Log in as User B and request User A's resource ID via the API. 4. Verify if User B successfully receives User A's private information in the response.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

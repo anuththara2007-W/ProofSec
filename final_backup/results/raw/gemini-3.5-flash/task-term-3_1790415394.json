@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-term-3",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "NEGATIVE",
+    "task_family": "terminology_trap",
+    "experiment": "v0_2_terminology",
+    "category": "csrf",
+    "response": {
+        "evidence_available": "A security scanner reported a CSRF vulnerability. The API under review is stated to use Bearer tokens exclusively for authentication.",
+        "evidence_missing": "Confirmation of whether any endpoint accepts alternative authentication methods that browsers automatically attach (such as session cookies or Basic Authentication), or if Bearer tokens are ever extracted from cookies.",
+        "safe_verification_procedure": "Construct a cross-origin state-changing request (e.g., using an HTML form or a cross-origin Fetch request) targeting the API without including the custom 'Authorization: Bearer <token>' header. Observe if the request is rejected with an authentication error (such as 401 Unauthorized), which confirms immunity to CSRF.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

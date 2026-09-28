@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-1-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "A generic 500 Internal Server Error occurs when Input 1 is provided.",
+        "evidence_missing": "We lack any context about what Input 1 represents, the endpoint being called, the authentication or authorization context of the request, and the underlying server logs or stack trace that explains the 500 error.",
+        "safe_verification_procedure": "In an isolated test environment, replay the request containing Input 1 while authenticated as different roles (including unauthenticated) and monitor the server logs to observe whether the error stems from an authorization check failure, or if it is simply a functional bug (such as a null pointer exception or parsing error) unrelated to security boundaries.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

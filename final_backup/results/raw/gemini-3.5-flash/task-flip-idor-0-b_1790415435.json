@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-0-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user is attempting to request 'record 0', which belongs to a different user.",
+        "evidence_missing": "The server's implementation details, the source code handling the request, and the actual response returned by the server when this request is made (i.e., whether it blocks the request with a 403/401 or successfully serves the unauthorized data).",
+        "safe_verification_procedure": "In an isolated test environment, log in as a non-owner user, make an API or HTTP request for 'record 0', and inspect the response status code and body. If the server returns a 200 OK along with the record's private contents, the system is vulnerable. If the server blocks the request with an authorization error (e.g., 403 Forbidden), it is secure.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

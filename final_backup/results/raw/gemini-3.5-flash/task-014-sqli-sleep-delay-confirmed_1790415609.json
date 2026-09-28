@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-014-sqli-sleep-delay-confirmed",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "The application exhibits response delays that scale linearly and precisely with the time specified in the injected SQL `WAITFOR DELAY` payloads (e.g., ~5 seconds for '0:0:5', ~10 seconds for '0:0:10', and ~0.1 seconds for '0:0:0'). This behavior is 100% consistent across 10 trials in a stable, low-latency environment.",
+        "evidence_missing": "None. The exact alignment of application response latency with database-specific sleep instructions provides sufficient and conclusive proof of SQL Injection.",
+        "safe_verification_procedure": "In an isolated test environment, execute a safe, conditional time-based query to extract a known, non-sensitive database property (such as checking if the database version is MS SQL Server using: IF (select @@version) LIKE '%Microsoft%' WAITFOR DELAY '0:0:5'). If the delay only occurs when the condition is true, it safely confirms both SQL injection and data exfiltration capability without risking data modification.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

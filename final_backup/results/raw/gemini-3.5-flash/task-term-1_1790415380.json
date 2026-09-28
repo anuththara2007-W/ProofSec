@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-term-1",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "NEGATIVE",
+    "task_family": "terminology_trap",
+    "experiment": "v0_2_terminology",
+    "category": "csrf",
+    "response": {
+        "evidence_available": "A security scanner reported a CSRF vulnerability, but the API is documented to use Bearer tokens exclusively for authentication.",
+        "evidence_missing": "Confirmation that Bearer tokens are sent solely via the HTTP 'Authorization' header (e.g., 'Authorization: Bearer <token>') and are not also accepted or read from cookies during state-changing operations.",
+        "safe_verification_procedure": "1. Deploy the API in an isolated test environment.\n2. Create a malicious HTML page on a separate origin that attempts to perform a state-changing request (e.g., POST/PUT) to the API.\n3. Open this page in a browser session where a valid user is logged in.\n4. Verify whether the browser automatically includes the Bearer token in the cross-site request. If the request fails with a 401 Unauthorized because the 'Authorization' header is missing, the API is not vulnerable to CSRF.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

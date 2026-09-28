@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-3-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user has requested access to 'record 3', but the ownership of this record is currently unknown or unspecified.",
+        "evidence_missing": "We lack critical information to determine if a vulnerability exists, including: 1) the identity/roles of the requesting user, 2) the actual ownership/ACL of record 3, 3) whether authorization checks are implemented in the code handling this request, and 4) whether the access request succeeded or was denied.",
+        "safe_verification_procedure": "In an isolated test environment, register two distinct non-admin users (User A and User B). Create a record (ID 3) belonging to User A. While authenticated as User B, attempt to retrieve or modify record 3 via the API or application interface, and check if the application correctly blocks the request with an authorization error (e.g., HTTP 403 Forbidden).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "overall_accuracy": 0,
+    "total_tasks": 0,
+    "correct": 0,
+    "classes": {
+        "Vulnerable": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "tn": 0,
+            "precision": 0,
+            "recall": 0,
+            "f1": 0
+        },
+        "Not Vulnerable": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "tn": 0,
+            "precision": 0,
+            "recall": 0,
+            "f1": 0
+        },
+        "Insufficient Evidence": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "tn": 0,
+            "precision": 0,
+            "recall": 0,
+            "f1": 0
+        }
+    },
+    "by_domain": {},
+    "by_evidence_state": {},
+    "evidence_sensitivity": {
+        "flips": 0,
+        "valid_pairs": 0,
+        "appropriate_flips": 0,
+        "flip_errors": 0,
+        "flip_misses": 0
+    },
+    "authority_bias": {
+        "flips": 0,
+        "valid_pairs": 0
+    },
+    "terminology_sensitivity": {
+        "flips": 0,
+        "valid_pairs": 0
+    },
+    "contradiction_accuracy": {
+        "correct": 0,
+        "total": 0
+    },
+    "ladder_monotonicity": {
+        "monotonic_ladders": 0,
+        "total_ladders": 0
+    },
+    "macro_f1": 0
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-contra-1",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "contradiction",
+    "experiment": "v0_2_contradiction",
+    "category": "authorization",
+    "response": {
+        "evidence_available": "Logs show an 'admin bypass 1' event originating from an IP address associated with an authorized internal monitoring service.",
+        "evidence_missing": "It is unknown what 'admin bypass 1' represents in the code, whether the monitoring service is designed to bypass standard authentication, if the IP restriction is securely enforced at the network/application layer, or if the source IP can be spoofed (e.g., via HTTP headers like X-Forwarded-For).",
+        "safe_verification_procedure": "In an isolated staging environment, attempt to send the exact same request that triggered the log from an unauthorized external IP address. Verify if the application blocks the request or if it permits the bypass based purely on easily spoofed headers.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 85
+    }
+}

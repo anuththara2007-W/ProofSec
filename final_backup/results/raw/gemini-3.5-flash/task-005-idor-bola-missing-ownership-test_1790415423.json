@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-005-idor-bola-missing-ownership-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "idor",
+    "response": {
+        "evidence_available": "User A accessed GET /api/orders/5001 and received a 200 OK response containing order details. The endpoint uses a predictable, sequential numeric identifier (5001).",
+        "evidence_missing": "There is no evidence establishing ownership of order 5001, whether User A is authorized to view it, or if User A can access orders belonging to other users (IDOR/BOLA).",
+        "safe_verification_procedure": "In an isolated test environment, register two distinct non-privileged users: User A and User B. Create an order belonging to User B (e.g., ID 9001). Authenticate as User A and send a GET request to /api/orders/9001. If User A successfully retrieves User B's order details, a vulnerability exists.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

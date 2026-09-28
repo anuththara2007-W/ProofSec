@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-4-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user has requested record 4, and the owner of that record is currently unknown.",
+        "evidence_missing": "The authorization rules of the application, the identity and permissions of the requesting user, the actual owner of record 4, and whether the system permitted or denied the access request.",
+        "safe_verification_procedure": "In an isolated test environment, configure record 4 with a specific owner (e.g., User A). Attempt to access record 4 using a different, non-privileged test user account (e.g., User B) and verify whether the application permits or denies the access request.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

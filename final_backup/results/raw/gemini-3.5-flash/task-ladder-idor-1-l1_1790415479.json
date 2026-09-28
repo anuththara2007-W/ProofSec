@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-idor-1-l1",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "idor",
+    "response": {
+        "evidence_available": "An API endpoint returned an HTTP 200 OK status code.",
+        "evidence_missing": "Information regarding the endpoint's purpose, the caller's identity, the caller's authorization or privilege level, the specific request payload, and whether the resource accessed should have been restricted to a different user or role.",
+        "safe_verification_procedure": "In an isolated test environment, authenticate as a low-privileged or unauthenticated user and send the same API request. Check if the API returns an authorization error (e.g., 401 Unauthorized or 403 Forbidden) rather than a 200 OK containing restricted data.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

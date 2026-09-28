@@ -1,0 +1,28 @@
+# Diagnostic Report: API 502 Bad Gateway
+
+## Issue Description
+When a user submits a POST request to `/api/v1/evaluate` using the default Kaggle provider, the API returns a 502 Bad Gateway error without providing a structured or actionable response.
+
+## Root Cause Trace
+1. **HTTP request**: The browser makes a `POST /api/v1/evaluate` request with a JSON payload.
+2. **API handler**: `ProofSecAPIHandler._run_evaluation` receives the payload and passes it to `CustomEvaluator`.
+3. **ProofSec evaluator**: `CustomEvaluator.evaluate()` uses `self.provider`, which defaults to `KaggleProvider` if `PROOFSEC_PROVIDER` is not set.
+4. **Provider manager**: `get_provider()` creates an instance of `KaggleProvider`.
+5. **KaggleProvider**: `evaluate_request()` calls `self.llm.prompt(prompt, schema=schema)` using `kaggle_benchmarks`.
+6. **Kaggle SDK/API**: The underlying `kaggle_benchmarks` library attempts to make an API call to Kaggle. Because valid credentials or active session tokens are missing, it throws an exception containing `401 Unauthorized` or `AuthenticationError`.
+7. **Exception mapping**: `KaggleProvider` catches the exception and returns a `ProviderResponse` with `status=ProviderStatus.AUTHENTICATION_ERROR` and the raw exception string.
+8. **Evaluator exception**: `CustomEvaluator.evaluate()` receives the failed `ProviderResponse` and raises a `RuntimeError(f"Evaluation failed: {response.status} ({response.error_message})")`.
+9. **API error mapping**: `ProofSecAPIHandler._run_evaluation` catches the `RuntimeError`. It checks if `"AUTHENTICATION_ERROR"` is in the exception string.
+10. **HTTP 502**: The API handler calls `self._send_error(502, "Provider authentication failed.")`.
+
+## Why this is problematic
+- The frontend receives an unstructured `502` string instead of a structured JSON payload that the SPA can parse.
+- The user is completely blinded; they don't know it's a Kaggle authentication issue specifically, nor how to fix it.
+- The entire evaluation pipeline breaks down when the default provider (Kaggle) is unauthenticated, instead of falling back to a mock or explaining the exact configuration required.
+
+## Fix Plan
+1. Update `ProofSecAPIHandler` to return structured JSON errors matching the format specified in Phase 11.
+2. Isolate the Kaggle provider implementation (`src/proofsec/providers/kaggle.py`) and do not assume `kaggle_benchmarks` is the only way to evaluate if they have a real benchmark API.
+3. Update the frontend (`app.js`) to parse the JSON error and present actionable messages (e.g., "Authenticate Kaggle").
+4. Introduce a generic `ProviderManager` to safely instantiate and verify providers before running evaluations.
+5. Create the `proofsec auth` commands to securely handle Kaggle CLI authentication logic.

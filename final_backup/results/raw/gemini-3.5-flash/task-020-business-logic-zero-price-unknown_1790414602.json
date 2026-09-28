@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-020-business-logic-zero-price-unknown",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "business_logic",
+    "response": {
+        "evidence_available": "A user added an item to the cart, the checkout total was calculated as $0, and the transaction completed successfully. The standard price, item description, and promotional status are unknown.",
+        "evidence_missing": "Information on whether the item is intended to be free (e.g., a promotional item, free trial, or complimentary sample), the standard price of the item in the database, and whether the client-side request modified the price parameter during the cart addition or checkout phases.",
+        "safe_verification_procedure": "In an isolated staging environment, perform two tests: 1) Add a known paid item to the cart normally and verify if the correct price is charged. 2) Attempt to add a known paid item to the cart while intercepting the HTTP request, modify the price parameter to $0, submit the request, and check if the backend validates the price against the database or accepts the user-supplied $0 price.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

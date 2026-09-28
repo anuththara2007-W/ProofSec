@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-2-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in and the resulting token is missing a field designated as 'X_2'.",
+        "evidence_missing": "Information regarding the purpose and function of the 'X_2' field within the token, how the backend validates the token, and whether the absence of this field leads to a bypass of authorization controls or improper privilege escalation.",
+        "safe_verification_procedure": "In a controlled test environment, generate a token that lacks the 'X_2' field, use it to make requests to endpoints requiring authentication and specific authorization levels, and observe if the system correctly rejects the request with an authorization error or incorrectly allows unauthorized access.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

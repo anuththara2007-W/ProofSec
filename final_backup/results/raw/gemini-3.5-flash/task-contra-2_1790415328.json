@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-contra-2",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "contradiction",
+    "experiment": "v0_2_contradiction",
+    "category": "authorization",
+    "response": {
+        "evidence_available": "Logs show an event logged as 'admin bypass 2' originating from an IP address assigned to an authorized internal monitoring service.",
+        "evidence_missing": "Whether this bypass is accessible to unauthorized source IPs, whether the monitoring service is intended to bypass this control, and the exact code implementation of the security check that was bypassed.",
+        "safe_verification_procedure": "In an isolated test environment, attempt to replicate the request triggering 'admin bypass 2' from an unauthorized external IP address. Verify if the system denies access or if it permits the bypass. Inspect the codebase to check if source IP validation is the sole mechanism of authentication or if credentials are required.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

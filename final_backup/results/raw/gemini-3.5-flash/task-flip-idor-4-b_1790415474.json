@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-4-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user has requested record 4, and it is known that the record belongs to a different user.",
+        "evidence_missing": "The system response, source code, or behavior showing whether this request is blocked (e.g., HTTP 403 Forbidden) or processed successfully (unauthorized access).",
+        "safe_verification_procedure": "Authenticate as a non-owner user in an isolated testing environment, attempt to access record 4 via the corresponding endpoint, and observe if the application denies access with an appropriate error code or unauthorized status.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

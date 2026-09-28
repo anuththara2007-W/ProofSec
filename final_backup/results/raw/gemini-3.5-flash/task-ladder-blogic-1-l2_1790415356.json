@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-blogic-1-l2",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "business_logic",
+    "response": {
+        "evidence_available": "The application allows input of negative quantities in the shopping cart, which reduces the displayed total price.",
+        "evidence_missing": "Confirmation of whether the backend order processing and payment gateway actually validate and reject the negative quantity or negative/reduced total price during the final checkout and payment step.",
+        "safe_verification_procedure": "1. In an isolated test environment, add an item to the shopping cart.\n2. Modify the cart item quantity to a negative value (e.g., -1) via the user interface or by intercepting the HTTP request.\n3. Verify if the total price decreases accordingly.\n4. Attempt to complete the checkout process and finalize the transaction.\n5. Check if the order is successfully placed and processed with the reduced/negative price.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

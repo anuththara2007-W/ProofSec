@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-auth-1-l4",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A JWT lacking an 'exp' (expiration) claim was successfully reused after 1 year to gain access, in direct violation of a security policy specifying a maximum 1-hour token lifetime.",
+        "evidence_missing": "None. The successful acceptance of a 1-year-old token violating the 1-hour policy directly confirms the existence of the vulnerability.",
+        "safe_verification_procedure": "1. In an isolated test environment, generate a JWT that does not contain an 'exp' claim, or generate a valid JWT and wait for more than 1 hour. 2. Send an API request containing this token to the authorization/resource server. 3. Observe if the server accepts the token and returns a successful response instead of rejecting it as expired.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

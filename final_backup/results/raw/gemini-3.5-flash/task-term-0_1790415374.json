@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-term-0",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "NEGATIVE",
+    "task_family": "terminology_trap",
+    "experiment": "v0_2_terminology",
+    "category": "csrf",
+    "response": {
+        "evidence_available": "A security scanner reported a CSRF vulnerability. The API is documented or observed to use Bearer tokens exclusively for authentication.",
+        "evidence_missing": "Confirmation that the API does not fallback to or accept ambient credentials (such as cookies or Basic Auth) under any circumstances, and that the Bearer token is not handled/transmitted via cookies or URL query parameters that could be leaked or automatically attached.",
+        "safe_verification_procedure": "In an isolated test environment, attempt to make a state-changing request to the API from a different origin (e.g., via a cross-origin form submission or an unauthorized fetch) without manually setting the 'Authorization' header. Verify that the request is rejected with a 401 Unauthorized status and that no ambient credentials (like session cookies) are automatically sent by the browser to authorize the request.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

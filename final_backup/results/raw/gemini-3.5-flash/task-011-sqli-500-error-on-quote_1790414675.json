@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-011-sqli-500-error-on-quote",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Inputting a single quote (') into the 'username' field of a login form causes the server to return an HTTP 500 Internal Server Error. The response body does not contain database error messages, the backend technology is unknown, and no other inputs have been tested.",
+        "evidence_missing": "Confirmation that the 500 error is caused by a database syntax error rather than application-side validation, parsing errors, or type assertions. We need evidence of query structure manipulation, such as observing different behavior (like a successful login or a different HTTP status) when sending a balanced SQL payload (e.g., ' OR '1'='1) versus an unbalanced one.",
+        "safe_verification_procedure": "In an isolated test environment, submit a balanced SQL syntax payload such as ' OR '1'='1 and a comment character sequence (e.g., '-- ) to see if the application returns a successful login (HTTP 200/302) or resolves the 500 error. Compare this behavior with standard benign inputs and inspect the database query logs to verify if the input is being executed as SQL command structure rather than data.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

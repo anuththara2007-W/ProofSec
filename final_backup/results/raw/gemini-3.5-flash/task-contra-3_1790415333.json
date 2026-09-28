@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-contra-3",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "contradiction",
+    "experiment": "v0_2_contradiction",
+    "category": "authorization",
+    "response": {
+        "evidence_available": "Logs record an event described as 'admin bypass 3' originating from an IP address associated with an authorized internal monitoring service.",
+        "evidence_missing": "Information about what specific request triggered the 'admin bypass 3' log entry, the exact definition of 'admin bypass 3', whether the monitoring service uses valid administrative credentials, and whether an unauthorized or external source can replicate the request to achieve administrative access without authentication.",
+        "safe_verification_procedure": "In an isolated test environment, reproduce the exact network request sent by the monitoring service. Attempt to send this same request from an unauthorized IP address and without any valid authentication tokens to determine if administrative functionality or sensitive data is exposed.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 85
+    }
+}

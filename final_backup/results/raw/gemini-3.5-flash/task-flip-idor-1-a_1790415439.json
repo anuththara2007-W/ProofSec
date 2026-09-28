@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-1-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user is requesting record 1, but the owner of record 1 is currently unknown, and there is no information about the context of the request, the user's permissions, or the system's response behavior.",
+        "evidence_missing": "Information about whether the request was successful, the access control policies of the application, the identity and roles of the requesting user, who the actual owner of record 1 is, and the implementation details of any authorization checks.",
+        "safe_verification_procedure": "In an isolated test environment, identify the owner of record 1, authenticate as a different user who should not have access to record 1, send a request for record 1, and verify if the system correctly blocks the request with an access denied error (e.g., HTTP 403 Forbidden).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

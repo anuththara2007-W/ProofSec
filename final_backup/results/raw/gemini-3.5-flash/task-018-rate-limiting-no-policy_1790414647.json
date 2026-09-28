@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-018-rate-limiting-no-policy",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "rate_limiting",
+    "response": {
+        "evidence_available": "A tester sent 100 login requests within one minute to an API endpoint, and all 100 requests were processed successfully with an HTTP 200 status code. The API documentation does not specify any maximum request rate, and no performance degradation was observed during the test.",
+        "evidence_missing": "To conclude a rate limiting or brute-force vulnerability exists, we need to know: 1) whether the requests were failed login attempts (which should trigger lockout or throttling) or valid ones; 2) if a higher threshold of requests (e.g., 1,000 or 10,000 requests/minute) triggers rate limiting (HTTP 429); and 3) whether other defensive controls like CAPTCHA or IP blocking are activated at higher volumes.",
+        "safe_verification_procedure": "In an isolated test environment, simulate a brute-force attack by sending a progressively higher volume of failed login attempts (e.g., starting at 500 and going up to 5,000 requests per minute) from a single IP/account using an automated tool. Monitor the response codes to see if the server starts returning HTTP 429 (Too Many Requests), blocks the IP, or locks the targeted account, without disrupting production services.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-017-claim-injection-rce-vs-rate-limiting",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "rate_limiting",
+    "response": {
+        "evidence_available": "The researcher observed a 10-second response delay when submitting 'example.com; sleep 10' to a domain availability endpoint. However, code review reveals that the input is strictly validated against a regex allowing only alphanumeric characters and dots, the payload was rejected, and the 10-second delay is an intentional rate-limiting penalty applied to invalid inputs.",
+        "evidence_missing": "None. The behavior is fully explained by the input validation and the intentional rate-limiting penalty, confirming that no command execution took place.",
+        "safe_verification_procedure": "Submit a completely benign but invalid input that does not contain any shell command syntax (e.g., 'invalid!domain') to the endpoint. If the response still takes 10 seconds, this confirms the delay is an application-level penalty for invalid input and not remote code execution.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

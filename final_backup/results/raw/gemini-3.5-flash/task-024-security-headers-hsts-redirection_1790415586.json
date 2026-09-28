@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-024-security-headers-hsts-redirection",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "security_headers",
+    "response": {
+        "evidence_available": "The HTTP response on port 80 does not contain the Strict-Transport-Security header and issues a 301 Redirect to the HTTPS version of the site on port 443. The HTTPS response on port 443 correctly includes a valid Strict-Transport-Security header with the includeSubDomains directive.",
+        "evidence_missing": "None. The observed behavior conforms exactly to the specifications of RFC 6797, which states that a host MUST NOT include the HSTS header in unencrypted HTTP responses, and that user agents must ignore HSTS headers received over non-secure transport.",
+        "safe_verification_procedure": "Use a command-line tool like curl to inspect headers on both ports: run 'curl -I http://<target>' to verify it issues a 301 redirect and does not send the HSTS header over HTTP, then run 'curl -I https://<target>' to verify that the HSTS header is present and correctly configured over the secure channel.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

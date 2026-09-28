@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-027-information-disclosure-local-dev",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "information_disclosure",
+    "response": {
+        "evidence_available": "An application error leaks detailed Java stack traces, internal file paths, and library versions in HTTP responses. This behavior is restricted to the local development environment (localhost) with the SPRING_PROFILES_ACTIVE environment variable set to 'dev'. In the production configuration, a global exception handler catches these errors and returns a generic message.",
+        "evidence_missing": "None. The provided facts show that the production environment is configured to prevent stack trace leaks, and the detailed output is confined to a local developer environment where such diagnostics are expected.",
+        "safe_verification_procedure": "To verify that production remains secure, deploy the application in an isolated staging environment with the production profile active. Send a malformed request designed to trigger the exception and verify that the server returns only the generic 'An error occurred' message without exposing any stack trace details.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

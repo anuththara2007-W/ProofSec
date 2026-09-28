@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-auth-1-l1",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "It is observed that the JWT (JSON Web Token) lacks an 'exp' (expiration time) claim in its payload.",
+        "evidence_missing": "We need to know: 1) Whether the backend application enforces a maximum session or token lifetime independently of the JWT's 'exp' claim (e.g., checking creation time 'iat' against a threshold, or validating against an active session store/database). 2) The context in which this JWT is used (e.g., short-lived single-use vs. long-lived session authorization).",
+        "safe_verification_procedure": "1. Generate or capture a valid JWT from the application. 2. Record the current timestamp. 3. Wait for an extended period (e.g., 24 hours or past the standard idle timeout threshold of the application) or simulate time passage. 4. Send an authenticated request to a protected API endpoint using the unmodified JWT. 5. If the request is successful and authorization is granted indefinitely, the token lacks proper lifetime controls.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

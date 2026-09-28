@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-auth-1-l3",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Insufficient Evidence",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "PARTIAL",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "Direct observation that the generated JWT lacks the 'exp' (expiration) claim in its payload, and that this same token remains valid and is successfully accepted by the backend server for authentication 24 hours after its issuance.",
+        "evidence_missing": "None. The lack of an expiration claim combined with the token still being active after 24 hours directly demonstrates a lack of proper session expiration (CWE-613), unless there is a backend-side stateful revocation mechanism that enforces a strict maximum lifetime, which is not standard for stateless JWT implementations.",
+        "safe_verification_procedure": "1. In an isolated test environment, authenticate and obtain a JWT.\n2. Decode the JWT to inspect its payload and confirm the absence of the 'exp' claim.\n3. Wait for 24 hours (or programmatically advance the system clock of the test server if possible).\n4. Send a request to a restricted API endpoint using the 24-hour-old JWT.\n5. Confirm if the server accepts the token and returns a successful response (HTTP 200) instead of rejecting it (HTTP 401).",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

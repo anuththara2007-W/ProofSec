@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-auth-1-l2",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "PARTIAL",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A JWT (JSON Web Token) is identified that does not contain an 'exp' (expiration time) claim, or the system's token generation/validation configuration does not require or enforce an expiration time.",
+        "evidence_missing": "Whether the backend application implements alternative server-side session expiration controls, token revocation mechanisms (such as blocklists or active database session checks), or if the lack of 'exp' indeed allows indefinite, unauthorized access to protected resources.",
+        "safe_verification_procedure": "1. Generate a valid JWT for a test account. 2. Decode the token to confirm the absence of the 'exp' claim. 3. Use the token to perform an authorized API request in a test environment. 4. Wait for a duration that exceeds standard session limits (or simulate time advancement). 5. Re-submit the same request with the same token and observe if the application accepts the request or rejects it as expired/invalid.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

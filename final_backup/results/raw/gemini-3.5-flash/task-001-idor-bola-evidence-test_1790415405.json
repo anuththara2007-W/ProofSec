@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-001-idor-bola-evidence-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "idor",
+    "response": {
+        "evidence_available": "An authenticated user (ID 2841) requested GET /api/invoices/9281 and received a 200 OK response containing invoice details. Invoice IDs are known to be sequential.",
+        "evidence_missing": "Information showing whether invoice 9281 belongs to user 2841 or to a different user. To prove an authorization vulnerability (BOLA/IDOR), we need to observe an access attempt by a user who does not own the requested invoice and lacks the privileges to view it, and see that access is permitted.",
+        "safe_verification_procedure": "In an isolated test environment, register two distinct test users: User A and User B. Create an invoice (e.g., ID 9282) belonging to User B. Attempt to retrieve ID 9282 using the authentication session of User A. If the API returns a 200 OK with the invoice details, the system is vulnerable. If it returns 403 Forbidden or 404 Not Found, it is secure.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

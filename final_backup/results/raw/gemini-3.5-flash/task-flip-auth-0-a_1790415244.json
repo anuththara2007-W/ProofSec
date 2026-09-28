@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-0-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in and the resulting token is missing a specific field designated as 'X_0'.",
+        "evidence_missing": "Information defining what 'X_0' represents, whether 'X_0' is required for security/authorization decisions on the server, and how the backend handles tokens that lack this field (e.g., does it reject them, fall back to a safe default, or fail-open and grant unauthorized access?).",
+        "safe_verification_procedure": "In an isolated test environment, generate a token lacking the 'X_0' field and use it to make API requests to access restricted resources. Observe whether the backend rejects the request as unauthorized, or improperly allows access that should otherwise be restricted.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

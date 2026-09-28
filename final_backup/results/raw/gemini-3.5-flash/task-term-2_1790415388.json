@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-term-2",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "NEGATIVE",
+    "task_family": "terminology_trap",
+    "experiment": "v0_2_terminology",
+    "category": "csrf",
+    "response": {
+        "evidence_available": "The scanner flags a potential CSRF vulnerability, but the API is described as exclusively using Bearer tokens for authentication.",
+        "evidence_missing": "Verification that the server does not fall back to cookie-based authentication or session identifiers in the absence of a Bearer token, and confirmation that the client-side application does not store or transmit the Bearer token in a cookie that is automatically attached by the browser.",
+        "safe_verification_procedure": "In an isolated test environment, attempt to execute a state-changing API request (such as a POST or PUT) from a different origin using an HTML form or a cross-origin Fetch request without the custom 'Authorization' header. Verify if the server rejects the request with an authorization error (e.g., 401 Unauthorized), confirming that the browser cannot perform unauthorized actions on behalf of the user.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

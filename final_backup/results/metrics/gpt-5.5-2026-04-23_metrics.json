@@ -1,0 +1,126 @@
+{
+    "overall_accuracy": 0.6090909090909091,
+    "total_tasks": 110,
+    "correct": 67,
+    "classes": {
+        "Vulnerable": {
+            "tp": 20,
+            "fp": 0,
+            "fn": 16,
+            "tn": 74,
+            "precision": 1.0,
+            "recall": 0.5555555555555556,
+            "f1": 0.7142857142857143
+        },
+        "Not Vulnerable": {
+            "tp": 12,
+            "fp": 0,
+            "fn": 22,
+            "tn": 76,
+            "precision": 1.0,
+            "recall": 0.35294117647058826,
+            "f1": 0.5217391304347826
+        },
+        "Insufficient Evidence": {
+            "tp": 35,
+            "fp": 27,
+            "fn": 5,
+            "tn": 43,
+            "precision": 0.5645161290322581,
+            "recall": 0.875,
+            "f1": 0.6862745098039217
+        }
+    },
+    "by_domain": {
+        "idor": {
+            "correct": 11,
+            "total": 19
+        },
+        "authentication": {
+            "correct": 19,
+            "total": 20
+        },
+        "ssrf": {
+            "correct": 13,
+            "total": 17
+        },
+        "terminology_traps": {
+            "correct": 5,
+            "total": 5
+        },
+        "sqli": {
+            "correct": 9,
+            "total": 18
+        },
+        "rate_limiting": {
+            "correct": 3,
+            "total": 3
+        },
+        "business_logic": {
+            "correct": 5,
+            "total": 6
+        },
+        "security_headers": {
+            "correct": 1,
+            "total": 1
+        },
+        "information_disclosure": {
+            "correct": 1,
+            "total": 11
+        },
+        "authorization": {
+            "correct": 0,
+            "total": 5
+        },
+        "csrf": {
+            "correct": 0,
+            "total": 5
+        }
+    },
+    "by_evidence_state": {
+        "WEAK": {
+            "correct": 33,
+            "total": 35
+        },
+        "DECISIVE": {
+            "correct": 28,
+            "total": 45
+        },
+        "CONTRADICTORY": {
+            "correct": 4,
+            "total": 10
+        },
+        "NEGATIVE": {
+            "correct": 0,
+            "total": 15
+        },
+        "PARTIAL": {
+            "correct": 2,
+            "total": 5
+        }
+    },
+    "evidence_sensitivity": {
+        "flips": 10,
+        "valid_pairs": 20,
+        "appropriate_flips": 10,
+        "flip_errors": 0,
+        "flip_misses": 10
+    },
+    "authority_bias": {
+        "flips": 0,
+        "valid_pairs": 5
+    },
+    "terminology_sensitivity": {
+        "flips": 0,
+        "valid_pairs": 0
+    },
+    "contradiction_accuracy": {
+        "correct": 0,
+        "total": 5
+    },
+    "ladder_monotonicity": {
+        "monotonic_ladders": 5,
+        "total_ladders": 5
+    },
+    "macro_f1": 0.6407664515081395
+}

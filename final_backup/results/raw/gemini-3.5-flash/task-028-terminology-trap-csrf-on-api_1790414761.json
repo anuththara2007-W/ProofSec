@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-028-terminology-trap-csrf-on-api",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "terminology_traps",
+    "response": {
+        "evidence_available": "The endpoint POST /api/transfer_funds uses the 'Authorization: Bearer <token>' header for authentication. No cookies are used for session management. Browsers do not automatically attach custom headers like 'Authorization' to cross-site requests.",
+        "evidence_missing": "No additional evidence is missing; the available evidence is sufficient to conclude that CSRF is not possible.",
+        "safe_verification_procedure": "In an isolated test environment, host an HTML page on a different origin that attempts to perform a cross-site POST request to the API endpoint via a standard form submission or standard cross-origin fetch. Verify that the browser does not automatically include the Bearer token in the request, resulting in an unauthorized request rejection.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

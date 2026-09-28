@@ -1,0 +1,11 @@
+[
+  {
+    "experiment_id": "v0_2_gemini-3.5-flash_1727357497",
+    "model": "gemini-3.5-flash",
+    "status": "partial",
+    "task_count": 110,
+    "completed_tasks": 88,
+    "dataset_sha256": "422501a4db424c30c8ef24b61183351ec8a4bd2096e2671cf0e6bdf91e133a80",
+    "timestamp": "1727357497"
+  }
+]

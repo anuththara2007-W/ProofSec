@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-1-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user has requested 'record 1', and it is established that the owner of 'record 1' is a different user.",
+        "evidence_missing": "There is no information about the server's response, the application logic, the presence of authorization checks, or whether 'record 1' is public or private data.",
+        "safe_verification_procedure": "In an isolated test environment, log in as a non-owner test user and attempt to access 'record 1' via the application interface or API. Check if the server responds with the private data of 'record 1' (unauthorized access) or correctly restricts the request with an authorization error (e.g., HTTP 403 Forbidden or HTTP 404 Not Found).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-2-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user login attempt with a token missing the 'X_2' field triggers a server crash, resulting in an authorization bypass.",
+        "evidence_missing": "To complete a full analysis, we would need access to the server logs, the exception stack trace, and the source code responsible for token parsing and error handling to understand why it fails open.",
+        "safe_verification_procedure": "In an isolated test environment, generate a session token omitting the 'X_2' parameter. Submit a request to a protected endpoint using this token. Observe if the server crashes and subsequently grants unauthorized access or fails to enforce authorization boundaries.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 95
+    }
+}

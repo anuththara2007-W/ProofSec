@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-008-ssrf-plausible-hypothesis-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "ssrf",
+    "response": {
+        "evidence_available": "The application features a POST endpoint (/image/import) that fetches a user-supplied URL and successfully retrieves a normal public image.",
+        "evidence_missing": "Proof that the application does not validate or restrict the input URL, specifically whether it allows connections to localhost, loopback addresses, private IP ranges (RFC 1918), or cloud metadata services (e.g., 169.254.169.254).",
+        "safe_verification_procedure": "In a controlled, isolated sandbox environment, host a mock service on a local port. Submit a request to the endpoint using a loopback or private IP address (e.g., http://127.0.0.1:80/image.png) and verify if the application blocks the request or successfully connects to the internal service.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

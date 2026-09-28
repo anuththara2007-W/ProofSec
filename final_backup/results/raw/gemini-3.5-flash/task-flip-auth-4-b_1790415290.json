@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-4-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in with a token missing the 'X_4' field, which causes the server to crash. The scenario description asserts that this crash allows an authorization bypass.",
+        "evidence_missing": "The server-side source code handling token parsing and validation, server error logs during the crash, and architecture details of any frontend proxy or gateway. Specifically, we need proof of a 'fail-open' mechanism where the crash bypasses security controls rather than simply resulting in a Denial of Service (5xx error).",
+        "safe_verification_procedure": "In an isolated test environment, generate a JWT or session token that lacks the 'X_4' parameter. Send this malformed token to a protected API endpoint. Observe whether the server crashes and if the request succeeds (returns 200 OK with sensitive data) or fails-safe (returns 500/503 Internal Server Error without executing the privileged action).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

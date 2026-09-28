@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-009-ssrf-confirmed-evidence-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "ssrf",
+    "response": {
+        "evidence_available": "The application accepted an internal IP address (10.0.0.5) supplied by an external requester, fetched the resource, and returned the response to the external requester, violating the explicit design specification that forbids accessing internal network resources.",
+        "evidence_missing": "No additional evidence is missing to conclude a vulnerability exists, as the observed behavior meets all functional criteria for a Server-Side Request Forgery (SSRF) vulnerability under the stated security policy.",
+        "safe_verification_procedure": "In a controlled staging environment, submit a request to the URL-fetching feature pointing to a benign internal test service or a local loopback address (e.g., http://127.0.0.1:port) and verify if the application attempts to connect to or returns data from the restricted destination.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

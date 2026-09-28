@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-0-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Input 0 causes a 500 Internal Server Error in an unspecified application or API endpoint.",
+        "evidence_missing": "We lack the application source code, API specification, user roles context, and any indication of whether this error exposes sensitive data, bypasses authentication, or allows unauthorized access. A 500 error typically indicates an unhandled exception or crash, not necessarily an authorization vulnerability.",
+        "safe_verification_procedure": "1. Replicate the application setup in an isolated test environment. 2. Send the input '0' to the affected endpoint using different authorization states (unauthenticated, low-privilege, and high-privilege). 3. Observe the server responses and backend logs to determine if the 500 error leaks sensitive configuration or data, or if it leads to a security state bypass.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

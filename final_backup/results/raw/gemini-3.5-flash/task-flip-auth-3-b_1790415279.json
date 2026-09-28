@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-3-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in with a token missing the 'X_3' field, which triggers a server crash. This server crash results in an authentication/authorization bypass.",
+        "evidence_missing": "To definitively confirm the vulnerability outside of the textual description, we would need the server-side code handling the token validation, server logs capturing the exception/crash, and the network response showing that access to protected resources is granted post-crash.",
+        "safe_verification_procedure": "In an isolated test environment, generate a login request or API call with a token that lacks the 'X_3' field. Send this request to a protected endpoint and observe if the server crashes (e.g., returning a 500 error or dropping the connection) and subsequently permits access to the protected resource or administrative functions without valid credentials.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 90
+    }
+}

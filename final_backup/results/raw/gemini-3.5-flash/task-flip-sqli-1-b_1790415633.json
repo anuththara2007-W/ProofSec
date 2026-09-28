@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-sqli-1-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "An input of '1' results in an HTTP 500 Internal Server Error, while an input of '1 OR 1=1' results in an HTTP 200 OK response.",
+        "evidence_missing": "To confirm an authorization vulnerability or SQL injection, we require: 1. Source code or database query logs showing how the input is processed and executed. 2. Evidence of unauthorized data exposure or access bypass resulting from the successful query execution. 3. Exclusion of non-database explanation for the status code changes (e.g., application-level input validation or routing rules).",
+        "safe_verification_procedure": "In an isolated staging environment, perform safe payload testing such as comparing '1 AND 1=2' against '1 AND 1=1' to see if the response behavior systematically reflects boolean conditions. Also, review the backend source code to check if queries are parameterized or if input is concatenated directly into database queries.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

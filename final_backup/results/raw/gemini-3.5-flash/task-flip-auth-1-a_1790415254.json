@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-1-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user logs in and the resulting session/security token lacks a specific field labeled 'X_1'.",
+        "evidence_missing": "The identity and security purpose of field 'X_1' (e.g., whether it is an authorization claim, a tenant ID, or a signature), how the backend validates this token, and whether the absence of this field leads to unauthorized access.",
+        "safe_verification_procedure": "In an isolated test environment, attempt to access protected endpoints using the token lacking 'X_1'. Observe whether the backend correctly rejects the request or incorrectly permits access. Additionally, test if manually injecting 'X_1' with spoofed privileges allows unauthorized access.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

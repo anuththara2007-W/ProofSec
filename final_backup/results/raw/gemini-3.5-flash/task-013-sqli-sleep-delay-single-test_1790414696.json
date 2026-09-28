@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-013-sqli-sleep-delay-single-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "The injection of the payload '; WAITFOR DELAY '0:0:5'-- resulted in a response time of 5.2 seconds, compared to the normal response time of 0.2 seconds. Only one test was performed, and network latency is unknown.",
+        "evidence_missing": "Consistent results from multiple test runs with different delay values (e.g., 2 seconds and 7 seconds) to confirm that the response time scales proportionally with the injected delay, ruling out transient network latency or server load spikes.",
+        "safe_verification_procedure": "In an isolated test environment, send requests with different delay parameters, such as '; WAITFOR DELAY '0:0:2'--' and '; WAITFOR DELAY '0:0:8'--', and check if the response times consistently align with the requested delay (approx. 2.2 seconds and 8.2 seconds respectively).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

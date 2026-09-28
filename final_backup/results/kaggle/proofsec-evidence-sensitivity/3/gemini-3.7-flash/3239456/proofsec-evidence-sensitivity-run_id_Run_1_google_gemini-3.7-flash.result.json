@@ -1,0 +1,33 @@
+{
+  "task_name": "proofsec-evidence-sensitivity",
+  "trial_name": "proofsec-evidence-sensitivity-Run #1",
+  "trial_uri": "kbench://not-a-harbor-trial",
+  "task_id": {
+    "path": "kbench://not-a-harbor-task"
+  },
+  "task_checksum": "unknown (kbench)",
+  "config": {
+    "task": {
+      "path": "kbench://not-a-harbor-task"
+    }
+  },
+  "agent_info": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_info": {
+      "name": "google/gemini-3.7-flash"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 188,
+    "n_output_tokens": 713,
+    "cost_usd": 0.00281475
+  },
+  "verifier_result": {
+    "rewards": {
+      "score": 1.0
+    }
+  },
+  "started_at": "2026-09-26T18:24:40.237453Z",
+  "finished_at": "2026-09-26T18:24:52.231952Z"
+}

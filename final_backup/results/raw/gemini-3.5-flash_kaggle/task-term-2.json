@@ -1,0 +1,19 @@
+{
+  "benchmark_version": "0.2.0",
+  "task_id": "task-term-2",
+  "model": "gemini-3.5-flash",
+  "classification": "Not Vulnerable",
+  "expected_classification": "Not Vulnerable",
+  "correct": true,
+  "latency_ms": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost": 0,
+  "evidence_state": "NEGATIVE",
+  "task_family": "terminology_trap",
+  "experiment": "v0_2_terminology",
+  "category": "csrf",
+  "response": {
+    "classification": "Not Vulnerable"
+  }
+}

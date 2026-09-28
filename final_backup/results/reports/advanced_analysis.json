@@ -1,0 +1,74 @@
+{
+  "pvr_analysis": {
+    "eligible": 62,
+    "failures": 1,
+    "rate": 0.016129032258064516
+  },
+  "evidence_matrix": {
+    "WEAK": {
+      "Expected": {
+        "Insufficient Evidence": 26,
+        "Not Vulnerable": 0,
+        "Vulnerable": 0
+      },
+      "Observed": {
+        "Insufficient Evidence": 25,
+        "Not Vulnerable": 1,
+        "Vulnerable": 0
+      }
+    },
+    "PARTIAL": {
+      "Expected": {
+        "Insufficient Evidence": 3,
+        "Not Vulnerable": 0,
+        "Vulnerable": 0
+      },
+      "Observed": {
+        "Insufficient Evidence": 2,
+        "Not Vulnerable": 0,
+        "Vulnerable": 1
+      }
+    },
+    "DECISIVE": {
+      "Expected": {
+        "Insufficient Evidence": 0,
+        "Not Vulnerable": 9,
+        "Vulnerable": 26
+      },
+      "Observed": {
+        "Insufficient Evidence": 13,
+        "Not Vulnerable": 9,
+        "Vulnerable": 13
+      }
+    },
+    "CONTRADICTORY": {
+      "Expected": {
+        "Insufficient Evidence": 0,
+        "Not Vulnerable": 9,
+        "Vulnerable": 0
+      },
+      "Observed": {
+        "Insufficient Evidence": 7,
+        "Not Vulnerable": 2,
+        "Vulnerable": 0
+      }
+    },
+    "NEGATIVE": {
+      "Expected": {
+        "Insufficient Evidence": 0,
+        "Not Vulnerable": 15,
+        "Vulnerable": 0
+      },
+      "Observed": {
+        "Insufficient Evidence": 8,
+        "Not Vulnerable": 7,
+        "Vulnerable": 0
+      }
+    }
+  },
+  "flip_matrix": {
+    "Correct Transition": 0,
+    "Missed Transition": 0,
+    "Incorrect Transition": 0
+  }
+}

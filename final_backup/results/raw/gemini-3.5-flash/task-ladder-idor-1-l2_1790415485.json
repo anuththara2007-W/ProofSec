@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-idor-1-l2",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "PARTIAL",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "idor",
+    "response": {
+        "evidence_available": "The API returns a HTTP 200 OK response and exposes sequential resource identifiers (IDs) in its responses or endpoints.",
+        "evidence_missing": "Whether the API enforces authorization checks that prevent one user from accessing or modifying sequential IDs belonging to other users. Additionally, it is unknown whether the data associated with these IDs is intended to be public or private.",
+        "safe_verification_procedure": "1. Register two distinct test accounts (User A and User B) in an isolated test environment. 2. Log in as User A and create a resource to obtain its sequential ID (e.g., ID 1001). 3. Authenticate as User B and attempt to retrieve or modify the resource at ID 1001. 4. Check if the server blocks the request with a 401 Unauthorized or 403 Forbidden, or if it erroneously permits access (indicating a BOLA/IDOR vulnerability).",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}

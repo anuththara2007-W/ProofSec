@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-007-authentication-confirmed-weakness-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A request made with username 'alice' and an incorrect password ('completely-wrong-password') returned an HTTP 200 OK, created a valid authenticated session, and generated logs confirming successful authentication.",
+        "evidence_missing": "None. The direct observation of successful authentication using an incorrect password is sufficient to prove a critical authentication bypass vulnerability.",
+        "safe_verification_procedure": "In an isolated test environment, attempt to authenticate to a test account using an arbitrary incorrect password and verify whether a valid session token is issued and grants access to protected resources.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

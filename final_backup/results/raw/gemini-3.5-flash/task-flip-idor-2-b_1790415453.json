@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-2-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user is requesting 'record 2', which is owned by a different user.",
+        "evidence_missing": "The actual application behavior, API response, or source code implementing the authorization check for this request is missing. We need to know whether the application permits or blocks the unauthorized access attempt.",
+        "safe_verification_procedure": "1. Set up an isolated test environment with two separate user accounts (User A and User B).\n2. Create a record (ID 2) owned by User B.\n3. Authenticate as User A and send a request for record 2.\n4. Observe the response: if User A successfully retrieves User B's record, it is vulnerable; if the request is blocked with an appropriate authorization error (e.g., 403 Forbidden), it is not vulnerable.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

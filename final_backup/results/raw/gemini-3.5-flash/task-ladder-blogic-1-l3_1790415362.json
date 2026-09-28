@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-ladder-blogic-1-l3",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Not Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "evidence_ladder",
+    "experiment": "v0_2_evidence_ladders",
+    "category": "business_logic",
+    "response": {
+        "evidence_available": "An action or modification caused the total price of an order to decrease, but the subsequent checkout process was blocked.",
+        "evidence_missing": "Detailed information regarding why the checkout was blocked (such as server-side validation logs, error codes, or client-side application logic), whether the block was due to active security controls checking price integrity, and the full API request and response history.",
+        "safe_verification_procedure": "In an isolated test environment, intercept the checkout network request using a proxy tool, modify the price parameter to a lower value, submit the modified request, and observe if the server-side validation correctly rejects the order with an appropriate error (e.g., HTTP 400 or 403) and prevents order creation.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 90
+    }
+}

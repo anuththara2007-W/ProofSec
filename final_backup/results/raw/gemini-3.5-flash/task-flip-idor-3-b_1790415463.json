@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-idor-3-b",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Vulnerable",
+    "correct": false,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "idor",
+    "response": {
+        "evidence_available": "A user is requesting 'record 3', which is known to be owned by a different user.",
+        "evidence_missing": "The server's response to this request, the backend access control code, and whether the requesting user has legitimate administrative or delegated permissions to access the record.",
+        "safe_verification_procedure": "In an isolated test environment, authenticate as a standard user who does not own 'record 3'. Send a request for 'record 3' and check the response. Verify if the system denies access with an appropriate error code (e.g., 403 Forbidden or 404 Not Found) or improperly returns the data.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 100
+    }
+}

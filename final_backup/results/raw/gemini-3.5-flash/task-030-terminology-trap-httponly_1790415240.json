@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-030-terminology-trap-httponly",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "The application is a Single Page Application (SPA) that stores session tokens in localStorage and transmits them via the Authorization header. No cookies are used for authentication.",
+        "evidence_missing": "No additional evidence is missing to evaluate the specific claim. Since cookies are not used for authentication, the 'HttpOnly' flag (which is exclusively a cookie attribute) cannot be applied. Therefore, the reported vulnerability regarding missing HttpOnly flags does not exist.",
+        "safe_verification_procedure": "1. Open the application in a browser and perform a successful login.\n2. Open the browser Developer Tools (F12) and navigate to the Application/Storage tab.\n3. Verify that no session cookies are set under 'Cookies'.\n4. Confirm that the token is stored in 'Local Storage' and sent in the HTTP 'Authorization' header using the Network tab.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-004-idor-bola-contradictory-evidence-test",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "CONTRADICTORY",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "idor",
+    "response": {
+        "evidence_available": "An initial request by user 2841 to GET /api/invoices/9281 (owned by user 9127) returned a 200 OK with the invoice details. However, subsequent evidence revealed this response came from a synthetic redacted test fixture/cache rather than the live endpoint. An isolated test of the actual protected endpoint correctly returned a 403 Forbidden response when user 2841 attempted to access another user's invoice.",
+        "evidence_missing": "None. There is sufficient evidence to show that the live application endpoint correctly enforces the authorization rules.",
+        "safe_verification_procedure": "To verify authorization in an isolated environment, send a GET request to the actual protected endpoint /api/invoices/9281 using the credentials of user 2841. Confirm that the application returns a 403 Forbidden response and does not leak the invoice details or route the request to an unauthenticated test cache.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

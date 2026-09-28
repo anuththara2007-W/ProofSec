@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-024-security-headers-hsts-redirection",
+    "model": "gemini-3.5-flash",
+    "classification": "Not Vulnerable",
+    "expected_classification": "Not Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "security_headers",
+    "response": {
+        "evidence_available": "HTTP response on port 80 redirects with a 301 status code to the HTTPS version and does not include the HSTS header. The HTTPS response on port 443 includes a valid Strict-Transport-Security header with the includeSubDomains directive.",
+        "evidence_missing": "None. The available observations are sufficient to determine that the HSTS implementation is correct.",
+        "safe_verification_procedure": "Use an HTTP client such as curl to inspect headers: 1. Run 'curl -I http://<domain>' and confirm it returns a 3xx redirect to HTTPS and does not contain the Strict-Transport-Security header (as mandated by RFC 6797). 2. Run 'curl -I https://<domain>' and confirm the presence of 'Strict-Transport-Security: max-age=<value>; includeSubDomains'.",
+        "classification": "Not Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

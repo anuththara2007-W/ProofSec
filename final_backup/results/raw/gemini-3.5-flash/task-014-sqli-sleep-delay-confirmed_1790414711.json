@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-014-sqli-sleep-delay-confirmed",
+    "model": "gemini-3.5-flash",
+    "classification": "Vulnerable",
+    "expected_classification": "Vulnerable",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "DECISIVE",
+    "task_family": "v1_baseline",
+    "experiment": "migrated_baseline",
+    "category": "sqli",
+    "response": {
+        "evidence_available": "Direct observation of SQL time-delay payloads ('WAITFOR DELAY') causing response times that precisely match the specified delay (5s, 10s, and 0s) across 10 trials in a stable, low-latency network environment.",
+        "evidence_missing": "None. The deterministic control over database execution timing through user-supplied input is definitive proof of a SQL Injection vulnerability.",
+        "safe_verification_procedure": "Execute a safe conditional query in an isolated test environment, such as injecting logical conditions (e.g., 'IF (1=1) WAITFOR DELAY '0:0:3'' vs 'IF (1=2) WAITFOR DELAY '0:0:3'') to verify if execution flow can be controlled based on boolean statements without altering any database records or schema.",
+        "classification": "Vulnerable",
+        "reasoning_confidence": 100
+    }
+}

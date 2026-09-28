@@ -1,0 +1,23 @@
+{
+    "benchmark_version": "0.1.0",
+    "task_id": "task-flip-auth-3-a",
+    "model": "gemini-3.5-flash",
+    "classification": "Insufficient Evidence",
+    "expected_classification": "Insufficient Evidence",
+    "correct": true,
+    "latency_ms": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "evidence_state": "WEAK",
+    "task_family": "one_fact_flip",
+    "experiment": "v0_2_evidence_sensitivity",
+    "category": "authentication",
+    "response": {
+        "evidence_available": "A user successfully logs in, and the returned session or identity token is observed to be missing a specific field designated as 'X_3'.",
+        "evidence_missing": "The definition and purpose of field 'X_3' (e.g., whether it is an authorization claim, user role, tenant identifier, or signature component), and how the backend API or service validates and handles tokens that lack this specific field. We need to know if the absence of 'X_3' causes the application to fail-open, elevate privileges, or bypass access controls.",
+        "safe_verification_procedure": "In an isolated staging or local test environment, log in to generate a token that lacks the 'X_3' field. Submit this token in API requests to restricted endpoints that require authorization. Check whether the server rejects the request with an appropriate error (e.g., HTTP 401 Unauthorized or 403 Forbidden) or incorrectly processes the request and grants access to unauthorized data or functionality.",
+        "classification": "Insufficient Evidence",
+        "reasoning_confidence": 95
+    }
+}
